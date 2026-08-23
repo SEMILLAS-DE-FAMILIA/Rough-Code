@@ -3,8 +3,8 @@
    ========================================= */
 
 .catalogSection {
-  background-color: #fdfcf1; /* Mismo color del degradado */
-  color: #1C1917; /* Texto café oscuro / carbón para coordinar mejor */
+  background-color: #fdfcf1;
+  color: #1C1917;
   padding: 4rem 2rem 6rem;
   position: relative;
   z-index: 2;
@@ -29,7 +29,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.15em;
-  color: #16a34a; /* Verde agrícola elegante */
+  color: #16a34a;
   margin-bottom: 0.5rem;
 }
 
@@ -41,7 +41,6 @@
   margin-bottom: 2rem;
 }
 
-/* Categorías Filtros (Pills) */
 .categoriesWrapper {
   display: flex;
   gap: 0.5rem;
@@ -72,17 +71,28 @@
   border-color: #0f172a;
 }
 
+.stateMessage {
+  text-align: center;
+  color: #78716c;
+  padding: 2rem 0;
+  font-size: 0.95rem;
+}
+
 /* Grilla de Productos */
 .productGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 2rem;
 }
+
 .productCard {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 1.25rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .productCard:hover {
@@ -96,6 +106,7 @@
   height: 240px;
   background-color: #f1f5f9;
   overflow: hidden;
+  border-radius: 1.25rem 1.25rem 0 0;
 }
 
 .productImage {
@@ -120,6 +131,20 @@
   border-radius: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  z-index: 1;
+}
+
+.discountBadge {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  z-index: 1;
 }
 
 .cardContent {
@@ -129,20 +154,58 @@
   flex: 1;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
 .productCategory {
   font-size: 0.75rem;
   color: #94a3b8;
   font-weight: 600;
   text-transform: uppercase;
-  margin-bottom: 0.25rem;
+}
+
+.infoBtn {
+  background: #f1f5f9;
+  border: none;
+  color: #16a34a;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.infoBtn:hover {
+  background: #dcfce7;
 }
 
 .productTitle {
   font-size: 1.05rem;
   font-weight: 700;
   color: #0f172a;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   line-height: 1.3;
+}
+
+.productDescription {
+  font-size: 0.85rem;
+  color: #57534e;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  background: #fafaf9;
+  border-radius: 0.65rem;
+  border: 1px solid #f1f5f9;
 }
 
 .cardFooter {
@@ -152,6 +215,18 @@
   margin-top: auto;
   padding-top: 1rem;
   border-top: 1px solid #f1f5f9;
+  gap: 0.75rem;
+}
+
+.priceGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.originalPrice {
+  font-size: 0.8rem;
+  color: #a8a29e;
+  text-decoration: line-through;
 }
 
 .price {
@@ -170,6 +245,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
+  white-space: nowrap;
 }
 
 .addBtn:hover {

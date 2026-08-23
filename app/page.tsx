@@ -21,7 +21,6 @@ export default function Home() {
       const existingIndex = prevCart.findIndex((item) => item.id === product.id);
 
       if (existingIndex > -1) {
-        // Si ya existe, incrementamos su cantidad
         const newCart = [...prevCart];
         newCart[existingIndex] = {
           ...newCart[existingIndex],
@@ -29,7 +28,6 @@ export default function Home() {
         };
         return newCart;
       } else {
-        // Si es nuevo, lo agregamos con cantidad = 1
         return [...prevCart, { ...product, quantity: 1 }];
       }
     });

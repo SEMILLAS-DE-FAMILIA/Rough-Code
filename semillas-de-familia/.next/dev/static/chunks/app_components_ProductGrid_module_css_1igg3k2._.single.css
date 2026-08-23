@@ -67,6 +67,13 @@
   border-color: #0f172a;
 }
 
+.ProductGrid-module__5--pqq__stateMessage {
+  text-align: center;
+  color: #78716c;
+  padding: 2rem 0;
+  font-size: .95rem;
+}
+
 .ProductGrid-module__5--pqq__productGrid {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 2rem;
@@ -77,6 +84,9 @@
   background: #fff;
   border: 1px solid #0000000f;
   border-radius: 1.25rem;
+  flex-direction: column;
+  transition: transform .3s, box-shadow .3s;
+  display: flex;
   box-shadow: 0 4px 12px #0000000d;
 }
 
@@ -87,6 +97,7 @@
 
 .ProductGrid-module__5--pqq__imageContainer {
   background-color: #f1f5f9;
+  border-radius: 1.25rem 1.25rem 0 0;
   width: 100%;
   height: 240px;
   position: relative;
@@ -108,6 +119,7 @@
   color: #16a34a;
   text-transform: uppercase;
   letter-spacing: .05em;
+  z-index: 1;
   background: #ffffffe6;
   border-radius: .5rem;
   padding: .25rem .6rem;
@@ -118,6 +130,19 @@
   left: .85rem;
 }
 
+.ProductGrid-module__5--pqq__discountBadge {
+  color: #fff;
+  z-index: 1;
+  background: #ef4444;
+  border-radius: .5rem;
+  padding: .3rem .6rem;
+  font-size: .75rem;
+  font-weight: 800;
+  position: absolute;
+  top: .85rem;
+  right: .85rem;
+}
+
 .ProductGrid-module__5--pqq__cardContent {
   flex-direction: column;
   flex: 1;
@@ -125,29 +150,79 @@
   display: flex;
 }
 
+.ProductGrid-module__5--pqq__titleRow {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .25rem;
+  display: flex;
+}
+
 .ProductGrid-module__5--pqq__productCategory {
   color: #94a3b8;
   text-transform: uppercase;
-  margin-bottom: .25rem;
   font-size: .75rem;
   font-weight: 600;
 }
 
+.ProductGrid-module__5--pqq__infoBtn {
+  color: #16a34a;
+  cursor: pointer;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  font-size: .95rem;
+  font-weight: 800;
+  line-height: 1;
+  transition: background .2s;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__infoBtn:hover {
+  background: #dcfce7;
+}
+
 .ProductGrid-module__5--pqq__productTitle {
   color: #0f172a;
-  margin-bottom: .75rem;
+  margin-bottom: .5rem;
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.3;
+}
+
+.ProductGrid-module__5--pqq__productDescription {
+  color: #57534e;
+  background: #fafaf9;
+  border: 1px solid #f1f5f9;
+  border-radius: .65rem;
+  margin-bottom: .75rem;
+  padding: .75rem;
+  font-size: .85rem;
+  line-height: 1.5;
 }
 
 .ProductGrid-module__5--pqq__cardFooter {
   border-top: 1px solid #f1f5f9;
   justify-content: space-between;
   align-items: center;
+  gap: .75rem;
   margin-top: auto;
   padding-top: 1rem;
   display: flex;
+}
+
+.ProductGrid-module__5--pqq__priceGroup {
+  flex-direction: column;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__originalPrice {
+  color: #a8a29e;
+  font-size: .8rem;
+  text-decoration: line-through;
 }
 
 .ProductGrid-module__5--pqq__price {
@@ -159,6 +234,7 @@
 .ProductGrid-module__5--pqq__addBtn {
   color: #fff;
   cursor: pointer;
+  white-space: nowrap;
   background: #16a34a;
   border: none;
   border-radius: .75rem;

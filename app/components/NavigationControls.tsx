@@ -11,6 +11,9 @@ interface NavigationControlsProps {
   lastAddedProduct: string | null;
 }
 
+const formatCLP = (value: number) =>
+  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
+
 export default function NavigationControls({
   cartItems,
   onUpdateQuantity,
@@ -20,21 +23,13 @@ export default function NavigationControls({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Total de items para la insignia
   const totalItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  // Total en CLP
-  const calculateTotal = () => {
-    return cartItems.reduce((acc, item) => {
-      const numericPrice = parseInt(item.price.replace(/[^\d]/g, ''), 10) || 0;
-      return acc + numericPrice * item.quantity;
-    }, 0);
-  };
+  // Usamos final_price (ya incluye el descuento aplicado) para el total
+  const calculateTotal = () =>
+    cartItems.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
 
-  const formattedTotal = new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: 'CLP',
-  }).format(calculateTotal());
+  const formattedTotal = formatCLP(calculateTotal());
 
   return (
     <>
@@ -121,10 +116,12 @@ export default function NavigationControls({
           ) : (
             cartItems.map((item) => (
               <div key={item.id} className={styles.cartItem}>
-                <img src={item.img} alt={item.title} className={styles.cartItemImg} />
+                {item.img_url && (
+                  <img src={item.img_url} alt={item.title} className={styles.cartItemImg} />
+                )}
                 <div style={{ flex: 1 }}>
                   <h4 className={styles.cartItemTitle}>{item.title}</h4>
-                  <p className={styles.cartItemPrice}>{item.price}</p>
+                  <p className={styles.cartItemPrice}>{formatCLP(item.final_price)}</p>
 
                   {/* Selector de Cantidad */}
                   <div className={styles.quantityControls}>

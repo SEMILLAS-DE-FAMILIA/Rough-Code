@@ -1,0 +1,818 @@
+/* [project]/app/components/Carousel.module.css [app-client] (css) */
+.Carousel-module__5OSfgq__heroContainer {
+  background-color: #0d1117;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.Carousel-module__5OSfgq__backgroundImageWrapper {
+  z-index: 0;
+  position: absolute;
+  inset: 0;
+}
+
+.Carousel-module__5OSfgq__backgroundImage {
+  object-fit: cover;
+  object-position: center;
+  transition: opacity .5s ease-in-out;
+}
+
+.Carousel-module__5OSfgq__backgroundOverlay {
+  background: linear-gradient(90deg, #000c 0%, #00000080 40%, #0003 60%, #0000 100%);
+  position: absolute;
+  inset: 0;
+}
+
+.Carousel-module__5OSfgq__heroContentGrid {
+  z-index: 10;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 3rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .Carousel-module__5OSfgq__heroContentGrid {
+    grid-template-columns: 1.2fr .8fr;
+  }
+}
+
+.Carousel-module__5OSfgq__textColumn {
+  color: #fff;
+}
+
+.Carousel-module__5OSfgq__mainTitle {
+  letter-spacing: -.05em;
+  margin-bottom: 1rem;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+@media (min-width: 900px) {
+  .Carousel-module__5OSfgq__mainTitle {
+    font-size: 4.5rem;
+  }
+}
+
+.Carousel-module__5OSfgq__mainDescription {
+  color: #e2e8f0;
+  max-width: 500px;
+  margin-bottom: 2rem;
+  font-size: 1.125rem;
+}
+
+.Carousel-module__5OSfgq__mainButton {
+  color: #fff;
+  cursor: pointer;
+  background-color: #ef4444;
+  border: none;
+  border-radius: 9999px;
+  padding: .75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color .2s, transform .1s;
+}
+
+.Carousel-module__5OSfgq__mainButton:hover {
+  background-color: #dc2626;
+}
+
+.Carousel-module__5OSfgq__mainButton:active {
+  transform: scale(.97);
+}
+
+.Carousel-module__5OSfgq__carouselColumn {
+  width: 100%;
+  position: relative;
+}
+
+.Carousel-module__5OSfgq__carouselViewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.Carousel-module__5OSfgq__carouselSlideContainer {
+  margin-left: -1rem;
+  display: flex;
+}
+
+.Carousel-module__5OSfgq__carouselSlide {
+  opacity: .6;
+  flex: 0 0 45%;
+  min-width: 0;
+  padding-left: 1rem;
+  transition: transform .3s ease-out, opacity .3s ease-out;
+}
+
+.Carousel-module__5OSfgq__carouselSlide.Carousel-module__5OSfgq__isActive {
+  opacity: 1;
+}
+
+.Carousel-module__5OSfgq__imageInner {
+  aspect-ratio: 2 / 3;
+  border-radius: 1rem;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px #0000004d;
+}
+
+.Carousel-module__5OSfgq__carouselImage {
+  object-fit: cover;
+}
+
+.Carousel-module__5OSfgq__arrowControls {
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  display: flex;
+}
+
+.Carousel-module__5OSfgq__arrowButton {
+  color: #fff;
+  cursor: pointer;
+  background-color: #ffffff1a;
+  border: 1px solid #fff3;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+  transition: all .2s;
+  display: flex;
+}
+
+.Carousel-module__5OSfgq__arrowButton:hover {
+  background-color: #fff3;
+  border-color: #ffffff4d;
+}
+
+.Carousel-module__5OSfgq__heroContainer {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+/* [project]/app/components/ProductGrid.module.css [app-client] (css) */
+.ProductGrid-module__5--pqq__catalogSection {
+  color: #1c1917;
+  z-index: 2;
+  background-color: #fdfcf1;
+  padding: 4rem 2rem 6rem;
+  position: relative;
+}
+
+.ProductGrid-module__5--pqq__catalogContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ProductGrid-module__5--pqq__catalogHeader {
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3.5rem;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__preTitle {
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: #16a34a;
+  margin-bottom: .5rem;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.ProductGrid-module__5--pqq__catalogTitle {
+  letter-spacing: -.03em;
+  color: #0f172a;
+  margin-bottom: 2rem;
+  font-size: 2.25rem;
+  font-weight: 800;
+}
+
+.ProductGrid-module__5--pqq__categoriesWrapper {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__categoryBtn {
+  color: #64748b;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: .6rem 1.25rem;
+  font-size: .875rem;
+  font-weight: 600;
+  transition: all .2s;
+}
+
+.ProductGrid-module__5--pqq__categoryBtn:hover {
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.ProductGrid-module__5--pqq__categoryBtn.ProductGrid-module__5--pqq__active {
+  color: #fff;
+  background: #0f172a;
+  border-color: #0f172a;
+}
+
+.ProductGrid-module__5--pqq__productGrid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
+  display: grid;
+}
+
+.ProductGrid-module__5--pqq__productCard {
+  background: #fff;
+  border: 1px solid #0000000f;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 12px #0000000d;
+}
+
+.ProductGrid-module__5--pqq__productCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 25px -5px #00000014, 0 8px 10px -6px #00000008;
+}
+
+.ProductGrid-module__5--pqq__imageContainer {
+  background-color: #f1f5f9;
+  width: 100%;
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ProductGrid-module__5--pqq__productImage {
+  object-fit: cover;
+  transition: transform .5s;
+}
+
+.ProductGrid-module__5--pqq__productCard:hover .ProductGrid-module__5--pqq__productImage {
+  transform: scale(1.05);
+}
+
+.ProductGrid-module__5--pqq__tagBadge {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #16a34a;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  background: #ffffffe6;
+  border-radius: .5rem;
+  padding: .25rem .6rem;
+  font-size: .7rem;
+  font-weight: 700;
+  position: absolute;
+  top: .85rem;
+  left: .85rem;
+}
+
+.ProductGrid-module__5--pqq__cardContent {
+  flex-direction: column;
+  flex: 1;
+  padding: 1.25rem;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__productCategory {
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: .25rem;
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.ProductGrid-module__5--pqq__productTitle {
+  color: #0f172a;
+  margin-bottom: .75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.ProductGrid-module__5--pqq__cardFooter {
+  border-top: 1px solid #f1f5f9;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__price {
+  color: #0f172a;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.ProductGrid-module__5--pqq__addBtn {
+  color: #fff;
+  cursor: pointer;
+  background: #16a34a;
+  border: none;
+  border-radius: .75rem;
+  padding: .6rem 1rem;
+  font-size: .85rem;
+  font-weight: 600;
+  transition: background .2s;
+}
+
+.ProductGrid-module__5--pqq__addBtn:hover {
+  background: #15803d;
+}
+
+/* [project]/app/components/AppLayout.module.css [app-client] (css) */
+.AppLayout-module__RrbURa__menuFloatingBtn, .AppLayout-module__RrbURa__cartFloatingBtn {
+  z-index: 80;
+  color: #1c1917;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #00000014;
+  border-radius: 9999px;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  padding: .75rem;
+  transition: transform .2s, box-shadow .2s;
+  display: flex;
+  position: fixed;
+  top: 1.5rem;
+  box-shadow: 0 4px 12px #0000000f;
+}
+
+.AppLayout-module__RrbURa__menuFloatingBtn {
+  left: 1.5rem;
+}
+
+.AppLayout-module__RrbURa__cartFloatingBtn {
+  right: 1.5rem;
+}
+
+.AppLayout-module__RrbURa__menuFloatingBtn:hover, .AppLayout-module__RrbURa__cartFloatingBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px #00000017;
+}
+
+.AppLayout-module__RrbURa__cartBadge {
+  color: #fff;
+  background: #15803d;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  font-size: .7rem;
+  font-weight: 800;
+  display: flex;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+}
+
+.AppLayout-module__RrbURa__sidebarOverlay {
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 90;
+  background: #1c191766;
+  transition: opacity .3s;
+  position: fixed;
+  inset: 0;
+}
+
+.AppLayout-module__RrbURa__sidebarOverlay.AppLayout-module__RrbURa__isOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.AppLayout-module__RrbURa__sidebar, .AppLayout-module__RrbURa__cartDrawer {
+  z-index: 100;
+  background-color: #fdfcf1;
+  flex-direction: column;
+  width: 100%;
+  max-width: 380px;
+  padding: 1.75rem 1.5rem;
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+  display: flex;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  box-shadow: -4px 0 25px #00000014;
+}
+
+.AppLayout-module__RrbURa__sidebar {
+  border-right: 1px solid #0000000f;
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.AppLayout-module__RrbURa__cartDrawer {
+  border-left: 1px solid #0000000f;
+  right: 0;
+  transform: translateX(100%);
+}
+
+.AppLayout-module__RrbURa__sidebar.AppLayout-module__RrbURa__isOpen, .AppLayout-module__RrbURa__cartDrawer.AppLayout-module__RrbURa__isOpen {
+  transform: translateX(0);
+}
+
+.AppLayout-module__RrbURa__sidebarHeader {
+  border-bottom: 1px solid #00000014;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  display: flex;
+}
+
+.AppLayout-module__RrbURa__sidebarHeader h3 {
+  color: #1c1917;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.AppLayout-module__RrbURa__closeBtn {
+  color: #78716c;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: .25rem;
+  font-size: 1.1rem;
+  transition: color .2s;
+}
+
+.AppLayout-module__RrbURa__closeBtn:hover {
+  color: #1c1917;
+}
+
+.AppLayout-module__RrbURa__sidebarNav {
+  flex-direction: column;
+  gap: .5rem;
+  display: flex;
+}
+
+.AppLayout-module__RrbURa__sidebarLink {
+  color: #44403c;
+  cursor: pointer;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: .85rem;
+  align-items: center;
+  gap: .85rem;
+  width: 100%;
+  padding: .85rem 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .2s;
+  display: flex;
+}
+
+.AppLayout-module__RrbURa__sidebarLink:hover, .AppLayout-module__RrbURa__sidebarLink.AppLayout-module__RrbURa__active {
+  color: #1c1917;
+  background: #0000000a;
+}
+
+.AppLayout-module__RrbURa__adminBadge {
+  color: #15803d;
+  background: #15803d1a;
+  border-radius: .5rem;
+  margin-left: auto;
+  padding: .2rem .5rem;
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.AppLayout-module__RrbURa__cartList {
+  flex-direction: column;
+  flex: 1;
+  gap: 1rem;
+  margin: .5rem 0;
+  padding-right: .25rem;
+  display: flex;
+  overflow-y: auto;
+}
+
+.AppLayout-module__RrbURa__emptyCartState {
+  text-align: center;
+  color: #78716c;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  margin-top: 4rem;
+  display: flex;
+}
+
+.AppLayout-module__RrbURa__emptyCartState span {
+  font-size: 2.5rem;
+}
+
+.AppLayout-module__RrbURa__cartItem {
+  background: #fff;
+  border: 1px solid #0000000d;
+  border-radius: 1rem;
+  align-items: center;
+  gap: 1rem;
+  padding: .85rem;
+  display: flex;
+  box-shadow: 0 2px 6px #00000005;
+}
+
+.AppLayout-module__RrbURa__cartItemImg {
+  object-fit: cover;
+  background: #f1f5f9;
+  border-radius: .6rem;
+  width: 60px;
+  height: 60px;
+}
+
+.AppLayout-module__RrbURa__cartItemTitle {
+  color: #1c1917;
+  margin: 0 0 .2rem;
+  font-size: .88rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.AppLayout-module__RrbURa__cartItemPrice {
+  color: #15803d;
+  margin: 0 0 .5rem;
+  font-size: .88rem;
+  font-weight: 700;
+}
+
+.AppLayout-module__RrbURa__quantityControls {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: .5rem;
+  align-items: center;
+  display: inline-flex;
+}
+
+.AppLayout-module__RrbURa__quantityControls button {
+  color: #1c1917;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 26px;
+  height: 24px;
+  font-weight: 700;
+  transition: background .2s;
+}
+
+.AppLayout-module__RrbURa__quantityControls button:hover {
+  background: #e2e8f0;
+}
+
+.AppLayout-module__RrbURa__quantityControls span {
+  color: #1c1917;
+  padding: 0 .5rem;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.AppLayout-module__RrbURa__deleteBtn {
+  color: #ef4444;
+  cursor: pointer;
+  opacity: .6;
+  background: none;
+  border: none;
+  align-self: flex-start;
+  padding: .25rem;
+  font-size: .9rem;
+  transition: opacity .2s;
+}
+
+.AppLayout-module__RrbURa__deleteBtn:hover {
+  opacity: 1;
+}
+
+.AppLayout-module__RrbURa__cartFooter {
+  background: #fdfcf1;
+  border-top: 1px solid #00000014;
+  margin-top: auto;
+  padding-top: 1.25rem;
+}
+
+.AppLayout-module__RrbURa__totalRow {
+  color: #44403c;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: .95rem;
+  font-weight: 600;
+  display: flex;
+}
+
+.AppLayout-module__RrbURa__totalPrice {
+  color: #15803d;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.AppLayout-module__RrbURa__cartCheckoutBtn {
+  color: #fff;
+  cursor: pointer;
+  background: #1c1917;
+  border: none;
+  border-radius: .85rem;
+  width: 100%;
+  padding: .9rem;
+  font-size: .95rem;
+  font-weight: 700;
+  transition: background .2s, transform .1s;
+}
+
+.AppLayout-module__RrbURa__cartCheckoutBtn:hover {
+  background: #292524;
+  transform: translateY(-1px);
+}
+
+.AppLayout-module__RrbURa__toastNotification {
+  z-index: 100;
+  color: #1c1917;
+  background: #fff;
+  border: 1px solid #00000014;
+  border-radius: 1rem;
+  align-items: center;
+  gap: .75rem;
+  padding: .85rem 1.25rem;
+  animation: .3s cubic-bezier(.16, 1, .3, 1) AppLayout-module__RrbURa__slideUp;
+  display: flex;
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  box-shadow: 0 10px 25px -5px #0000001a;
+}
+
+@keyframes AppLayout-module__RrbURa__slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.AppLayout-module__RrbURa__productsSection {
+  color: #1c1917;
+  background-color: #fdfcf1;
+  min-height: 100vh;
+  padding: 6rem 2rem 8rem;
+}
+
+.AppLayout-module__RrbURa__productsHeader {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 4rem;
+}
+
+.AppLayout-module__RrbURa__productsTitle {
+  letter-spacing: -.03em;
+  color: #1c1917;
+  margin-bottom: .75rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+.AppLayout-module__RrbURa__productsGrid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+}
+
+.AppLayout-module__RrbURa__productCard {
+  background: #fff;
+  border: 1px solid #0000000f;
+  border-radius: 1.5rem;
+  flex-direction: column;
+  padding: 1.25rem;
+  transition: all .3s cubic-bezier(.16, 1, .3, 1);
+  display: flex;
+  box-shadow: 0 4px 12px #00000008;
+}
+
+.AppLayout-module__RrbURa__productCard:hover {
+  border-color: #0000001f;
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px -6px #00000014;
+}
+
+.AppLayout-module__RrbURa__productImgWrapper {
+  background: #f8fafc;
+  border-radius: 1rem;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.AppLayout-module__RrbURa__productCardTitle {
+  color: #1c1917;
+  margin-bottom: .25rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.AppLayout-module__RrbURa__productCardPrice {
+  color: #15803d;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.AppLayout-module__RrbURa__addToCartBtn {
+  color: #fff;
+  cursor: pointer;
+  background: #1c1917;
+  border: none;
+  border-radius: .85rem;
+  width: 100%;
+  margin-top: auto;
+  padding: .75rem;
+  font-weight: 600;
+  transition: all .2s;
+}
+
+.AppLayout-module__RrbURa__addToCartBtn:hover {
+  background: #15803d;
+}
+
+/* [project]/app/components/TrustBanner.module.css [app-client] (css) */
+.TrustBanner-module__Rko1JG__trustSection {
+  z-index: 10;
+  background-color: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 2.5rem 1.5rem;
+  position: relative;
+  box-shadow: 0 4px 20px #00000008;
+}
+
+.TrustBanner-module__Rko1JG__trustGrid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: center;
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+}
+
+.TrustBanner-module__Rko1JG__trustItem {
+  align-items: center;
+  gap: 1rem;
+  display: flex;
+}
+
+.TrustBanner-module__Rko1JG__trustIcon {
+  color: #16a34a;
+  background: #f0fdf4;
+  border-radius: 12px;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  display: flex;
+}
+
+.TrustBanner-module__Rko1JG__trustText h4 {
+  color: #0f172a;
+  margin-bottom: .15rem;
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.TrustBanner-module__Rko1JG__trustText p {
+  color: #64748b;
+  margin: 0;
+  font-size: .8rem;
+}
+
+/*# sourceMappingURL=app_components_0audlmv._.css.map*/

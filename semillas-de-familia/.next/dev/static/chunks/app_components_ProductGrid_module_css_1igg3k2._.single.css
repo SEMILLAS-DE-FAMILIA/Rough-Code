@@ -1,0 +1,175 @@
+/* [project]/app/components/ProductGrid.module.css [app-client] (css) */
+.ProductGrid-module__5--pqq__catalogSection {
+  color: #1c1917;
+  z-index: 2;
+  background-color: #fdfcf1;
+  padding: 4rem 2rem 6rem;
+  position: relative;
+}
+
+.ProductGrid-module__5--pqq__catalogContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ProductGrid-module__5--pqq__catalogHeader {
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3.5rem;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__preTitle {
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: #16a34a;
+  margin-bottom: .5rem;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.ProductGrid-module__5--pqq__catalogTitle {
+  letter-spacing: -.03em;
+  color: #0f172a;
+  margin-bottom: 2rem;
+  font-size: 2.25rem;
+  font-weight: 800;
+}
+
+.ProductGrid-module__5--pqq__categoriesWrapper {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__categoryBtn {
+  color: #64748b;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: .6rem 1.25rem;
+  font-size: .875rem;
+  font-weight: 600;
+  transition: all .2s;
+}
+
+.ProductGrid-module__5--pqq__categoryBtn:hover {
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.ProductGrid-module__5--pqq__categoryBtn.ProductGrid-module__5--pqq__active {
+  color: #fff;
+  background: #0f172a;
+  border-color: #0f172a;
+}
+
+.ProductGrid-module__5--pqq__productGrid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
+  display: grid;
+}
+
+.ProductGrid-module__5--pqq__productCard {
+  background: #fff;
+  border: 1px solid #0000000f;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 12px #0000000d;
+}
+
+.ProductGrid-module__5--pqq__productCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 25px -5px #00000014, 0 8px 10px -6px #00000008;
+}
+
+.ProductGrid-module__5--pqq__imageContainer {
+  background-color: #f1f5f9;
+  width: 100%;
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ProductGrid-module__5--pqq__productImage {
+  object-fit: cover;
+  transition: transform .5s;
+}
+
+.ProductGrid-module__5--pqq__productCard:hover .ProductGrid-module__5--pqq__productImage {
+  transform: scale(1.05);
+}
+
+.ProductGrid-module__5--pqq__tagBadge {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #16a34a;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  background: #ffffffe6;
+  border-radius: .5rem;
+  padding: .25rem .6rem;
+  font-size: .7rem;
+  font-weight: 700;
+  position: absolute;
+  top: .85rem;
+  left: .85rem;
+}
+
+.ProductGrid-module__5--pqq__cardContent {
+  flex-direction: column;
+  flex: 1;
+  padding: 1.25rem;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__productCategory {
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: .25rem;
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.ProductGrid-module__5--pqq__productTitle {
+  color: #0f172a;
+  margin-bottom: .75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.ProductGrid-module__5--pqq__cardFooter {
+  border-top: 1px solid #f1f5f9;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  display: flex;
+}
+
+.ProductGrid-module__5--pqq__price {
+  color: #0f172a;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.ProductGrid-module__5--pqq__addBtn {
+  color: #fff;
+  cursor: pointer;
+  background: #16a34a;
+  border: none;
+  border-radius: .75rem;
+  padding: .6rem 1rem;
+  font-size: .85rem;
+  font-weight: 600;
+  transition: background .2s;
+}
+
+.ProductGrid-module__5--pqq__addBtn:hover {
+  background: #15803d;
+}
+
+/*# sourceMappingURL=app_components_ProductGrid_module_css_1igg3k2._.single.css.map*/

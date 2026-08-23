@@ -1,0 +1,51 @@
+/* [project]/app/components/TrustBanner.module.css [app-client] (css) */
+.TrustBanner-module__Rko1JG__trustSection {
+  z-index: 10;
+  background-color: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 2.5rem 1.5rem;
+  position: relative;
+  box-shadow: 0 4px 20px #00000008;
+}
+
+.TrustBanner-module__Rko1JG__trustGrid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: center;
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+}
+
+.TrustBanner-module__Rko1JG__trustItem {
+  align-items: center;
+  gap: 1rem;
+  display: flex;
+}
+
+.TrustBanner-module__Rko1JG__trustIcon {
+  color: #16a34a;
+  background: #f0fdf4;
+  border-radius: 12px;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  display: flex;
+}
+
+.TrustBanner-module__Rko1JG__trustText h4 {
+  color: #0f172a;
+  margin-bottom: .15rem;
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.TrustBanner-module__Rko1JG__trustText p {
+  color: #64748b;
+  margin: 0;
+  font-size: .8rem;
+}
+
+/*# sourceMappingURL=app_components_TrustBanner_module_css_1igg3k2._.single.css.map*/

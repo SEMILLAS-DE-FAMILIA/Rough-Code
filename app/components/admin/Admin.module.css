@@ -1,0 +1,473 @@
+.adminWrapper {
+  min-height: 100vh;
+  background-color: #fdfcf1;
+  color: #1c1917;
+}
+
+/* ---------- LOGIN ---------- */
+.loginWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fdfcf1;
+  padding: 1.5rem;
+}
+
+.loginCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.loginCard h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.loginSubtitle {
+  color: #78716c;
+  font-size: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: #44403c;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.65rem;
+  border: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+  background: #fafaf9;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: #16a34a;
+  background: #ffffff;
+}
+
+.primaryBtn {
+  width: 100%;
+  background: #1c1917;
+  color: #ffffff;
+  border: none;
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.primaryBtn:hover {
+  background: #292524;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.82rem;
+  margin-top: 0.75rem;
+}
+
+/* ---------- LAYOUT DEL PANEL ---------- */
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.panelHeader h1 {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #57534e;
+}
+
+.logoutBtn:hover {
+  background: #f8fafc;
+}
+
+.tabBar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 2rem 0;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  flex-wrap: wrap;
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1.1rem;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #78716c;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+
+.tabBtn.activeTab {
+  color: #16a34a;
+  border-bottom-color: #16a34a;
+}
+
+.panelBody {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ---------- SECCIONES GENERALES ---------- */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sectionHeader h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.addBtn {
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.2rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.addBtn:hover {
+  background: #15803d;
+}
+
+/* ---------- TABLA / LISTA ---------- */
+.dataTable {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dataRow {
+  display: grid;
+  align-items: center;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 1rem;
+}
+
+.dataRow:last-child {
+  border-bottom: none;
+}
+
+.rowThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  background: #f1f5f9;
+  flex-shrink: 0;
+}
+
+.rowTitle {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.rowMeta {
+  font-size: 0.78rem;
+  color: #78716c;
+}
+
+.badgePill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.badgeActive {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badgeInactive {
+  background: #f1f5f9;
+  color: #78716c;
+}
+
+.rowActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.iconActionBtn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  width: 32px;
+  height: 32px;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.iconActionBtn:hover {
+  background: #f1f5f9;
+}
+
+.deleteActionBtn {
+  color: #ef4444;
+  border-color: #fecaca;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #78716c;
+  font-size: 0.9rem;
+}
+
+/* ---------- MODAL / FORM ---------- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 25, 23, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+}
+
+.modalCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalCard h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.formGridFull {
+  grid-column: 1 / -1;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+}
+
+.checkboxField input {
+  width: auto;
+}
+
+.modalActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.secondaryBtn {
+  flex: 1;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #57534e;
+}
+
+.modalActions .primaryBtn {
+  flex: 1;
+}
+
+.finalPricePreview {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.65rem;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  color: #15803d;
+  font-weight: 700;
+  margin-bottom: 1.1rem;
+}
+
+/* ---------- IMAGE UPLOAD ---------- */
+.uploadBox {
+  border: 2px dashed #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  background: #fafaf9;
+  position: relative;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.uploadPreview {
+  width: 100%;
+  max-height: 140px;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+
+.uploadHint {
+  font-size: 0.78rem;
+  color: #a8a29e;
+}
+
+/* ---------- DASHBOARD ---------- */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.statCard .statLabel {
+  font-size: 0.78rem;
+  color: #78716c;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.statCard .statValue {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.statCard .statSub {
+  font-size: 0.78rem;
+  color: #16a34a;
+  margin-top: 0.25rem;
+  font-weight: 600;
+}
+
+.dashboardPanel {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.5rem;
+}
+
+.dashboardPanel h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.rankRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f8fafc;
+  font-size: 0.88rem;
+}
+
+.rankRow:last-child {
+  border-bottom: none;
+}
+
+.rankLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.rankNumber {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f0fdf4;
+  color: #16a34a;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rankValue {
+  font-weight: 700;
+  color: #0f172a;
+}

@@ -17,6 +17,7 @@ interface AdminProduct {
   badge: string | null;
   stock: number;
   active: boolean;
+  is_new: boolean;
 }
 
 const emptyForm = {
@@ -29,6 +30,7 @@ const emptyForm = {
   badge: '',
   stock: '0',
   active: true,
+  is_new: false,
 };
 
 const formatCLP = (value: number) =>
@@ -36,6 +38,7 @@ const formatCLP = (value: number) =>
 
 export default function ProductsManager() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -54,8 +57,14 @@ export default function ProductsManager() {
     setLoading(false);
   };
 
+  const fetchCategories = async () => {
+    const { data, error } = await supabase.from('categories').select('id, name').order('name', { ascending: true });
+    if (!error && data) setCategories(data);
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   const openCreateModal = () => {
@@ -77,6 +86,7 @@ export default function ProductsManager() {
       badge: p.badge ?? '',
       stock: String(p.stock),
       active: p.active,
+      is_new: p.is_new,
     });
     setFormError(null);
     setShowModal(true);
@@ -113,6 +123,7 @@ export default function ProductsManager() {
       badge: form.badge.trim() || null,
       stock: isNaN(stockNum) ? 0 : stockNum,
       active: form.active,
+      is_new: form.is_new,
     };
 
     const { error } = editingId
@@ -184,6 +195,7 @@ export default function ProductsManager() {
                   {p.discount_percent > 0 && ` (−${p.discount_percent}% de ${formatCLP(p.price)})`}
                   {' · Stock: '}
                   {p.stock}
+                  {p.is_new && ' · 🌟 Novedad'}
                 </div>
               </div>
               <button
@@ -228,12 +240,26 @@ export default function ProductsManager() {
               <div className={styles.formGrid}>
                 <div className={styles.field}>
                   <label>Categoría</label>
-                  <input
-                    value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value })}
-                    placeholder="Semillas, Insumos..."
-                    required
-                  />
+                  {categories.length === 0 ? (
+                    <p style={{ fontSize: '0.8rem', color: '#a8a29e' }}>
+                      No hay categorías creadas. Ve a la pestaña "Categorías" y crea al menos una.
+                    </p>
+                  ) : (
+                    <select
+                      value={form.category}
+                      onChange={(e) => setForm({ ...form, category: e.target.value })}
+                      required
+                    >
+                      <option value="" disabled>
+                        Selecciona una categoría
+                      </option>
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.name}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
                 <div className={styles.field}>
                   <label>Etiqueta (opcional)</label>
@@ -309,6 +335,18 @@ export default function ProductsManager() {
                 />
                 <label htmlFor="activeCheck" style={{ marginBottom: 0 }}>
                   Visible en la tienda
+                </label>
+              </div>
+
+              <div className={styles.checkboxField}>
+                <input
+                  type="checkbox"
+                  id="isNewCheck"
+                  checked={form.is_new}
+                  onChange={(e) => setForm({ ...form, is_new: e.target.checked })}
+                />
+                <label htmlFor="isNewCheck" style={{ marginBottom: 0 }}>
+                  Marcar como novedad (se destaca con una etiqueta "Nuevo" en la tienda)
                 </label>
               </div>
 

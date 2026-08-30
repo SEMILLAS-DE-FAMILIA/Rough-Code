@@ -4,7 +4,13 @@ import React, { useState } from 'react';
 import { supabase } from '../../../src/lib/supabaseClient';
 import styles from './Admin.module.css';
 
-export default function AdminLogin({ onLoggedIn }: { onLoggedIn: () => void }) {
+export default function AdminLogin({
+  onLoggedIn,
+  infoMessage,
+}: {
+  onLoggedIn: () => void;
+  infoMessage?: string;
+}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,6 +38,21 @@ export default function AdminLogin({ onLoggedIn }: { onLoggedIn: () => void }) {
       <div className={styles.loginCard}>
         <h2>Panel Admin</h2>
         <p className={styles.loginSubtitle}>Semillas de Familia</p>
+
+        {infoMessage && (
+          <p
+            style={{
+              background: '#fef9c3',
+              color: '#854d0e',
+              fontSize: '0.8rem',
+              padding: '0.65rem 0.85rem',
+              borderRadius: '0.6rem',
+              marginBottom: '1.25rem',
+            }}
+          >
+            {infoMessage}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className={styles.field}>

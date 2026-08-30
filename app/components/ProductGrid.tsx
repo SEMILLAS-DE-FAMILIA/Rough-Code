@@ -15,6 +15,7 @@ export interface Product {
   description: string | null;
   img_url: string | null;
   badge?: string | null;
+  is_new?: boolean;
 }
 
 const formatCLP = (value: number) =>
@@ -35,7 +36,7 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
       setLoading(true);
       const { data, error } = await supabase
         .from('products')
-        .select('id, title, category, price, discount_percent, final_price, description, img_url, badge')
+        .select('id, title, category, price, discount_percent, final_price, description, img_url, badge, is_new')
         .eq('active', true)
         .order('created_at', { ascending: false });
 
@@ -101,7 +102,9 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
             return (
               <div key={product.id} className={styles.productCard}>
                 <div className={styles.imageContainer}>
-                  {product.badge && <span className={styles.tagBadge}>{product.badge}</span>}
+                  <div className={styles.topLeftBadges}>
+                    {product.badge && <span className={styles.tagBadge}>{product.badge}</span>}
+                  </div>
                   {hasDiscount && (
                     <span className={styles.discountBadge}>-{product.discount_percent}%</span>
                   )}

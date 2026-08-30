@@ -164,6 +164,200 @@
   position: relative;
 }
 
+/* [project]/app/components/NovedadesCarousel.module.css [app-client] (css) */
+.NovedadesCarousel-module__mx4VTG__section {
+  z-index: 2;
+  background-color: #fdfcf1;
+  padding: 3rem 2rem 1rem;
+  position: relative;
+}
+
+.NovedadesCarousel-module__mx4VTG__container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.NovedadesCarousel-module__mx4VTG__header {
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  display: flex;
+}
+
+.NovedadesCarousel-module__mx4VTG__preTitle {
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: #16a34a;
+  margin-bottom: .3rem;
+  font-size: .75rem;
+  font-weight: 700;
+  display: block;
+}
+
+.NovedadesCarousel-module__mx4VTG__title {
+  letter-spacing: -.02em;
+  color: #0f172a;
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.NovedadesCarousel-module__mx4VTG__arrowGroup {
+  gap: .6rem;
+  display: flex;
+}
+
+.NovedadesCarousel-module__mx4VTG__arrowBtn {
+  color: #1c1917;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #0000001a;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: .95rem;
+  transition: all .2s;
+  display: flex;
+}
+
+.NovedadesCarousel-module__mx4VTG__arrowBtn:hover {
+  color: #fff;
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
+.NovedadesCarousel-module__mx4VTG__scrollRow {
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 1.25rem;
+  padding-bottom: .5rem;
+  display: flex;
+  overflow-x: auto;
+}
+
+.NovedadesCarousel-module__mx4VTG__scrollRow::-webkit-scrollbar {
+  display: none;
+}
+
+.NovedadesCarousel-module__mx4VTG__card {
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid #0000000f;
+  border-radius: 1.25rem;
+  flex-direction: column;
+  flex: 0 0 240px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 4px 12px #0000000d;
+}
+
+.NovedadesCarousel-module__mx4VTG__imageWrap {
+  background-color: #f1f5f9;
+  width: 100%;
+  height: 180px;
+  position: relative;
+}
+
+.NovedadesCarousel-module__mx4VTG__image {
+  object-fit: cover;
+}
+
+.NovedadesCarousel-module__mx4VTG__newBadge {
+  z-index: 1;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  background: #16a34a;
+  border-radius: .5rem;
+  padding: .22rem .55rem;
+  font-size: .65rem;
+  font-weight: 700;
+  position: absolute;
+  top: .75rem;
+  left: .75rem;
+}
+
+.NovedadesCarousel-module__mx4VTG__discountBadge {
+  z-index: 1;
+  color: #fff;
+  background: #ef4444;
+  border-radius: .5rem;
+  padding: .25rem .5rem;
+  font-size: .7rem;
+  font-weight: 800;
+  position: absolute;
+  top: .75rem;
+  right: .75rem;
+}
+
+.NovedadesCarousel-module__mx4VTG__cardContent {
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+}
+
+.NovedadesCarousel-module__mx4VTG__category {
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: .2rem;
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+.NovedadesCarousel-module__mx4VTG__productTitle {
+  color: #0f172a;
+  min-height: 2.4em;
+  margin-bottom: .75rem;
+  font-size: .92rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.NovedadesCarousel-module__mx4VTG__footer {
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  display: flex;
+}
+
+.NovedadesCarousel-module__mx4VTG__priceGroup {
+  flex-direction: column;
+  display: flex;
+}
+
+.NovedadesCarousel-module__mx4VTG__originalPrice {
+  color: #a8a29e;
+  font-size: .72rem;
+  text-decoration: line-through;
+}
+
+.NovedadesCarousel-module__mx4VTG__price {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.NovedadesCarousel-module__mx4VTG__addBtn {
+  color: #fff;
+  cursor: pointer;
+  background: #16a34a;
+  border: none;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: background .2s;
+}
+
+.NovedadesCarousel-module__mx4VTG__addBtn:hover {
+  background: #15803d;
+}
+
 /* [project]/app/components/ProductGrid.module.css [app-client] (css) */
 .ProductGrid-module__5--pqq__catalogSection {
   color: #1c1917;
@@ -909,4 +1103,49 @@
   font-size: .8rem;
 }
 
-/*# sourceMappingURL=app_components_0audlmv._.css.map*/
+/* [project]/app/components/AlertBanner.module.css [app-client] (css) */
+.AlertBanner-module__0tMRIa__banner {
+  z-index: 50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: .75rem 2.5rem .75rem 1.5rem;
+  font-size: .85rem;
+  font-weight: 600;
+  display: flex;
+  position: relative;
+}
+
+.AlertBanner-module__0tMRIa__info {
+  color: #15803d;
+  background-color: #dcfce7;
+}
+
+.AlertBanner-module__0tMRIa__alerta {
+  color: #b91c1c;
+  background-color: #fee2e2;
+}
+
+.AlertBanner-module__0tMRIa__message {
+  margin: 0;
+}
+
+.AlertBanner-module__0tMRIa__closeBtn {
+  cursor: pointer;
+  color: inherit;
+  opacity: .7;
+  background: none;
+  border: none;
+  font-size: .85rem;
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+}
+
+.AlertBanner-module__0tMRIa__closeBtn:hover {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=app_components_1eg190v._.css.map*/

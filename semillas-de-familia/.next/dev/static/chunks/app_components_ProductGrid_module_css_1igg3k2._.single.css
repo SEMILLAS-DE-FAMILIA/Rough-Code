@@ -113,21 +113,39 @@
   transform: scale(1.05);
 }
 
+.ProductGrid-module__5--pqq__topLeftBadges {
+  z-index: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .4rem;
+  display: flex;
+  position: absolute;
+  top: .85rem;
+  left: .85rem;
+}
+
+.ProductGrid-module__5--pqq__newBadge {
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  background: #16a34a;
+  border-radius: .5rem;
+  padding: .25rem .6rem;
+  font-size: .7rem;
+  font-weight: 700;
+}
+
 .ProductGrid-module__5--pqq__tagBadge {
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   color: #16a34a;
   text-transform: uppercase;
   letter-spacing: .05em;
-  z-index: 1;
   background: #ffffffe6;
   border-radius: .5rem;
   padding: .25rem .6rem;
   font-size: .7rem;
   font-weight: 700;
-  position: absolute;
-  top: .85rem;
-  left: .85rem;
 }
 
 .ProductGrid-module__5--pqq__discountBadge {

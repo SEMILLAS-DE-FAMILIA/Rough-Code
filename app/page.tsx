@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import CarouselHero from './components/Carousel';
+import NovedadesCarousel from './components/NovedadesCarousel';
 import ProductGrid, { Product } from './components/ProductGrid';
 import NavigationControls from './components/NavigationControls';
 import TrustBanner from './components/TrustBanner';
-import AlertBanner from './components/AlertaBanner';
+import AlertBanner from './components/AlertBanner';
 import { useCart } from '../src/lib/useCart';
 
 export type { CartItem } from '../src/lib/useCart';
@@ -33,6 +34,7 @@ export default function Home() {
       />
 
       <CarouselHero />
+      <NovedadesCarousel onAddToCart={handleAddToCart} />
       <ProductGrid onAddToCart={handleAddToCart} />
       <TrustBanner />
     </main>

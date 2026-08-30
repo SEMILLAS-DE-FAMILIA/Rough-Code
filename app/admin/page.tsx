@@ -8,6 +8,7 @@ import AdminPanel from '../components/admin/AdminPanel';
 export default function AdminPage() {
   const [checkingSession, setCheckingSession] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedOutReason, setLoggedOutReason] = useState<'inactivity' | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -33,8 +34,27 @@ export default function AdminPage() {
   }
 
   if (!isLoggedIn) {
-    return <AdminLogin onLoggedIn={() => setIsLoggedIn(true)} />;
+    return (
+      <AdminLogin
+        onLoggedIn={() => {
+          setLoggedOutReason(null);
+          setIsLoggedIn(true);
+        }}
+        infoMessage={
+          loggedOutReason === 'inactivity'
+            ? 'Tu sesión se cerró por inactividad. Ingresa de nuevo para continuar.'
+            : undefined
+        }
+      />
+    );
   }
 
-  return <AdminPanel onLoggedOut={() => setIsLoggedIn(false)} />;
+  return (
+    <AdminPanel
+      onLoggedOut={(reason) => {
+        setLoggedOutReason(reason === 'inactivity' ? 'inactivity' : null);
+        setIsLoggedIn(false);
+      }}
+    />
+  );
 }

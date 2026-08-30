@@ -1449,16 +1449,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carouse
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/ProductGrid.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NavigationControls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/NavigationControls.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$TrustBanner$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/TrustBanner.tsx [app-client] (ecmascript)");
-(()=>{
-    const e = new Error("Cannot find module './components/AlertBanner'");
-    e.code = 'MODULE_NOT_FOUND';
-    throw e;
-})();
-(()=>{
-    const e = new Error("Cannot find module './lib/useCart'");
-    e.code = 'MODULE_NOT_FOUND';
-    throw e;
-})();
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCart$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/useCart.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -1468,10 +1459,9 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-;
 function Home() {
     _s();
-    const { cart, addToCart, updateQuantity, removeItem, itemCount } = useCart();
+    const { cart, addToCart, updateQuantity, removeItem, itemCount } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCart$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCart"])();
     const [lastAdded, setLastAdded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const handleAddToCart = (product)=>{
         addToCart(product);
@@ -1484,11 +1474,6 @@ function Home() {
             minHeight: '100vh'
         },
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AlertBanner, {}, void 0, false, {
-                fileName: "[project]/app/page.tsx",
-                lineNumber: 25,
-                columnNumber: 7
-            }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NavigationControls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 cartItems: cart,
                 itemCount: itemCount,
@@ -1497,36 +1482,36 @@ function Home() {
                 lastAddedProduct: lastAdded
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 27,
+                lineNumber: 24,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 35,
+                lineNumber: 32,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 onAddToCart: handleAddToCart
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 36,
+                lineNumber: 33,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$TrustBanner$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 37,
+                lineNumber: 34,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/page.tsx",
-        lineNumber: 24,
+        lineNumber: 23,
         columnNumber: 5
     }, this);
 }
 _s(Home, "6o43KOytByuRoxntPyPHJOjdQEQ=", false, function() {
     return [
-        useCart
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCart$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCart"]
     ];
 });
 _c = Home;
@@ -1555,6 +1540,128 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
 }),
+"[project]/src/lib/useCart.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useCart",
+    ()=>useCart
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+const CART_STORAGE_KEY = 'semillas_familia_cart_v1';
+function useCart() {
+    _s();
+    const [cart, setCart] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [isLoaded, setIsLoaded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // Cargar el carrito guardado al montar (solo corre en el navegador)
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useCart.useEffect": ()=>{
+            try {
+                const stored = window.localStorage.getItem(CART_STORAGE_KEY);
+                if (stored) setCart(JSON.parse(stored));
+            } catch  {
+            // Si el dato guardado está corrupto, seguimos con carrito vacío
+            } finally{
+                setIsLoaded(true);
+            }
+        }
+    }["useCart.useEffect"], []);
+    // Guardar cada vez que el carrito cambia (una vez que ya se cargó el inicial,
+    // para no sobrescribir el guardado con un array vacío antes de leerlo)
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useCart.useEffect": ()=>{
+            if (!isLoaded) return;
+            try {
+                window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+            } catch  {
+            // Si el almacenamiento está lleno o bloqueado, no interrumpimos la compra
+            }
+        }
+    }["useCart.useEffect"], [
+        cart,
+        isLoaded
+    ]);
+    const addToCart = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCart.useCallback[addToCart]": (product)=>{
+            setCart({
+                "useCart.useCallback[addToCart]": (prev)=>{
+                    const idx = prev.findIndex({
+                        "useCart.useCallback[addToCart].idx": (item)=>item.id === product.id
+                    }["useCart.useCallback[addToCart].idx"]);
+                    if (idx > -1) {
+                        const next = [
+                            ...prev
+                        ];
+                        next[idx] = {
+                            ...next[idx],
+                            quantity: next[idx].quantity + 1
+                        };
+                        return next;
+                    }
+                    return [
+                        ...prev,
+                        {
+                            ...product,
+                            quantity: 1
+                        }
+                    ];
+                }
+            }["useCart.useCallback[addToCart]"]);
+        }
+    }["useCart.useCallback[addToCart]"], []);
+    const updateQuantity = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCart.useCallback[updateQuantity]": (id, delta)=>{
+            setCart({
+                "useCart.useCallback[updateQuantity]": (prev)=>prev.map({
+                        "useCart.useCallback[updateQuantity]": (item)=>{
+                            if (item.id === id) {
+                                const newQty = item.quantity + delta;
+                                return newQty > 0 ? {
+                                    ...item,
+                                    quantity: newQty
+                                } : null;
+                            }
+                            return item;
+                        }
+                    }["useCart.useCallback[updateQuantity]"]).filter({
+                        "useCart.useCallback[updateQuantity]": (item)=>item !== null
+                    }["useCart.useCallback[updateQuantity]"])
+            }["useCart.useCallback[updateQuantity]"]);
+        }
+    }["useCart.useCallback[updateQuantity]"], []);
+    const removeItem = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCart.useCallback[removeItem]": (id)=>{
+            setCart({
+                "useCart.useCallback[removeItem]": (prev)=>prev.filter({
+                        "useCart.useCallback[removeItem]": (item)=>item.id !== id
+                    }["useCart.useCallback[removeItem]"])
+            }["useCart.useCallback[removeItem]"]);
+        }
+    }["useCart.useCallback[removeItem]"], []);
+    const clearCart = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCart.useCallback[clearCart]": ()=>setCart([])
+    }["useCart.useCallback[clearCart]"], []);
+    const itemCount = cart.reduce((acc, item)=>acc + item.quantity, 0);
+    const total = cart.reduce((acc, item)=>acc + item.final_price * item.quantity, 0);
+    return {
+        cart,
+        isLoaded,
+        addToCart,
+        updateQuantity,
+        removeItem,
+        clearCart,
+        itemCount,
+        total
+    };
+}
+_s(useCart, "Eh5No0CYMit5TtuY3NFyePNcGwo=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
 ]);
 
-//# sourceMappingURL=_19aw1rs._.js.map
+//# sourceMappingURL=_07kyfyh._.js.map

@@ -1,0 +1,232 @@
+.pageWrapper {
+  min-height: 100vh;
+  background-color: #fdfcf1;
+  color: #1c1917;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.pageContainer {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-block;
+  color: #78716c;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.backLink:hover {
+  color: #1c1917;
+}
+
+.pageTitle {
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+
+.layoutGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 800px) {
+  .layoutGrid {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+}
+
+/* ---------- Resumen ---------- */
+.summaryCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  height: fit-content;
+}
+
+.summaryCard h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 1.1rem;
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.summaryThumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.6rem;
+  object-fit: cover;
+  background: #f1f5f9;
+  flex-shrink: 0;
+}
+
+.summaryTitle {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0 0 0.15rem 0;
+}
+
+.summaryMeta {
+  font-size: 0.78rem;
+  color: #78716c;
+  margin: 0;
+}
+
+.summaryLineTotal {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.summaryTotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.summaryTotalValue {
+  color: #15803d;
+}
+
+/* ---------- Formulario ---------- */
+.formCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: #44403c;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.65rem;
+  border: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+  background: #fafaf9;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #16a34a;
+  background: #ffffff;
+}
+
+.toggleRow {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.toggleBtn {
+  flex: 1;
+  padding: 0.65rem;
+  border-radius: 0.65rem;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #57534e;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.toggleBtnActive {
+  background: #1c1917;
+  color: #ffffff;
+  border-color: #1c1917;
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.primaryBtn {
+  display: inline-block;
+  text-align: center;
+  background: #1c1917;
+  color: #ffffff;
+  border: none;
+  padding: 0.9rem 1.5rem;
+  border-radius: 0.85rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.primaryBtn:hover {
+  background: #292524;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Estados (vacío / confirmado) ---------- */
+.stateWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fdfcf1;
+  padding: 1.5rem;
+}
+
+.confirmCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 3rem 2rem;
+  text-align: center;
+  max-width: 380px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.confirmCard h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.confirmCard p {
+  color: #78716c;
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}

@@ -1,4 +1,83 @@
 (globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push([typeof document === "object" ? document.currentScript : undefined,
+"[project]/app/components/AlertBanner.module.css [app-client] (css module)", ((__turbopack_context__) => {
+
+__turbopack_context__.v({
+  "alerta": "AlertBanner-module__0tMRIa__alerta",
+  "banner": "AlertBanner-module__0tMRIa__banner",
+  "closeBtn": "AlertBanner-module__0tMRIa__closeBtn",
+  "info": "AlertBanner-module__0tMRIa__info",
+  "message": "AlertBanner-module__0tMRIa__message",
+});
+}),
+"[project]/app/components/AlertaBanner.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>AlertBanner
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/supabaseClient.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertBanner$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__ = __turbopack_context__.i("[project]/app/components/AlertBanner.module.css [app-client] (css module)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+function AlertBanner() {
+    _s();
+    const [banner, setBanner] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [dismissed, setDismissed] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "AlertBanner.useEffect": ()=>{
+            async function fetchBanner() {
+                const { data } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from('site_banner').select('id, message, type').eq('active', true).order('id', {
+                    ascending: false
+                }).limit(1).maybeSingle();
+                if (data) setBanner(data);
+            }
+            fetchBanner();
+        }
+    }["AlertBanner.useEffect"], []);
+    if (!banner || dismissed) return null;
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: `${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertBanner$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].banner} ${banner.type === 'alerta' ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertBanner$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].alerta : __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertBanner$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].info}`,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertBanner$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].message,
+                children: banner.message
+            }, void 0, false, {
+                fileName: "[project]/app/components/AlertaBanner.tsx",
+                lineNumber: 37,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertBanner$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].closeBtn,
+                onClick: ()=>setDismissed(true),
+                "aria-label": "Cerrar aviso",
+                children: "✕"
+            }, void 0, false, {
+                fileName: "[project]/app/components/AlertaBanner.tsx",
+                lineNumber: 38,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/app/components/AlertaBanner.tsx",
+        lineNumber: 36,
+        columnNumber: 5
+    }, this);
+}
+_s(AlertBanner, "AZM4clQAT7ahd6lkpEKJ4nrZgRU=");
+_c = AlertBanner;
+var _c;
+__turbopack_context__.k.register(_c, "AlertBanner");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
 "[project]/app/components/AppLayout.module.css [app-client] (css module)", ((__turbopack_context__) => {
 
 __turbopack_context__.v({
@@ -72,9 +151,8 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$embla$2d$carousel$2d$react$40$8$2e$6$2e$0_react$40$19$2e$2$2e$8$2f$node_modules$2f$embla$2d$carousel$2d$react$2f$esm$2f$embla$2d$carousel$2d$react$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/embla-carousel-react@8.6.0_react@19.2.8/node_modules/embla-carousel-react/esm/embla-carousel-react.esm.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$embla$2d$carousel$2d$autoplay$40$8$2e$6$2e$0_embla$2d$carousel$40$8$2e$6$2e$0$2f$node_modules$2f$embla$2d$carousel$2d$autoplay$2f$esm$2f$embla$2d$carousel$2d$autoplay$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/embla-carousel-autoplay@8.6.0_embla-carousel@8.6.0/node_modules/embla-carousel-autoplay/esm/embla-carousel-autoplay.esm.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/image.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/supabaseClient.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__ = __turbopack_context__.i("[project]/app/components/Carousel.module.css [app-client] (css module)");
 ;
 var _s = __turbopack_context__.k.signature();
@@ -83,85 +161,112 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-;
-// Datos locales
-const SLIDES_LOCALES = [
-    {
-        id: 1,
-        src: '/images/slider/image1.png',
-        alt: 'Bosque de Semillas Seleccionadas',
-        title: 'Semillas Seleccionadas',
-        description: 'La mejor calidad para la siembra de la temporada. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        buttonText: 'Explorar Catálogo'
-    },
-    {
-        id: 2,
-        src: '/images/slider/image2.png',
-        alt: 'Insumos Agrícolas Profesionales',
-        title: 'Insumos Agrícolas',
-        description: 'Soluciones integrales para la producción del campo. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        buttonText: 'Ver Productos'
-    },
-    {
-        id: 3,
-        src: '/images/slider/image3.png',
-        alt: 'Nosotros',
-        title: 'Nosotros',
-        description: 'De nuestro corazón a tu mesa.',
-        buttonText: 'Ver Productos'
-    }
-];
-function CarouselHero({ slides = SLIDES_LOCALES }) {
+const FALLBACK_SLIDE = {
+    id: 'fallback',
+    src: '/images/slider/image1.png',
+    alt: 'Semillas de Familia',
+    title: 'Bienvenido a Semillas de Familia',
+    description: 'Configura tu primer slide desde el panel admin para personalizar este espacio.',
+    buttonText: 'Ver Catálogo'
+};
+const AUTOPLAY_DELAY = 5000;
+function CarouselHero() {
     _s();
-    const [emblaRef, emblaApi] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$embla$2d$carousel$2d$react$40$8$2e$6$2e$0_react$40$19$2e$2$2e$8$2f$node_modules$2f$embla$2d$carousel$2d$react$2f$esm$2f$embla$2d$carousel$2d$react$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])({
-        loop: true,
-        align: 'center'
-    }, [
-        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$embla$2d$carousel$2d$autoplay$40$8$2e$6$2e$0_embla$2d$carousel$40$8$2e$6$2e$0$2f$node_modules$2f$embla$2d$carousel$2d$autoplay$2f$esm$2f$embla$2d$carousel$2d$autoplay$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])({
-            delay: 5000,
-            stopOnInteraction: false
-        })
-    ]);
-    const [currentSlideIndex, setCurrentSlideIndex] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
-    // Sincronizar el estado del slide actual para cambiar el fondo
-    const onSelect = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "CarouselHero.useCallback[onSelect]": ()=>{
-            if (!emblaApi) return;
-            setCurrentSlideIndex(emblaApi.selectedScrollSnap());
+    const [slides, setSlides] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [currentIndex, setCurrentIndex] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
+    const autoplayRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const viewportRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "CarouselHero.useEffect": ()=>{
+            let isMounted = true;
+            async function fetchSlides() {
+                const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from('carousel_slides').select('id, title, subtitle, img_url, btn_text').eq('active', true).order('sort_order', {
+                    ascending: true
+                });
+                if (!isMounted) return;
+                if (!error && data && data.length > 0) {
+                    setSlides(data.map({
+                        "CarouselHero.useEffect.fetchSlides": (slide)=>({
+                                id: slide.id,
+                                src: slide.img_url || '/images/slider/image1.png',
+                                alt: slide.title,
+                                title: slide.title,
+                                description: slide.subtitle || '',
+                                buttonText: slide.btn_text || 'Ver Catálogo'
+                            })
+                    }["CarouselHero.useEffect.fetchSlides"]));
+                } else {
+                    // Solo caemos al slide de bienvenida si Supabase realmente no tiene
+                    // ningún slide activo (o falló la consulta), nunca como estado inicial.
+                    setSlides([
+                        FALLBACK_SLIDE
+                    ]);
+                }
+                setCurrentIndex(0);
+                setIsLoading(false);
+            }
+            fetchSlides();
+            return ({
+                "CarouselHero.useEffect": ()=>{
+                    isMounted = false;
+                }
+            })["CarouselHero.useEffect"];
         }
-    }["CarouselHero.useCallback[onSelect]"], [
-        emblaApi
+    }["CarouselHero.useEffect"], []);
+    // Arranca (o reinicia) el temporizador de autoplay
+    const startAutoplay = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "CarouselHero.useCallback[startAutoplay]": ()=>{
+            if (autoplayRef.current) clearInterval(autoplayRef.current);
+            if (slides.length > 1) {
+                autoplayRef.current = setInterval({
+                    "CarouselHero.useCallback[startAutoplay]": ()=>{
+                        setCurrentIndex({
+                            "CarouselHero.useCallback[startAutoplay]": (prev)=>(prev + 1) % slides.length
+                        }["CarouselHero.useCallback[startAutoplay]"]);
+                    }
+                }["CarouselHero.useCallback[startAutoplay]"], AUTOPLAY_DELAY);
+            }
+        }
+    }["CarouselHero.useCallback[startAutoplay]"], [
+        slides.length
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "CarouselHero.useEffect": ()=>{
-            if (!emblaApi) return;
-            onSelect(); // Llamar inicialmente
-            emblaApi.on('select', onSelect);
-            emblaApi.on('reInit', onSelect);
+            startAutoplay();
+            return ({
+                "CarouselHero.useEffect": ()=>{
+                    if (autoplayRef.current) clearInterval(autoplayRef.current);
+                }
+            })["CarouselHero.useEffect"];
         }
     }["CarouselHero.useEffect"], [
-        emblaApi,
-        onSelect
+        startAutoplay
     ]);
-    const scrollPrev = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "CarouselHero.useCallback[scrollPrev]": ()=>emblaApi && emblaApi.scrollPrev()
-    }["CarouselHero.useCallback[scrollPrev]"], [
-        emblaApi
-    ]);
-    const scrollNext = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "CarouselHero.useCallback[scrollNext]": ()=>emblaApi && emblaApi.scrollNext()
-    }["CarouselHero.useCallback[scrollNext]"], [
-        emblaApi
-    ]);
-    // Hacer click en un slide pequeño para ir directo a él
-    const scrollToSlide = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "CarouselHero.useCallback[scrollToSlide]": (index)=>{
-            if (emblaApi) emblaApi.scrollTo(index);
+    // Cada vez que cambia el índice actual, desplazamos el contenedor hasta ese slide
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "CarouselHero.useEffect": ()=>{
+            const container = viewportRef.current;
+            if (!container) return;
+            const slideEl = container.querySelector(`[data-slide-index="${currentIndex}"]`);
+            if (slideEl) {
+                container.scrollTo({
+                    left: slideEl.offsetLeft,
+                    behavior: 'smooth'
+                });
+            }
         }
-    }["CarouselHero.useCallback[scrollToSlide]"], [
-        emblaApi
+    }["CarouselHero.useEffect"], [
+        currentIndex,
+        slides
     ]);
-    // Función para scroll suave hasta la sección de catálogo de productos abajo
+    const goToSlide = (index)=>{
+        setCurrentIndex((index % slides.length + slides.length) % slides.length);
+        // Navegación manual: le damos otros 5s completos antes del próximo avance automático
+        startAutoplay();
+    };
+    const scrollPrev = ()=>goToSlide(currentIndex - 1);
+    const scrollNext = ()=>goToSlide(currentIndex + 1);
     const handleExploreClick = ()=>{
         const catalogSection = document.getElementById('catalogo');
         if (catalogSection) {
@@ -170,8 +275,7 @@ function CarouselHero({ slides = SLIDES_LOCALES }) {
             });
         }
     };
-    // Datos del slide actualmente visible
-    const currentSlide = slides[currentSlideIndex];
+    const currentSlide = !isLoading ? slides[currentIndex] : null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].heroContainer,
         children: [
@@ -187,20 +291,20 @@ function CarouselHero({ slides = SLIDES_LOCALES }) {
                         quality: 60
                     }, void 0, false, {
                         fileName: "[project]/app/components/Carousel.tsx",
-                        lineNumber: 93,
+                        lineNumber: 122,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].backgroundOverlay
                     }, void 0, false, {
                         fileName: "[project]/app/components/Carousel.tsx",
-                        lineNumber: 101,
+                        lineNumber: 130,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/Carousel.tsx",
-                lineNumber: 92,
+                lineNumber: 121,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -215,35 +319,36 @@ function CarouselHero({ slides = SLIDES_LOCALES }) {
                                     children: currentSlide.title
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Carousel.tsx",
-                                    lineNumber: 112,
+                                    lineNumber: 138,
                                     columnNumber: 15
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                currentSlide.description && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].mainDescription,
                                     children: currentSlide.description
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Carousel.tsx",
-                                    lineNumber: 113,
-                                    columnNumber: 15
+                                    lineNumber: 140,
+                                    columnNumber: 17
                                 }, this),
                                 currentSlide.buttonText && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "button",
                                     className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].mainButton,
                                     onClick: handleExploreClick,
                                     children: currentSlide.buttonText
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Carousel.tsx",
-                                    lineNumber: 115,
+                                    lineNumber: 143,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/Carousel.tsx",
-                            lineNumber: 111,
+                            lineNumber: 137,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/components/Carousel.tsx",
-                        lineNumber: 109,
+                        lineNumber: 135,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -251,12 +356,13 @@ function CarouselHero({ slides = SLIDES_LOCALES }) {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].carouselViewport,
-                                ref: emblaRef,
+                                ref: viewportRef,
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].carouselSlideContainer,
                                     children: slides.map((slide, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: `${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].carouselSlide} ${index === currentSlideIndex ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].isActive : ''}`,
-                                            onClick: ()=>scrollToSlide(index),
+                                            "data-slide-index": index,
+                                            className: `${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].carouselSlide} ${index === currentIndex ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].isActive : ''}`,
+                                            onClick: ()=>goToSlide(index),
                                             style: {
                                                 cursor: 'pointer'
                                             },
@@ -270,82 +376,80 @@ function CarouselHero({ slides = SLIDES_LOCALES }) {
                                                     sizes: "(max-width: 768px) 30vw, 15vw"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/Carousel.tsx",
-                                                    lineNumber: 138,
+                                                    lineNumber: 163,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/Carousel.tsx",
-                                                lineNumber: 137,
+                                                lineNumber: 162,
                                                 columnNumber: 19
                                             }, this)
                                         }, slide.id, false, {
                                             fileName: "[project]/app/components/Carousel.tsx",
-                                            lineNumber: 131,
+                                            lineNumber: 155,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Carousel.tsx",
-                                    lineNumber: 129,
+                                    lineNumber: 153,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/components/Carousel.tsx",
-                                lineNumber: 128,
+                                lineNumber: 152,
                                 columnNumber: 11
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            slides.length > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowControls,
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
                                         onClick: scrollPrev,
                                         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowButton,
                                         "aria-label": "Anterior",
                                         children: "❮"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Carousel.tsx",
-                                        lineNumber: 153,
-                                        columnNumber: 13
+                                        lineNumber: 178,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
                                         onClick: scrollNext,
                                         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowButton,
                                         "aria-label": "Siguiente",
                                         children: "❯"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Carousel.tsx",
-                                        lineNumber: 156,
-                                        columnNumber: 13
+                                        lineNumber: 181,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/Carousel.tsx",
-                                lineNumber: 152,
-                                columnNumber: 11
+                                lineNumber: 177,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/Carousel.tsx",
-                        lineNumber: 127,
+                        lineNumber: 151,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/Carousel.tsx",
-                lineNumber: 106,
+                lineNumber: 134,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/Carousel.tsx",
-        lineNumber: 89,
+        lineNumber: 119,
         columnNumber: 5
     }, this);
 }
-_s(CarouselHero, "+ZuP5zlyNe8GolAJX2naLlo+5v8=", false, function() {
-    return [
-        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$embla$2d$carousel$2d$react$40$8$2e$6$2e$0_react$40$19$2e$2$2e$8$2f$node_modules$2f$embla$2d$carousel$2d$react$2f$esm$2f$embla$2d$carousel$2d$react$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"]
-    ];
-});
+_s(CarouselHero, "k48nB2HbSrqZmhGJhnwcfgc+QNA=");
 _c = CarouselHero;
 var _c;
 __turbopack_context__.k.register(_c, "CarouselHero");
@@ -1449,16 +1553,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carouse
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/ProductGrid.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NavigationControls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/NavigationControls.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$TrustBanner$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/TrustBanner.tsx [app-client] (ecmascript)");
-(()=>{
-    const e = new Error("Cannot find module './components/AlertBanner'");
-    e.code = 'MODULE_NOT_FOUND';
-    throw e;
-})();
-(()=>{
-    const e = new Error("Cannot find module './lib/useCart'");
-    e.code = 'MODULE_NOT_FOUND';
-    throw e;
-})();
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertaBanner$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/AlertaBanner.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCart$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/useCart.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -1471,7 +1567,7 @@ var _s = __turbopack_context__.k.signature();
 ;
 function Home() {
     _s();
-    const { cart, addToCart, updateQuantity, removeItem, itemCount } = useCart();
+    const { cart, addToCart, updateQuantity, removeItem, itemCount } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCart$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCart"])();
     const [lastAdded, setLastAdded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const handleAddToCart = (product)=>{
         addToCart(product);
@@ -1484,7 +1580,7 @@ function Home() {
             minHeight: '100vh'
         },
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AlertBanner, {}, void 0, false, {
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertaBanner$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/page.tsx",
                 lineNumber: 25,
                 columnNumber: 7
@@ -1526,7 +1622,7 @@ function Home() {
 }
 _s(Home, "6o43KOytByuRoxntPyPHJOjdQEQ=", false, function() {
     return [
-        useCart
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCart$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCart"]
     ];
 });
 _c = Home;
@@ -1555,6 +1651,128 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
 }),
+"[project]/src/lib/useCart.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useCart",
+    ()=>useCart
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+const CART_STORAGE_KEY = 'semillas_familia_cart_v1';
+function useCart() {
+    _s();
+    const [cart, setCart] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [isLoaded, setIsLoaded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // Cargar el carrito guardado al montar (solo corre en el navegador)
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useCart.useEffect": ()=>{
+            try {
+                const stored = window.localStorage.getItem(CART_STORAGE_KEY);
+                if (stored) setCart(JSON.parse(stored));
+            } catch  {
+            // Si el dato guardado está corrupto, seguimos con carrito vacío
+            } finally{
+                setIsLoaded(true);
+            }
+        }
+    }["useCart.useEffect"], []);
+    // Guardar cada vez que el carrito cambia (una vez que ya se cargó el inicial,
+    // para no sobrescribir el guardado con un array vacío antes de leerlo)
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useCart.useEffect": ()=>{
+            if (!isLoaded) return;
+            try {
+                window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+            } catch  {
+            // Si el almacenamiento está lleno o bloqueado, no interrumpimos la compra
+            }
+        }
+    }["useCart.useEffect"], [
+        cart,
+        isLoaded
+    ]);
+    const addToCart = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCart.useCallback[addToCart]": (product)=>{
+            setCart({
+                "useCart.useCallback[addToCart]": (prev)=>{
+                    const idx = prev.findIndex({
+                        "useCart.useCallback[addToCart].idx": (item)=>item.id === product.id
+                    }["useCart.useCallback[addToCart].idx"]);
+                    if (idx > -1) {
+                        const next = [
+                            ...prev
+                        ];
+                        next[idx] = {
+                            ...next[idx],
+                            quantity: next[idx].quantity + 1
+                        };
+                        return next;
+                    }
+                    return [
+                        ...prev,
+                        {
+                            ...product,
+                            quantity: 1
+                        }
+                    ];
+                }
+            }["useCart.useCallback[addToCart]"]);
+        }
+    }["useCart.useCallback[addToCart]"], []);
+    const updateQuantity = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCart.useCallback[updateQuantity]": (id, delta)=>{
+            setCart({
+                "useCart.useCallback[updateQuantity]": (prev)=>prev.map({
+                        "useCart.useCallback[updateQuantity]": (item)=>{
+                            if (item.id === id) {
+                                const newQty = item.quantity + delta;
+                                return newQty > 0 ? {
+                                    ...item,
+                                    quantity: newQty
+                                } : null;
+                            }
+                            return item;
+                        }
+                    }["useCart.useCallback[updateQuantity]"]).filter({
+                        "useCart.useCallback[updateQuantity]": (item)=>item !== null
+                    }["useCart.useCallback[updateQuantity]"])
+            }["useCart.useCallback[updateQuantity]"]);
+        }
+    }["useCart.useCallback[updateQuantity]"], []);
+    const removeItem = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCart.useCallback[removeItem]": (id)=>{
+            setCart({
+                "useCart.useCallback[removeItem]": (prev)=>prev.filter({
+                        "useCart.useCallback[removeItem]": (item)=>item.id !== id
+                    }["useCart.useCallback[removeItem]"])
+            }["useCart.useCallback[removeItem]"]);
+        }
+    }["useCart.useCallback[removeItem]"], []);
+    const clearCart = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCart.useCallback[clearCart]": ()=>setCart([])
+    }["useCart.useCallback[clearCart]"], []);
+    const itemCount = cart.reduce((acc, item)=>acc + item.quantity, 0);
+    const total = cart.reduce((acc, item)=>acc + item.final_price * item.quantity, 0);
+    return {
+        cart,
+        isLoaded,
+        addToCart,
+        updateQuantity,
+        removeItem,
+        clearCart,
+        itemCount,
+        total
+    };
+}
+_s(useCart, "Eh5No0CYMit5TtuY3NFyePNcGwo=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
 ]);
 
-//# sourceMappingURL=_19aw1rs._.js.map
+//# sourceMappingURL=_0q9_vp1._.js.map

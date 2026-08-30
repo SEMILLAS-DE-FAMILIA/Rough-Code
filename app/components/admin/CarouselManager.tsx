@@ -83,6 +83,15 @@ export default function CarouselManager() {
       return;
     }
 
+    const sortOrderNum = parseInt(form.sort_order || '0', 10) || 0;
+
+    // Bloqueamos que dos slides compartan la misma posición
+    const conflict = slides.some((s) => s.sort_order === sortOrderNum && s.id !== editingId);
+    if (conflict) {
+      setFormError(`Ya existe un slide en la posición ${sortOrderNum}. Elige otra posición.`);
+      return;
+    }
+
     setSaving(true);
     setFormError(null);
 
@@ -91,7 +100,7 @@ export default function CarouselManager() {
       subtitle: form.subtitle.trim() || null,
       img_url: form.img_url,
       btn_text: form.btn_text.trim() || 'Ver Catálogo',
-      sort_order: parseInt(form.sort_order || '0', 10) || 0,
+      sort_order: sortOrderNum,
       active: form.active,
     };
 
@@ -214,6 +223,16 @@ export default function CarouselManager() {
                     value={form.sort_order}
                     onChange={(e) => setForm({ ...form, sort_order: e.target.value })}
                   />
+                  {slides.length > 0 && (
+                    <p style={{ fontSize: '0.75rem', color: '#a8a29e', marginTop: '0.35rem' }}>
+                      Posiciones en uso:{' '}
+                      {slides
+                        .filter((s) => s.id !== editingId)
+                        .map((s) => s.sort_order)
+                        .sort((a, b) => a - b)
+                        .join(', ') || 'ninguna'}
+                    </p>
+                  )}
                 </div>
               </div>
 

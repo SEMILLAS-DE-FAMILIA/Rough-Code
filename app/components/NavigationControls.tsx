@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import styles from './AppLayout.module.css';
 import { CartItem } from '../page';
 
 interface NavigationControlsProps {
   cartItems: CartItem[];
+  itemCount: number;
   onUpdateQuantity: (id: number, delta: number) => void;
   onRemoveItem: (id: number) => void;
   lastAddedProduct: string | null;
@@ -16,6 +18,7 @@ const formatCLP = (value: number) =>
 
 export default function NavigationControls({
   cartItems,
+  itemCount,
   onUpdateQuantity,
   onRemoveItem,
   lastAddedProduct,
@@ -23,9 +26,6 @@ export default function NavigationControls({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const totalItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
-  // Usamos final_price (ya incluye el descuento aplicado) para el total
   const calculateTotal = () =>
     cartItems.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
 
@@ -60,7 +60,7 @@ export default function NavigationControls({
             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
           />
         </svg>
-        {totalItemCount > 0 && <span className={styles.cartBadge}>{totalItemCount}</span>}
+        {itemCount > 0 && <span className={styles.cartBadge}>{itemCount}</span>}
       </button>
 
       {/* Overlay Sombra Suave */}
@@ -90,17 +90,17 @@ export default function NavigationControls({
             <span>📦</span> Mis Pedidos
           </button>
           <hr style={{ border: '0.5px solid #e2e8f0', margin: '0.75rem 0' }} />
-          <button className={styles.sidebarLink}>
+          <a href="/admin" className={styles.sidebarLink} style={{ textDecoration: 'none' }}>
             <span>🛠️</span> Panel Admin
             <span className={styles.adminBadge}>ADMIN</span>
-          </button>
+          </a>
         </nav>
       </aside>
 
       {/* Panel Desplegable del Carrito (Warm Theme) */}
       <aside className={`${styles.cartDrawer} ${isCartOpen ? styles.isOpen : ''}`}>
         <div className={styles.sidebarHeader}>
-          <h3>Tu Carrito ({totalItemCount})</h3>
+          <h3>Tu Carrito ({itemCount})</h3>
           <button className={styles.closeBtn} onClick={() => setIsCartOpen(false)}>
             ✕
           </button>
@@ -150,12 +150,14 @@ export default function NavigationControls({
               <span>Total acumulado:</span>
               <span className={styles.totalPrice}>{formattedTotal}</span>
             </div>
-            <button className={styles.cartCheckoutBtn}>Ir a Pagar</button>
+            <Link href="/pedidos" className={styles.cartCheckoutBtn} style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>
+              Ir a Pagar
+            </Link>
           </div>
         )}
       </aside>
 
-      {/* Toast Flotante CÁLIDO */}
+      {/* Toast Flotante CÁLIDO (producto agregado) */}
       {lastAddedProduct && !isCartOpen && (
         <div className={styles.toastNotification}>
           <span style={{ fontSize: '1.2rem' }}>🌿</span>

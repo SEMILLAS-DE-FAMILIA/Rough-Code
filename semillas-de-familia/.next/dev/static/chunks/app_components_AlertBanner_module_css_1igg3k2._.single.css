@@ -1,0 +1,46 @@
+/* [project]/app/components/AlertBanner.module.css [app-client] (css) */
+.AlertBanner-module__0tMRIa__banner {
+  z-index: 50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: .75rem 2.5rem .75rem 1.5rem;
+  font-size: .85rem;
+  font-weight: 600;
+  display: flex;
+  position: relative;
+}
+
+.AlertBanner-module__0tMRIa__info {
+  color: #15803d;
+  background-color: #dcfce7;
+}
+
+.AlertBanner-module__0tMRIa__alerta {
+  color: #b91c1c;
+  background-color: #fee2e2;
+}
+
+.AlertBanner-module__0tMRIa__message {
+  margin: 0;
+}
+
+.AlertBanner-module__0tMRIa__closeBtn {
+  cursor: pointer;
+  color: inherit;
+  opacity: .7;
+  background: none;
+  border: none;
+  font-size: .85rem;
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+}
+
+.AlertBanner-module__0tMRIa__closeBtn:hover {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=app_components_AlertBanner_module_css_1igg3k2._.single.css.map*/

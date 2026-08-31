@@ -326,29 +326,33 @@ export default function ProductsManager() {
                 label="Imagen del producto"
               />
 
-              <div className={styles.checkboxField} style={{ marginTop: '1.1rem' }}>
+              <label className={styles.switchRow} style={{ marginTop: '1.1rem' }}>
                 <input
                   type="checkbox"
-                  id="activeCheck"
+                  className={styles.switchInput}
                   checked={form.active}
                   onChange={(e) => setForm({ ...form, active: e.target.checked })}
                 />
-                <label htmlFor="activeCheck" style={{ marginBottom: 0 }}>
-                  Visible en la tienda
-                </label>
-              </div>
+                <span className={styles.switchTrack}>
+                  <span className={styles.switchThumb} />
+                </span>
+                <span className={styles.switchLabel}>Visible en la tienda</span>
+              </label>
 
-              <div className={styles.checkboxField}>
+              <label className={styles.switchRow}>
                 <input
                   type="checkbox"
-                  id="isNewCheck"
+                  className={styles.switchInput}
                   checked={form.is_new}
                   onChange={(e) => setForm({ ...form, is_new: e.target.checked })}
                 />
-                <label htmlFor="isNewCheck" style={{ marginBottom: 0 }}>
+                <span className={styles.switchTrack}>
+                  <span className={styles.switchThumb} />
+                </span>
+                <span className={styles.switchLabel}>
                   Marcar como novedad (aparecerá en la sección Novedades de la tienda)
-                </label>
-              </div>
+                </span>
+              </label>
 
               {formError && <p className={styles.errorText}>{formError}</p>}
 

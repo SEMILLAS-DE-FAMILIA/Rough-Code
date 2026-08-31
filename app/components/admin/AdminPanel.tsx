@@ -13,8 +13,8 @@ type Tab = 'dashboard' | 'products' | 'categories' | 'carousel' | 'banner';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
-  { id: 'products', label: 'Productos' },
   { id: 'categories', label: 'Categorías' },
+  { id: 'products', label: 'Productos' },
   { id: 'carousel', label: 'Carrusel' },
   { id: 'banner', label: 'Banner' },
 ];
@@ -62,32 +62,39 @@ export default function AdminPanel({ onLoggedOut }: { onLoggedOut: (reason?: 'in
   }, [resetInactivityTimer]);
 
   return (
-    <div className={styles.adminWrapper}>
-      <header className={styles.panelHeader}>
-        <h1>Semillas de Familia · Admin</h1>
-        <button className={styles.logoutBtn} onClick={() => handleLogout()}>
+    <div className={styles.adminLayout}>
+      <aside className={styles.sidebar}>
+        <div className={styles.sidebarBrand}>
+          <span className={styles.sidebarBrandTitle}>Semillas de Familia</span>
+          <span className={styles.sidebarBrandSub}>Panel Admin</span>
+        </div>
+
+        <nav className={styles.sidebarNav}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              className={`${styles.sidebarNavItem} ${activeTab === tab.id ? styles.sidebarNavItemActive : ''}`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <span className={styles.navDot} />
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        <button className={styles.sidebarLogout} onClick={() => handleLogout()}>
           Cerrar sesión
         </button>
-      </header>
+      </aside>
 
-      <nav className={styles.tabBar}>
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            className={`${styles.tabBtn} ${activeTab === tab.id ? styles.activeTab : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </nav>
-
-      <main className={styles.panelBody}>
-        {activeTab === 'dashboard' && <Dashboard />}
-        {activeTab === 'products' && <ProductsManager />}
-        {activeTab === 'categories' && <CategoriesManager />}
-        {activeTab === 'carousel' && <CarouselManager />}
-        {activeTab === 'banner' && <BannerManager />}
+      <main className={styles.mainArea}>
+        <div className={styles.panelBody}>
+          {activeTab === 'dashboard' && <Dashboard />}
+          {activeTab === 'categories' && <CategoriesManager />}
+          {activeTab === 'products' && <ProductsManager />}
+          {activeTab === 'carousel' && <CarouselManager />}
+          {activeTab === 'banner' && <BannerManager />}
+        </div>
       </main>
     </div>
   );

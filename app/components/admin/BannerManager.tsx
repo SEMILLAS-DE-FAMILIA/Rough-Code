@@ -91,17 +91,18 @@ export default function BannerManager() {
             </select>
           </div>
 
-          <div className={styles.checkboxField}>
+          <label className={styles.switchRow}>
             <input
               type="checkbox"
-              id="bannerActive"
+              className={styles.switchInput}
               checked={active}
               onChange={(e) => setActive(e.target.checked)}
             />
-            <label htmlFor="bannerActive" style={{ marginBottom: 0 }}>
-              Mostrar banner en la tienda
-            </label>
-          </div>
+            <span className={styles.switchTrack}>
+              <span className={styles.switchThumb} />
+            </span>
+            <span className={styles.switchLabel}>Mostrar banner en la tienda</span>
+          </label>
 
           <button type="submit" className={styles.primaryBtn} disabled={saving}>
             {saving ? 'Guardando...' : saved ? '✓ Guardado' : 'Guardar banner'}

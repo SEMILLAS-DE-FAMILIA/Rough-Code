@@ -243,17 +243,18 @@ export default function CarouselManager() {
                 label="Imagen del slide"
               />
 
-              <div className={styles.checkboxField} style={{ marginTop: '1.1rem' }}>
+              <label className={styles.switchRow} style={{ marginTop: '1.1rem' }}>
                 <input
                   type="checkbox"
-                  id="slideActiveCheck"
+                  className={styles.switchInput}
                   checked={form.active}
                   onChange={(e) => setForm({ ...form, active: e.target.checked })}
                 />
-                <label htmlFor="slideActiveCheck" style={{ marginBottom: 0 }}>
-                  Visible en el carrusel
-                </label>
-              </div>
+                <span className={styles.switchTrack}>
+                  <span className={styles.switchThumb} />
+                </span>
+                <span className={styles.switchLabel}>Visible en el carrusel</span>
+              </label>
 
               {formError && <p className={styles.errorText}>{formError}</p>}
 

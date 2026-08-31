@@ -346,7 +346,7 @@ export default function ProductsManager() {
                   onChange={(e) => setForm({ ...form, is_new: e.target.checked })}
                 />
                 <label htmlFor="isNewCheck" style={{ marginBottom: 0 }}>
-                  Marcar como novedad (se destaca con una etiqueta "Nuevo" en la tienda)
+                  Marcar como novedad (aparecerá en la sección Novedades de la tienda)
                 </label>
               </div>
 

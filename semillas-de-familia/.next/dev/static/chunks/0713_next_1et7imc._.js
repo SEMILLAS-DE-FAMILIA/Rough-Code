@@ -461,6 +461,7 @@ const configEnv = ("TURBOPACK compile-time value", {
         ("TURBOPACK compile-time value", 384)
     ]),
     "qualities": ("TURBOPACK compile-time value", [
+        ("TURBOPACK compile-time value", 60),
         ("TURBOPACK compile-time value", 75)
     ]),
     "path": ("TURBOPACK compile-time value", "/_next/image"),
@@ -471,7 +472,7 @@ const configEnv = ("TURBOPACK compile-time value", {
     "remotePatterns": ("TURBOPACK compile-time value", [
         ("TURBOPACK compile-time value", {
             "protocol": ("TURBOPACK compile-time value", "https"),
-            "hostname": ("TURBOPACK compile-time value", "kusyzbjuzjvbiyufsinp.supabase.co"),
+            "hostname": ("TURBOPACK compile-time value", "yczueyygfqjqfcvastse.supabase.co"),
             "pathname": ("TURBOPACK compile-time value", "/storage/v1/object/public/**")
         })
     ]),
@@ -5168,6 +5169,7 @@ function getImageProps(imgProps) {
                 ("TURBOPACK compile-time value", 384)
             ]),
             "qualities": ("TURBOPACK compile-time value", [
+                ("TURBOPACK compile-time value", 60),
                 ("TURBOPACK compile-time value", 75)
             ]),
             "path": ("TURBOPACK compile-time value", "/_next/image"),
@@ -5178,7 +5180,7 @@ function getImageProps(imgProps) {
             "remotePatterns": ("TURBOPACK compile-time value", [
                 ("TURBOPACK compile-time value", {
                     "protocol": ("TURBOPACK compile-time value", "https"),
-                    "hostname": ("TURBOPACK compile-time value", "kusyzbjuzjvbiyufsinp.supabase.co"),
+                    "hostname": ("TURBOPACK compile-time value", "yczueyygfqjqfcvastse.supabase.co"),
                     "pathname": ("TURBOPACK compile-time value", "/storage/v1/object/public/**")
                 })
             ]),

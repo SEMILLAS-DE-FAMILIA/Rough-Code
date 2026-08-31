@@ -25,7 +25,7 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>(['Todos']);
   const [activeCategory, setActiveCategory] = useState('Todos');
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,12 +61,17 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
     };
   }, []);
 
+  // Cerrar el modal con la tecla Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedProduct(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const filteredProducts =
     activeCategory === 'Todos' ? products : products.filter((p) => p.category === activeCategory);
-
-  const toggleExpanded = (id: number) => {
-    setExpandedId((prev) => (prev === id ? null : id));
-  };
 
   return (
     <section id="catalogo" className={styles.catalogSection}>
@@ -97,7 +102,6 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
         <div className={styles.productGrid}>
           {filteredProducts.map((product) => {
             const hasDiscount = product.discount_percent > 0;
-            const isExpanded = expandedId === product.id;
 
             return (
               <div key={product.id} className={styles.productCard}>
@@ -120,24 +124,13 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
                 </div>
 
                 <div className={styles.cardContent}>
-                  <div className={styles.titleRow}>
-                    <span className={styles.productCategory}>{product.category}</span>
-                    {product.description && (
-                      <button
-                        className={styles.infoBtn}
-                        onClick={() => toggleExpanded(product.id)}
-                        aria-label="Ver más información"
-                        aria-expanded={isExpanded}
-                      >
-                        {isExpanded ? '−' : '+'}
-                      </button>
-                    )}
-                  </div>
-
+                  <span className={styles.productCategory}>{product.category}</span>
                   <h3 className={styles.productTitle}>{product.title}</h3>
 
-                  {isExpanded && product.description && (
-                    <p className={styles.productDescription}>{product.description}</p>
+                  {product.description && (
+                    <button className={styles.moreInfoLink} onClick={() => setSelectedProduct(product)}>
+                      Más información
+                    </button>
                   )}
 
                   <div className={styles.cardFooter}>
@@ -157,6 +150,60 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
           })}
         </div>
       </div>
+
+      {/* Modal de detalle del producto */}
+      {selectedProduct && (
+        <div className={styles.modalOverlay} onClick={() => setSelectedProduct(null)}>
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+            <button
+              className={styles.modalCloseBtn}
+              onClick={() => setSelectedProduct(null)}
+              aria-label="Cerrar"
+            >
+              ✕
+            </button>
+
+            {selectedProduct.img_url && (
+              <div className={styles.modalImageWrap}>
+                <Image
+                  src={selectedProduct.img_url}
+                  alt={selectedProduct.title}
+                  fill
+                  className={styles.modalImage}
+                  sizes="(max-width: 768px) 100vw, 480px"
+                />
+              </div>
+            )}
+
+            <div className={styles.modalInfoBox}>
+              <span className={styles.productCategory}>{selectedProduct.category}</span>
+              <h3 className={styles.modalTitle}>{selectedProduct.title}</h3>
+
+              {selectedProduct.description && (
+                <p className={styles.modalDescription}>{selectedProduct.description}</p>
+              )}
+
+              <div className={styles.cardFooter} style={{ borderTop: 'none', paddingTop: 0 }}>
+                <div className={styles.priceGroup}>
+                  {selectedProduct.discount_percent > 0 && (
+                    <span className={styles.originalPrice}>{formatCLP(selectedProduct.price)}</span>
+                  )}
+                  <span className={styles.price}>{formatCLP(selectedProduct.final_price)}</span>
+                </div>
+                <button
+                  className={styles.addBtn}
+                  onClick={() => {
+                    onAddToCart(selectedProduct);
+                    setSelectedProduct(null);
+                  }}
+                >
+                  + Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

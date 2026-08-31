@@ -50,7 +50,6 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
       <div className={styles.container}>
         <div className={styles.header}>
           <div>
-            <span className={styles.preTitle}>Recién llegado</span>
             <h2 className={styles.title}>Novedades</h2>
           </div>
           {products.length > 1 && (
@@ -71,7 +70,6 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
             return (
               <div key={p.id} className={styles.card}>
                 <div className={styles.imageWrap}>
-                  <span className={styles.newBadge}>Nuevo</span>
                   {hasDiscount && <span className={styles.discountBadge}>-{p.discount_percent}%</span>}
                   {p.img_url && (
                     <Image src={p.img_url} alt={p.title} fill className={styles.image} sizes="240px" />

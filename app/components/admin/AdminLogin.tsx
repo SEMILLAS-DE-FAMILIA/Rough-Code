@@ -26,7 +26,9 @@ export default function AdminLogin({
     setLoading(false);
 
     if (error) {
-      setError('Correo o contraseña incorrectos.');
+      // Mostramos el mensaje real de Supabase temporalmente para diagnosticar
+      // (usuario no confirmado, credenciales inválidas, error de red, etc.)
+      setError(`${error.message} (código: ${error.status ?? 's/n'})`);
       return;
     }
 

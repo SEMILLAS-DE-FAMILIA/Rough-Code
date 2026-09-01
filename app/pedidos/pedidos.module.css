@@ -1,7 +1,7 @@
 .pageWrapper {
   min-height: 100vh;
-  background-color: #fdfcf1;
-  color: #1c1917;
+  background-color: var(--color-bg-light);
+  color: var(--color-dark-brown);
   padding: 2.5rem 1.5rem 4rem;
 }
 
@@ -103,7 +103,7 @@
 }
 
 .summaryTotalValue {
-  color: #15803d;
+  color: var(--color-primary-green);
 }
 
 /* ---------- Formulario ---------- */
@@ -161,9 +161,9 @@
 }
 
 .toggleBtnActive {
-  background: #1c1917;
+  background: var(--color-primary-brown);
   color: #ffffff;
-  border-color: #1c1917;
+  border-color: var(--color-primary-brown);
 }
 
 .errorText {
@@ -175,7 +175,7 @@
 .primaryBtn {
   display: inline-block;
   text-align: center;
-  background: #1c1917;
+  background: var(--color-primary-brown);
   color: #ffffff;
   border: none;
   padding: 0.9rem 1.5rem;
@@ -188,7 +188,7 @@
 }
 
 .primaryBtn:hover {
-  background: #292524;
+  background: var(--color-dark-brown);
 }
 
 .primaryBtn:active:not(:disabled) {
@@ -226,7 +226,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fdfcf1;
+  background-color: var(--color-bg-light);
   padding: 1.5rem;
 }
 

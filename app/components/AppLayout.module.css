@@ -40,7 +40,7 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #15803d;
+  background: var(--color-primary-green);
   color: #ffffff;
   font-size: 0.7rem;
   font-weight: 800;
@@ -86,7 +86,7 @@
   bottom: 0;
   width: 100%;
   max-width: 380px;
-  background-color: #fdfcf1;
+  background-color: var(--color-bg-light);
   box-shadow: -4px 0 25px rgba(0, 0, 0, 0.08);
   z-index: 100;
   display: flex;
@@ -174,8 +174,8 @@
 
 .adminBadge {
   margin-left: auto;
-  background: rgba(21, 128, 61, 0.1);
-  color: #15803d;
+  background: rgba(47, 103, 50, 0.1);
+  color: var(--color-primary-green);
   font-size: 0.7rem;
   padding: 0.2rem 0.5rem;
   border-radius: 0.5rem;
@@ -393,7 +393,7 @@
 .cartCheckoutBtn {
   width: 100%;
   padding: 0.95rem;
-  background: #1c1917;
+  background: var(--color-primary-brown);
   color: #ffffff;
   border: none;
   border-radius: 9999px;
@@ -405,7 +405,7 @@
 }
 
 .cartCheckoutBtn:hover {
-  background: #292524;
+  background: var(--color-dark-brown);
   transform: translateY(-2px);
   box-shadow: 0 12px 22px -4px rgba(28, 25, 23, 0.4);
 }

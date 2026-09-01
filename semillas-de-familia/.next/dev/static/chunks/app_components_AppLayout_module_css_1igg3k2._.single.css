@@ -32,8 +32,8 @@
 }
 
 .AppLayout-module__RrbURa__cartBadge {
+  background: var(--color-primary-green);
   color: #fff;
-  background: #15803d;
   border: 2px solid #fff;
   border-radius: 50%;
   justify-content: center;
@@ -77,8 +77,8 @@
 }
 
 .AppLayout-module__RrbURa__sidebar, .AppLayout-module__RrbURa__cartDrawer {
+  background-color: var(--color-bg-light);
   z-index: 100;
-  background-color: #fdfcf1;
   flex-direction: column;
   width: 100%;
   max-width: 380px;
@@ -166,8 +166,8 @@
 }
 
 .AppLayout-module__RrbURa__adminBadge {
-  color: #15803d;
-  background: #15803d1a;
+  color: var(--color-primary-green);
+  background: #2f67321a;
   border-radius: .5rem;
   margin-left: auto;
   padding: .2rem .5rem;
@@ -381,9 +381,9 @@
 }
 
 .AppLayout-module__RrbURa__cartCheckoutBtn {
+  background: var(--color-primary-brown);
   color: #fff;
   cursor: pointer;
-  background: #1c1917;
   border: none;
   border-radius: 9999px;
   width: 100%;
@@ -395,7 +395,7 @@
 }
 
 .AppLayout-module__RrbURa__cartCheckoutBtn:hover {
-  background: #292524;
+  background: var(--color-dark-brown);
   transform: translateY(-2px);
   box-shadow: 0 12px 22px -4px #1c191766;
 }

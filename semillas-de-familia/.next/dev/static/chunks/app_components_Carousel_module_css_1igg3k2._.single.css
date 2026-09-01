@@ -96,9 +96,9 @@
 }
 
 .Carousel-module__5OSfgq__mainButton {
+  background-color: var(--color-primary-green);
   color: #fff;
   cursor: pointer;
-  background-color: #16a34a;
   border: none;
   border-radius: 9999px;
   padding: .9rem 1.9rem;
@@ -109,7 +109,7 @@
 }
 
 .Carousel-module__5OSfgq__mainButton:hover {
-  background-color: #15803d;
+  background-color: var(--color-accent-green);
   transform: translateY(-2px);
   box-shadow: 0 12px 24px -4px #16a34a8c;
 }

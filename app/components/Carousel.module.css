@@ -100,7 +100,7 @@
 }
 
 .mainButton {
-  background-color: #16a34a;
+  background-color: var(--color-primary-green);
   color: #ffffff;
   border: none;
   padding: 0.9rem 1.9rem;
@@ -113,7 +113,7 @@
 }
 
 .mainButton:hover {
-  background-color: #15803d;
+  background-color: var(--color-accent-green);
   transform: translateY(-2px);
   box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.55);
 }

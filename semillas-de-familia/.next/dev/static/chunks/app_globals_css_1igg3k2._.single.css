@@ -58,6 +58,11 @@
 
 @layer theme {
   :root, :host {
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+      "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
     --color-red-900: #82181a;
     --color-orange-50: #fff7ed;
     --color-orange-100: #ffedd5;
@@ -116,8 +121,8 @@
     --animate-bounce: bounce 1s infinite;
     --default-transition-duration: .15s;
     --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-    --default-font-family: var(--font-geist-sans);
-    --default-mono-font-family: var(--font-geist-mono);
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
   }
 
   @supports (color: lab(0% 0 0)) {
@@ -810,7 +815,7 @@
   }
 
   .font-mono {
-    font-family: var(--font-geist-mono);
+    font-family: var(--font-mono);
   }
 
   .text-2xl {
@@ -1085,15 +1090,15 @@
 }
 
 :root {
-  --background: #fff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary-green: #2f6732;
+  --color-accent-green: #5ea831;
+  --color-primary-brown: #4e2c1d;
+  --color-secondary-brown: #a95c2b;
+  --color-dark-brown: #2a1a17;
+  --color-warm-cream: #dfb773;
+  --color-bg-light: #f7f5f0;
+  --background: var(--color-bg-light);
+  --foreground: var(--color-dark-brown);
 }
 
 body {

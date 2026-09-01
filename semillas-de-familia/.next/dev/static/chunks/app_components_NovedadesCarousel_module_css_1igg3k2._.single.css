@@ -21,7 +21,7 @@
 .NovedadesCarousel-module__mx4VTG__preTitle {
   text-transform: uppercase;
   letter-spacing: .15em;
-  color: #16a34a;
+  color: var(--color-accent-green);
   margin-bottom: .3rem;
   font-size: .75rem;
   font-weight: 700;
@@ -175,9 +175,9 @@
 }
 
 .NovedadesCarousel-module__mx4VTG__addBtn {
+  background-color: var(--color-primary-green);
   color: #fff;
   cursor: pointer;
-  background: #16a34a;
   border: none;
   border-radius: 50%;
   flex-shrink: 0;
@@ -189,7 +189,7 @@
 }
 
 .NovedadesCarousel-module__mx4VTG__addBtn:hover {
-  background: #15803d;
+  background-color: var(--color-accent-green);
 }
 
 /*# sourceMappingURL=app_components_NovedadesCarousel_module_css_1igg3k2._.single.css.map*/

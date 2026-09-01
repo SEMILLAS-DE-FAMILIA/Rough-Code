@@ -96,9 +96,9 @@
 }
 
 .Carousel-module__5OSfgq__mainButton {
+  background-color: var(--color-primary-green);
   color: #fff;
   cursor: pointer;
-  background-color: #16a34a;
   border: none;
   border-radius: 9999px;
   padding: .9rem 1.9rem;
@@ -109,7 +109,7 @@
 }
 
 .Carousel-module__5OSfgq__mainButton:hover {
-  background-color: #15803d;
+  background-color: var(--color-accent-green);
   transform: translateY(-2px);
   box-shadow: 0 12px 24px -4px #16a34a8c;
 }
@@ -224,7 +224,7 @@
 .NovedadesCarousel-module__mx4VTG__preTitle {
   text-transform: uppercase;
   letter-spacing: .15em;
-  color: #16a34a;
+  color: var(--color-accent-green);
   margin-bottom: .3rem;
   font-size: .75rem;
   font-weight: 700;
@@ -378,9 +378,9 @@
 }
 
 .NovedadesCarousel-module__mx4VTG__addBtn {
+  background-color: var(--color-primary-green);
   color: #fff;
   cursor: pointer;
-  background: #16a34a;
   border: none;
   border-radius: 50%;
   flex-shrink: 0;
@@ -392,14 +392,14 @@
 }
 
 .NovedadesCarousel-module__mx4VTG__addBtn:hover {
-  background: #15803d;
+  background-color: var(--color-accent-green);
 }
 
 /* [project]/app/components/ProductGrid.module.css [app-client] (css) */
 .ProductGrid-module__5--pqq__catalogSection {
-  color: #1c1917;
+  background-color: var(--color-bg-light);
+  color: var(--color-dark-brown);
   z-index: 2;
-  background-color: #fdfcf1;
   padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) clamp(3rem, 8vw, 6rem);
   position: relative;
 }
@@ -420,7 +420,7 @@
 .ProductGrid-module__5--pqq__preTitle {
   text-transform: uppercase;
   letter-spacing: .15em;
-  color: #16a34a;
+  color: var(--color-primary-green);
   margin-bottom: .5rem;
   font-size: .75rem;
   font-weight: 700;
@@ -459,9 +459,9 @@
 }
 
 .ProductGrid-module__5--pqq__categoryBtn.ProductGrid-module__5--pqq__active {
+  background: var(--color-primary-brown);
   color: #fff;
-  background: #0f172a;
-  border-color: #0f172a;
+  border-color: var(--color-primary-brown);
 }
 
 .ProductGrid-module__5--pqq__stateMessage {
@@ -555,10 +555,10 @@
 }
 
 .ProductGrid-module__5--pqq__newBadge {
+  background: var(--color-primary-green);
   color: #fff;
   text-transform: uppercase;
   letter-spacing: .05em;
-  background: #16a34a;
   border-radius: 9999px;
   padding: .25rem .65rem;
   font-size: .7rem;
@@ -568,7 +568,7 @@
 .ProductGrid-module__5--pqq__tagBadge {
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  color: #16a34a;
+  color: var(--color-primary-green);
   text-transform: uppercase;
   letter-spacing: .05em;
   background: #ffffffe6;
@@ -613,7 +613,7 @@
 }
 
 .ProductGrid-module__5--pqq__moreInfoLink {
-  color: #16a34a;
+  color: var(--color-primary-green);
   cursor: pointer;
   text-underline-offset: 2px;
   background: none;
@@ -803,10 +803,10 @@
 }
 
 .ProductGrid-module__5--pqq__addBtn {
+  background: var(--color-primary-green);
   color: #fff;
   cursor: pointer;
   white-space: nowrap;
-  background: #16a34a;
   border: none;
   border-radius: 9999px;
   padding: .75rem 1.35rem;
@@ -817,7 +817,7 @@
 }
 
 .ProductGrid-module__5--pqq__addBtn:hover {
-  background: #15803d;
+  background: var(--color-accent-green);
   transform: translateY(-2px);
   box-shadow: 0 10px 20px -4px #16a34a80;
 }
@@ -869,8 +869,8 @@
 }
 
 .AppLayout-module__RrbURa__cartBadge {
+  background: var(--color-primary-green);
   color: #fff;
-  background: #15803d;
   border: 2px solid #fff;
   border-radius: 50%;
   justify-content: center;
@@ -914,8 +914,8 @@
 }
 
 .AppLayout-module__RrbURa__sidebar, .AppLayout-module__RrbURa__cartDrawer {
+  background-color: var(--color-bg-light);
   z-index: 100;
-  background-color: #fdfcf1;
   flex-direction: column;
   width: 100%;
   max-width: 380px;
@@ -1003,8 +1003,8 @@
 }
 
 .AppLayout-module__RrbURa__adminBadge {
-  color: #15803d;
-  background: #15803d1a;
+  color: var(--color-primary-green);
+  background: #2f67321a;
   border-radius: .5rem;
   margin-left: auto;
   padding: .2rem .5rem;
@@ -1218,9 +1218,9 @@
 }
 
 .AppLayout-module__RrbURa__cartCheckoutBtn {
+  background: var(--color-primary-brown);
   color: #fff;
   cursor: pointer;
-  background: #1c1917;
   border: none;
   border-radius: 9999px;
   width: 100%;
@@ -1232,7 +1232,7 @@
 }
 
 .AppLayout-module__RrbURa__cartCheckoutBtn:hover {
-  background: #292524;
+  background: var(--color-dark-brown);
   transform: translateY(-2px);
   box-shadow: 0 12px 22px -4px #1c191766;
 }

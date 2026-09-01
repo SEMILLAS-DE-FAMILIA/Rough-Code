@@ -1,22 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Paleta Base Organica */
+  --color-primary-green: #2F6732;
+  --color-accent-green: #5EA831;
+  --color-primary-brown: #4E2C1D;
+  --color-secondary-brown: #A95C2B;
+  --color-dark-brown: #2A1A17;
+  --color-warm-cream: #DFB773;
+  --color-bg-light: #F7F5F0;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Aliases de estructura para los componentes */
+  --background: var(--color-bg-light);
+  --foreground: var(--color-dark-brown);
 }
 
 body {

@@ -241,7 +241,14 @@ export default function PedidosPage() {
               {error && <p className={styles.errorText}>{error}</p>}
 
               <button type="submit" className={styles.primaryBtn} disabled={submitting} style={{ width: '100%' }}>
-                {submitting ? 'Enviando...' : 'Enviar Pedido por WhatsApp'}
+                {submitting ? (
+                  <span className={styles.btnLoadingContent}>
+                    <span className={styles.spinner} />
+                    Enviando...
+                  </span>
+                ) : (
+                  'Enviar Pedido por WhatsApp'
+                )}
               </button>
             </form>
           </div>

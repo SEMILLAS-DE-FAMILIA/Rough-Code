@@ -70,7 +70,7 @@
   backdrop-filter: blur(2px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.22s ease-out;
   z-index: 90;
 }
 
@@ -92,7 +92,8 @@
   display: flex;
   flex-direction: column;
   padding: 1.75rem 1.5rem;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  /* transform únicamente: se anima en GPU, nunca fuerza layout/paint del resto de la página */
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sidebar {

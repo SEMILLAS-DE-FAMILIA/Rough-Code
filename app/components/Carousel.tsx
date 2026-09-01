@@ -118,7 +118,9 @@ export default function CarouselHero() {
   return (
     <section className={styles.heroContainer}>
       {currentSlide && (
-        <div className={styles.backgroundImageWrapper}>
+        // key={currentSlide.id} fuerza a React a remontar la imagen en cada cambio
+        // de slide, lo que reinicia la animación de zoom (Ken Burns) desde cero.
+        <div className={styles.backgroundImageWrapper} key={currentSlide.id}>
           <Image
             src={currentSlide.src}
             alt="Fondo de pantalla"
@@ -134,7 +136,8 @@ export default function CarouselHero() {
       <div className={styles.heroContentGrid}>
         <div className={styles.textColumn}>
           {currentSlide && (
-            <>
+            // key en el wrapper de texto reinicia la animación de entrada (fade + slide up)
+            <div className={styles.textInner} key={currentSlide.id}>
               <h1 className={styles.mainTitle}>{currentSlide.title}</h1>
               {currentSlide.description && (
                 <p className={styles.mainDescription}>{currentSlide.description}</p>
@@ -144,7 +147,7 @@ export default function CarouselHero() {
                   {currentSlide.buttonText}
                 </button>
               )}
-            </>
+            </div>
           )}
         </div>
 
@@ -176,10 +179,14 @@ export default function CarouselHero() {
           {slides.length > 1 && (
             <div className={styles.arrowControls}>
               <button type="button" onClick={scrollPrev} className={styles.arrowButton} aria-label="Anterior">
-                &#10094;
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.25}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
+                </svg>
               </button>
               <button type="button" onClick={scrollNext} className={styles.arrowButton} aria-label="Siguiente">
-                &#10095;
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.25}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
+                </svg>
               </button>
             </div>
           )}

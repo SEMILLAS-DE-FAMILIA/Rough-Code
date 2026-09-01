@@ -1,10 +1,11 @@
 /* [project]/app/components/Carousel.module.css [app-client] (css) */
 .Carousel-module__5OSfgq__heroContainer {
-  background-color: #0d1117;
+  background-color: #171310;
   align-items: center;
   width: 100%;
-  min-height: 100vh;
-  padding: 4rem 2rem;
+  height: 100vh;
+  min-height: 560px;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3rem);
   display: flex;
   position: relative;
   overflow: hidden;
@@ -19,11 +20,21 @@
 .Carousel-module__5OSfgq__backgroundImage {
   object-fit: cover;
   object-position: center;
-  transition: opacity .5s ease-in-out;
+  animation: 6s cubic-bezier(.16, 1, .3, 1) forwards Carousel-module__5OSfgq__kenBurns;
+}
+
+@keyframes Carousel-module__5OSfgq__kenBurns {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.06);
+  }
 }
 
 .Carousel-module__5OSfgq__backgroundOverlay {
-  background: linear-gradient(90deg, #000c 0%, #00000080 40%, #0003 60%, #0000 100%);
+  background: linear-gradient(90deg, #0a0806e0 0%, #0a08068c 42%, #0a080638 68%, #0a08060d 100%), linear-gradient(0deg, #0a080659 0%, #0a080600 35%);
   position: absolute;
   inset: 0;
 }
@@ -32,7 +43,7 @@
   z-index: 10;
   grid-template-columns: 1fr;
   align-items: center;
-  gap: 3rem;
+  gap: clamp(2rem, 5vw, 3rem);
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -50,45 +61,62 @@
   color: #fff;
 }
 
-.Carousel-module__5OSfgq__mainTitle {
-  letter-spacing: -.05em;
-  margin-bottom: 1rem;
-  font-size: 3rem;
-  font-weight: 800;
-  line-height: 1.1;
+.Carousel-module__5OSfgq__textInner {
+  animation: .6s cubic-bezier(.16, 1, .3, 1) Carousel-module__5OSfgq__fadeSlideUp;
 }
 
-@media (min-width: 900px) {
-  .Carousel-module__5OSfgq__mainTitle {
-    font-size: 4.5rem;
+@keyframes Carousel-module__5OSfgq__fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+.Carousel-module__5OSfgq__mainTitle {
+  letter-spacing: -.03em;
+  text-shadow: 0 2px 24px #00000059;
+  margin-bottom: 1.1rem;
+  font-size: clamp(2.1rem, 4.5vw, 4.25rem);
+  font-weight: 800;
+  line-height: 1.08;
+}
+
 .Carousel-module__5OSfgq__mainDescription {
-  color: #e2e8f0;
-  max-width: 500px;
-  margin-bottom: 2rem;
-  font-size: 1.125rem;
+  color: #ffffffe0;
+  text-shadow: 0 1px 12px #0000004d;
+  max-width: 480px;
+  margin-bottom: 2.25rem;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.55;
 }
 
 .Carousel-module__5OSfgq__mainButton {
   color: #fff;
   cursor: pointer;
-  background-color: #ef4444;
+  background-color: #16a34a;
   border: none;
   border-radius: 9999px;
-  padding: .75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: background-color .2s, transform .1s;
+  padding: .9rem 1.9rem;
+  font-size: .95rem;
+  font-weight: 700;
+  transition: transform .25s cubic-bezier(.16, 1, .3, 1), background-color .25s, box-shadow .25s;
+  box-shadow: 0 8px 20px -4px #16a34a73;
 }
 
 .Carousel-module__5OSfgq__mainButton:hover {
-  background-color: #dc2626;
+  background-color: #15803d;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px #16a34a8c;
 }
 
 .Carousel-module__5OSfgq__mainButton:active {
-  transform: scale(.97);
+  transform: translateY(0)scale(.97);
+  box-shadow: 0 4px 12px -2px #16a34a73;
 }
 
 .Carousel-module__5OSfgq__carouselColumn {
@@ -97,71 +125,80 @@
 }
 
 .Carousel-module__5OSfgq__carouselViewport {
+  scroll-behavior: smooth;
   width: 100%;
   overflow: hidden;
 }
 
 .Carousel-module__5OSfgq__carouselSlideContainer {
-  margin-left: -1rem;
+  margin-left: -.9rem;
   display: flex;
 }
 
 .Carousel-module__5OSfgq__carouselSlide {
-  opacity: .6;
+  opacity: .55;
   flex: 0 0 45%;
   min-width: 0;
-  padding-left: 1rem;
-  transition: transform .3s ease-out, opacity .3s ease-out;
+  padding-left: .9rem;
+  transition: transform .4s cubic-bezier(.16, 1, .3, 1), opacity .4s cubic-bezier(.16, 1, .3, 1);
+  transform: scale(.94);
 }
 
 .Carousel-module__5OSfgq__carouselSlide.Carousel-module__5OSfgq__isActive {
   opacity: 1;
+  transform: scale(1);
 }
 
 .Carousel-module__5OSfgq__imageInner {
   aspect-ratio: 2 / 3;
-  border-radius: 1rem;
+  border: 1px solid #ffffff14;
+  border-radius: 1.1rem;
   width: 100%;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 10px 15px -3px #0000004d;
+  box-shadow: 0 14px 28px -8px #0a080673;
 }
 
 .Carousel-module__5OSfgq__carouselImage {
   object-fit: cover;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.Carousel-module__5OSfgq__carouselSlide:hover .Carousel-module__5OSfgq__carouselImage {
+  transform: scale(1.04);
 }
 
 .Carousel-module__5OSfgq__arrowControls {
   justify-content: flex-start;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: .75rem;
+  margin-top: 1.75rem;
   display: flex;
 }
 
 .Carousel-module__5OSfgq__arrowButton {
+  -webkit-backdrop-filter: blur(10px);
   color: #fff;
   cursor: pointer;
-  background-color: #ffffff1a;
-  border: 1px solid #fff3;
+  background-color: #ffffff14;
+  border: 1px solid #ffffff38;
   border-radius: 50%;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
-  font-size: 1rem;
-  transition: all .2s;
+  width: 44px;
+  height: 44px;
+  transition: background-color .25s, border-color .25s, transform .2s cubic-bezier(.16, 1, .3, 1);
   display: flex;
 }
 
 .Carousel-module__5OSfgq__arrowButton:hover {
-  background-color: #fff3;
-  border-color: #ffffff4d;
+  background-color: #ffffff2e;
+  border-color: #fff6;
+  transform: translateY(-2px);
 }
 
-.Carousel-module__5OSfgq__heroContainer {
-  width: 100%;
-  height: 100vh;
-  position: relative;
+.Carousel-module__5OSfgq__arrowButton:active {
+  background-color: #ffffff40;
+  transform: translateY(0)scale(.92);
 }
 
 /*# sourceMappingURL=app_components_Carousel_module_css_1igg3k2._.single.css.map*/

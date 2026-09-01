@@ -1,21 +1,20 @@
 /* =========================================
-   1. Estilos Globales de la Sección Hero
+   1. Contenedor principal del Hero
    ========================================= */
 .heroContainer {
   position: relative;
   width: 100%;
-  min-height: 100vh; /* Ocupa todo el alto de la pantalla */
+  height: 100vh;
+  min-height: 560px;
   overflow: hidden;
   display: flex;
-  align-items: center; /* Centrado vertical */
-  padding: 4rem 2rem;
-  background-color: #0d1117; /* Fondo oscuro de seguridad */
+  align-items: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3rem);
+  background-color: #171310; /* Fondo cálido oscuro de seguridad (evita el "flash" azulado típico de #000/#0d1117) */
 }
 
-
-
 /* =========================================
-   2. Imagen de Fondo Sincronizada
+   2. Imagen de fondo + contraste de texto
    ========================================= */
 .backgroundImageWrapper {
   position: absolute;
@@ -26,20 +25,23 @@
 .backgroundImage {
   object-fit: cover;
   object-position: center;
-  transition: opacity 0.5s ease-in-out; /* Transición suave de fondo */
+  /* Zoom lento tipo "Ken Burns": sutil, se reinicia en cada cambio de slide */
+  animation: kenBurns 6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+/* Doble capa de overlay: un lavado uniforme (garantiza contraste mínimo sin
+   importar la foto) + un degradado direccional (da profundidad y foco al texto) */
 .backgroundOverlay {
   position: absolute;
   inset: 0;
-  /* Degradado oscuro para que el texto de la izquierda sea legible */
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0.5) 40%,
-    rgba(0, 0, 0, 0.2) 60%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background:
+    linear-gradient(90deg, rgba(10, 8, 6, 0.88) 0%, rgba(10, 8, 6, 0.55) 42%, rgba(10, 8, 6, 0.22) 68%, rgba(10, 8, 6, 0.05) 100%),
+    linear-gradient(0deg, rgba(10, 8, 6, 0.35) 0%, rgba(10, 8, 6, 0) 35%);
 }
 
 /* =========================================
@@ -49,70 +51,80 @@
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 1200px; /* Ancho máximo de contenido */
+  max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr; /* Por defecto 1 columna (móvil) */
-  gap: 3rem;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 5vw, 3rem);
   align-items: center;
 }
 
 @media (min-width: 900px) {
   .heroContentGrid {
-    grid-template-columns: 1.2fr 0.8fr; /* Dos columnas en desktop */
+    grid-template-columns: 1.2fr 0.8fr;
   }
 }
 
 /* =========================================
-   4. Columna de Texto (Izquierda)
+   4. Columna de Texto
    ========================================= */
 .textColumn {
   color: #ffffff;
 }
 
-.mainTitle {
-  font-size: 3rem;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  margin-bottom: 1rem;
-  line-height: 1.1;
+.textInner {
+  animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (min-width: 900px) {
-  .mainTitle {
-    font-size: 4.5rem;
-  }
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mainTitle {
+  font-size: clamp(2.1rem, 4.5vw, 4.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-bottom: 1.1rem;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
 }
 
 .mainDescription {
-  font-size: 1.125rem;
-  color: #e2e8f0;
-  margin-bottom: 2rem;
-  max-width: 500px;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.55;
+  margin-bottom: 2.25rem;
+  max-width: 480px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.3);
 }
 
 .mainButton {
-  background-color: #ef4444; /* Color rojo como el diseño */
+  background-color: #16a34a;
   color: #ffffff;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px; /* Botón píldora */
-  font-weight: 600;
+  padding: 0.9rem 1.9rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  font-size: 1rem;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 8px 20px -4px rgba(22, 163, 74, 0.45);
 }
 
 .mainButton:hover {
-  background-color: #dc2626;
+  background-color: #15803d;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.55);
 }
 
 .mainButton:active {
-  transform: scale(0.97);
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 4px 12px -2px rgba(22, 163, 74, 0.45);
 }
 
 /* =========================================
-   5. Columna del Carrusel (Derecha)
+   5. Columna del Carrusel (miniaturas)
    ========================================= */
 .carouselColumn {
   position: relative;
@@ -122,75 +134,80 @@
 .carouselViewport {
   overflow: hidden;
   width: 100%;
+  scroll-behavior: smooth;
 }
 
 .carouselSlideContainer {
   display: flex;
-  margin-left: -1rem; /* Gap compensado */
+  margin-left: -0.9rem;
 }
 
-/* --- CLAVE PARA QUE SE VEAN VARIOS SLIDES --- */
 .carouselSlide {
-  flex: 0 0 45%; /* Cada slide ocupa el 45% (se ven más de 2) */
+  flex: 0 0 45%;
   min-width: 0;
-  padding-left: 1rem;
-  opacity: 0.6; /* Opacidad para los no activos */
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  padding-left: 0.9rem;
+  opacity: 0.55;
+  transform: scale(0.94);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .carouselSlide.isActive {
-  opacity: 1; /* Slide central activo al 100% */
+  opacity: 1;
+  transform: scale(1);
 }
 
 .imageInner {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 3; /* Proporción retrato (portrait) para los slides */
-  border-radius: 1rem;
+  aspect-ratio: 2 / 3;
+  border-radius: 1.1rem;
   overflow: hidden;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 14px 28px -8px rgba(10, 8, 6, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .carouselImage {
   object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.carouselSlide:hover .carouselImage {
+  transform: scale(1.04);
 }
 
 /* =========================================
-   6. Controles (Flechas)
+   6. Botones de navegación (flechas)
    ========================================= */
 .arrowControls {
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  justify-content: flex-start; /* Flechas a la izquierda debajo del carrusel */
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  justify-content: flex-start;
 }
 
 .arrowButton {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 40px;
-  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .arrowButton:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
 }
 
-
-/* Máscara de fundido hacia el fondo claro de la tienda */
-/* Carousel.module.css */
-.heroContainer {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  /* Sin capas de degradado extra */
+.arrowButton:active {
+  transform: translateY(0) scale(0.92);
+  background-color: rgba(255, 255, 255, 0.25);
 }

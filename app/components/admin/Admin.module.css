@@ -42,10 +42,12 @@
 
 .field label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   margin-bottom: 0.4rem;
-  color: #44403c;
+  color: #57534e;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .field input,
@@ -89,9 +91,35 @@
 }
 
 .errorText {
-  color: #ef4444;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-left: 3px solid #ef4444;
+  color: #b91c1c;
   font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.4;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.6rem;
   margin-top: 0.75rem;
+}
+
+.errorText::before {
+  content: '!';
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.05rem;
 }
 
 /* ---------- LAYOUT DEL PANEL ---------- */
@@ -289,6 +317,8 @@
 .sectionHeader h2 {
   font-size: 1.3rem;
   font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #1c1917;
 }
 
 .addBtn {
@@ -321,6 +351,11 @@
   padding: 0.9rem 1.25rem;
   border-bottom: 1px solid #f1f5f9;
   gap: 1rem;
+  transition: background 0.15s ease;
+}
+
+.dataRow:hover {
+  background: #fafaf9;
 }
 
 .dataRow:last-child {
@@ -339,11 +374,13 @@
 .rowTitle {
   font-weight: 700;
   font-size: 0.9rem;
+  color: #1c1917;
 }
 
 .rowMeta {
   font-size: 0.78rem;
-  color: #78716c;
+  color: #a8a29e;
+  margin-top: 0.1rem;
 }
 
 .badgePill {
@@ -421,7 +458,10 @@
 .modalCard h3 {
   font-size: 1.15rem;
   font-weight: 800;
+  color: #1c1917;
+  padding-bottom: 1rem;
   margin-bottom: 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .formGrid {
@@ -545,6 +585,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.uploadBox:hover {
+  border-color: #16a34a;
+  background: #f0fdf4;
 }
 
 .uploadPreview {
@@ -572,26 +618,29 @@
   border-radius: 1rem;
   padding: 1.5rem;
   border: 1px solid rgba(0, 0, 0, 0.06);
+  border-left: 3px solid #16a34a;
 }
 
 .statCard .statLabel {
-  font-size: 0.78rem;
-  color: #78716c;
-  font-weight: 600;
+  font-size: 0.72rem;
+  color: #a8a29e;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin-bottom: 0.4rem;
 }
 
 .statCard .statValue {
-  font-size: 1.7rem;
+  font-size: 1.85rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #1c1917;
+  letter-spacing: -0.02em;
 }
 
 .statCard .statSub {
   font-size: 0.78rem;
   color: #16a34a;
-  margin-top: 0.25rem;
+  margin-top: 0.3rem;
   font-weight: 600;
 }
 
@@ -604,9 +653,12 @@
 }
 
 .dashboardPanel h3 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 800;
-  margin-bottom: 1rem;
+  color: #1c1917;
+  padding-bottom: 0.85rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .rankRow {

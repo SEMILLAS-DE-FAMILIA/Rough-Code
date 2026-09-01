@@ -400,7 +400,7 @@
   color: #1c1917;
   z-index: 2;
   background-color: #fdfcf1;
-  padding: 4rem 2rem 6rem;
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) clamp(3rem, 8vw, 6rem);
   position: relative;
 }
 
@@ -413,7 +413,7 @@
   text-align: center;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 3.5rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
   display: flex;
 }
 
@@ -429,8 +429,8 @@
 .ProductGrid-module__5--pqq__catalogTitle {
   letter-spacing: -.03em;
   color: #0f172a;
-  margin-bottom: 2rem;
-  font-size: 2.25rem;
+  margin-bottom: 1.75rem;
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
   font-weight: 800;
 }
 
@@ -450,7 +450,7 @@
   padding: .6rem 1.25rem;
   font-size: .875rem;
   font-weight: 600;
-  transition: all .2s;
+  transition: border-color .2s, color .2s, background .2s;
 }
 
 .ProductGrid-module__5--pqq__categoryBtn:hover {
@@ -473,37 +473,70 @@
 
 .ProductGrid-module__5--pqq__productGrid {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 2rem;
+  gap: clamp(1.25rem, 3vw, 2rem);
   display: grid;
+}
+
+@media (max-width: 640px) {
+  .ProductGrid-module__5--pqq__productGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: .9rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .ProductGrid-module__5--pqq__productGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .ProductGrid-module__5--pqq__productCard {
   background: #fff;
-  border: 1px solid #0000000f;
+  border: 1px solid #0f172a12;
   border-radius: 1.25rem;
   flex-direction: column;
-  transition: transform .3s, box-shadow .3s;
+  transition: transform .45s cubic-bezier(.16, 1, .3, 1), box-shadow .45s cubic-bezier(.16, 1, .3, 1), border-color .3s;
   display: flex;
-  box-shadow: 0 4px 12px #0000000d;
+  overflow: hidden;
+  box-shadow: 0 1px 2px #57442e0a, 0 4px 12px #57442e0d;
 }
 
 .ProductGrid-module__5--pqq__productCard:hover {
+  border-color: #16a34a2e;
   transform: translateY(-6px);
-  box-shadow: 0 20px 25px -5px #00000014, 0 8px 10px -6px #00000008;
+  box-shadow: 0 20px 25px -5px #57442e1f, 0 8px 10px -6px #57442e0f;
 }
 
 .ProductGrid-module__5--pqq__imageContainer {
   background-color: #f1f5f9;
-  border-radius: 1.25rem 1.25rem 0 0;
+  background-image: linear-gradient(110deg, #f1f5f9 30%, #f8fafc 50%, #f1f5f9 70%);
+  background-size: 200% 100%;
   width: 100%;
   height: 240px;
+  animation: 1.8s ease-in-out infinite ProductGrid-module__5--pqq__shimmer;
   position: relative;
   overflow: hidden;
 }
 
+@media (max-width: 640px) {
+  .ProductGrid-module__5--pqq__imageContainer {
+    height: 160px;
+  }
+}
+
+@keyframes ProductGrid-module__5--pqq__shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 .ProductGrid-module__5--pqq__productImage {
   object-fit: cover;
-  transition: transform .5s;
+  transition: transform .6s cubic-bezier(.16, 1, .3, 1);
 }
 
 .ProductGrid-module__5--pqq__productCard:hover .ProductGrid-module__5--pqq__productImage {
@@ -526,8 +559,8 @@
   text-transform: uppercase;
   letter-spacing: .05em;
   background: #16a34a;
-  border-radius: .5rem;
-  padding: .25rem .6rem;
+  border-radius: 9999px;
+  padding: .25rem .65rem;
   font-size: .7rem;
   font-weight: 700;
 }
@@ -539,8 +572,8 @@
   text-transform: uppercase;
   letter-spacing: .05em;
   background: #ffffffe6;
-  border-radius: .5rem;
-  padding: .25rem .6rem;
+  border-radius: 9999px;
+  padding: .25rem .65rem;
   font-size: .7rem;
   font-weight: 700;
 }
@@ -549,8 +582,8 @@
   color: #fff;
   z-index: 1;
   background: #ef4444;
-  border-radius: .5rem;
-  padding: .3rem .6rem;
+  border-radius: 9999px;
+  padding: .3rem .65rem;
   font-size: .75rem;
   font-weight: 800;
   position: absolute;
@@ -561,8 +594,14 @@
 .ProductGrid-module__5--pqq__cardContent {
   flex-direction: column;
   flex: 1;
-  padding: 1.25rem;
+  padding: 1.1rem 1.25rem 1.25rem;
   display: flex;
+}
+
+@media (max-width: 640px) {
+  .ProductGrid-module__5--pqq__cardContent {
+    padding: .85rem .9rem .9rem;
+  }
 }
 
 .ProductGrid-module__5--pqq__productCategory {
@@ -597,6 +636,12 @@
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.3;
+}
+
+@media (max-width: 640px) {
+  .ProductGrid-module__5--pqq__productTitle {
+    font-size: .92rem;
+  }
 }
 
 .ProductGrid-module__5--pqq__modalOverlay {
@@ -687,13 +732,24 @@
 }
 
 .ProductGrid-module__5--pqq__cardFooter {
+  background: #fafaf9;
   border-top: 1px solid #f1f5f9;
   justify-content: space-between;
   align-items: center;
   gap: .75rem;
-  margin-top: auto;
-  padding-top: 1rem;
+  margin: .75rem -1.25rem -1.25rem;
+  padding: .9rem 1.25rem;
   display: flex;
+}
+
+@media (max-width: 640px) {
+  .ProductGrid-module__5--pqq__cardFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .6rem;
+    margin: .6rem -.9rem -.9rem;
+    padding: .7rem .9rem;
+  }
 }
 
 .ProductGrid-module__5--pqq__priceGroup {
@@ -703,14 +759,22 @@
 
 .ProductGrid-module__5--pqq__originalPrice {
   color: #a8a29e;
-  font-size: .8rem;
+  font-size: .78rem;
   text-decoration: line-through;
 }
 
 .ProductGrid-module__5--pqq__price {
   color: #0f172a;
-  font-size: 1.2rem;
+  letter-spacing: -.01em;
+  font-size: 1.35rem;
   font-weight: 800;
+  line-height: 1.1;
+}
+
+@media (max-width: 640px) {
+  .ProductGrid-module__5--pqq__price {
+    font-size: 1.15rem;
+  }
 }
 
 .ProductGrid-module__5--pqq__addBtn {
@@ -719,15 +783,31 @@
   white-space: nowrap;
   background: #16a34a;
   border: none;
-  border-radius: .75rem;
-  padding: .6rem 1rem;
-  font-size: .85rem;
-  font-weight: 600;
-  transition: background .2s;
+  border-radius: 9999px;
+  padding: .75rem 1.35rem;
+  font-size: .88rem;
+  font-weight: 700;
+  transition: background-color .2s, transform .2s cubic-bezier(.16, 1, .3, 1), box-shadow .2s;
+  box-shadow: 0 6px 16px -4px #16a34a73;
 }
 
 .ProductGrid-module__5--pqq__addBtn:hover {
   background: #15803d;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -4px #16a34a80;
+}
+
+.ProductGrid-module__5--pqq__addBtn:active {
+  transform: translateY(0)scale(.96);
+  box-shadow: 0 4px 10px -2px #16a34a66;
+}
+
+@media (max-width: 640px) {
+  .ProductGrid-module__5--pqq__addBtn {
+    text-align: center;
+    width: 100%;
+    padding: .7rem 1rem;
+  }
 }
 
 /* [project]/app/components/AppLayout.module.css [app-client] (css) */

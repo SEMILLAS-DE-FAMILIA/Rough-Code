@@ -5,7 +5,7 @@
 .catalogSection {
   background-color: #fdfcf1;
   color: #1C1917;
-  padding: 4rem 2rem 6rem;
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) clamp(3rem, 8vw, 6rem);
   position: relative;
   z-index: 2;
 }
@@ -21,7 +21,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 3.5rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
 }
 
 .preTitle {
@@ -34,11 +34,11 @@
 }
 
 .catalogTitle {
-  font-size: 2.25rem;
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
   font-weight: 800;
   letter-spacing: -0.03em;
   color: #0f172a;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 }
 
 .categoriesWrapper {
@@ -57,7 +57,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 .categoryBtn:hover {
@@ -78,26 +78,46 @@
   font-size: 0.95rem;
 }
 
-/* Grilla de Productos */
+/* =========================================
+   Grilla de Productos (responsiva)
+   ========================================= */
 .productGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 2rem;
+  gap: clamp(1.25rem, 3vw, 2rem);
+}
+
+/* Tablet pequeño / móvil grande: 2 columnas fijas para no dejar tarjetas huérfanas muy anchas */
+@media (max-width: 640px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+  }
+}
+
+/* Móvil chico: 1 columna, tarjetas más cómodas de leer */
+@media (max-width: 420px) {
+  .productGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .productCard {
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.07);
   border-radius: 1.25rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(87, 68, 46, 0.04), 0 4px 12px rgba(87, 68, 46, 0.05);
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
 }
 
 .productCard:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  border-color: rgba(22, 163, 74, 0.18);
+  /* Sombra con tinte cálido (acorde al fondo crema) en vez de negro puro */
+  box-shadow: 0 20px 25px -5px rgba(87, 68, 46, 0.12), 0 8px 10px -6px rgba(87, 68, 46, 0.06);
 }
 
 .imageContainer {
@@ -105,13 +125,27 @@
   width: 100%;
   height: 240px;
   background-color: #f1f5f9;
+  /* Placeholder sutil mientras carga la imagen, en vez de un gris plano */
+  background-image: linear-gradient(110deg, #f1f5f9 30%, #f8fafc 50%, #f1f5f9 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
   overflow: hidden;
-  border-radius: 1.25rem 1.25rem 0 0;
+}
+
+@media (max-width: 640px) {
+  .imageContainer {
+    height: 160px;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .productImage {
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .productCard:hover .productImage {
@@ -134,8 +168,8 @@
   color: #ffffff;
   font-size: 0.7rem;
   font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  border-radius: 0.5rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -146,8 +180,8 @@
   color: #16a34a;
   font-size: 0.7rem;
   font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  border-radius: 0.5rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -160,16 +194,22 @@
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 800;
-  padding: 0.3rem 0.6rem;
-  border-radius: 0.5rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
   z-index: 1;
 }
 
 .cardContent {
-  padding: 1.25rem;
+  padding: 1.1rem 1.25rem 1.25rem;
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+@media (max-width: 640px) {
+  .cardContent {
+    padding: 0.85rem 0.9rem 0.9rem;
+  }
 }
 
 .productCategory {
@@ -204,6 +244,12 @@
   color: #0f172a;
   margin-bottom: 0.5rem;
   line-height: 1.3;
+}
+
+@media (max-width: 640px) {
+  .productTitle {
+    font-size: 0.92rem;
+  }
 }
 
 /* ---------- Modal de detalle del producto ---------- */
@@ -296,14 +342,28 @@
   margin-bottom: 1.1rem;
 }
 
+/* =========================================
+   Footer de la tarjeta: precio + botón con más presencia
+   ========================================= */
 .cardFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto;
-  padding-top: 1rem;
+  margin: 0.75rem -1.25rem -1.25rem;
+  padding: 0.9rem 1.25rem;
   border-top: 1px solid #f1f5f9;
+  background: #fafaf9;
   gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .cardFooter {
+    margin: 0.6rem -0.9rem -0.9rem;
+    padding: 0.7rem 0.9rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
 }
 
 .priceGroup {
@@ -312,30 +372,54 @@
 }
 
 .originalPrice {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #a8a29e;
   text-decoration: line-through;
 }
 
 .price {
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: #0f172a;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+@media (max-width: 640px) {
+  .price {
+    font-size: 1.15rem;
+  }
 }
 
 .addBtn {
   background: #16a34a;
   color: #ffffff;
   border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 0.75rem;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 0.75rem 1.35rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
   white-space: nowrap;
+  box-shadow: 0 6px 16px -4px rgba(22, 163, 74, 0.45);
+  transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
 }
 
 .addBtn:hover {
   background: #15803d;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -4px rgba(22, 163, 74, 0.5);
+}
+
+.addBtn:active {
+  transform: translateY(0) scale(0.96);
+  box-shadow: 0 4px 10px -2px rgba(22, 163, 74, 0.4);
+}
+
+@media (max-width: 640px) {
+  .addBtn {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    text-align: center;
+  }
 }

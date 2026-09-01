@@ -183,7 +183,7 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
                 <p className={styles.modalDescription}>{selectedProduct.description}</p>
               )}
 
-              <div className={styles.cardFooter} style={{ borderTop: 'none', paddingTop: 0 }}>
+              <div className={styles.cardFooter} style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}>
                 <div className={styles.priceGroup}>
                   {selectedProduct.discount_percent > 0 && (
                     <span className={styles.originalPrice}>{formatCLP(selectedProduct.price)}</span>

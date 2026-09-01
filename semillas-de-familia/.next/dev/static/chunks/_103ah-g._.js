@@ -1329,6 +1329,7 @@ __turbopack_context__.v({
   "productGrid": "ProductGrid-module__5--pqq__productGrid",
   "productImage": "ProductGrid-module__5--pqq__productImage",
   "productTitle": "ProductGrid-module__5--pqq__productTitle",
+  "shimmer": "ProductGrid-module__5--pqq__shimmer",
   "stateMessage": "ProductGrid-module__5--pqq__stateMessage",
   "tagBadge": "ProductGrid-module__5--pqq__tagBadge",
   "topLeftBadges": "ProductGrid-module__5--pqq__topLeftBadges",
@@ -1701,8 +1702,10 @@ function ProductGrid({ onAddToCart }) {
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cardFooter,
                                     style: {
-                                        borderTop: 'none',
-                                        paddingTop: 0
+                                        margin: 0,
+                                        padding: 0,
+                                        border: 'none',
+                                        background: 'transparent'
                                     },
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {

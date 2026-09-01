@@ -16,6 +16,9 @@ interface NavigationControlsProps {
 const formatCLP = (value: number) =>
   new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
+// Duración de la animación de salida antes de sacar el item del estado real
+const REMOVE_ANIMATION_MS = 220;
+
 export default function NavigationControls({
   cartItems,
   itemCount,
@@ -25,11 +28,21 @@ export default function NavigationControls({
 }: NavigationControlsProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  // Solo controla la animación visual de salida; el carrito real (estado/lógica)
+  // no se toca hasta que la animación termina.
+  const [removingId, setRemovingId] = useState<number | null>(null);
 
-  const calculateTotal = () =>
-    cartItems.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
+  const subtotal = cartItems.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
+  // El envío se define en el siguiente paso (según retiro/despacho), no se cobra desde el carrito
+  const total = subtotal;
 
-  const formattedTotal = formatCLP(calculateTotal());
+  const handleRemoveClick = (id: number) => {
+    setRemovingId(id);
+    setTimeout(() => {
+      onRemoveItem(id);
+      setRemovingId(null);
+    }, REMOVE_ANIMATION_MS);
+  };
 
   return (
     <>
@@ -60,7 +73,11 @@ export default function NavigationControls({
             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
           />
         </svg>
-        {itemCount > 0 && <span className={styles.cartBadge}>{itemCount}</span>}
+        {itemCount > 0 && (
+          <span key={itemCount} className={styles.cartBadge}>
+            {itemCount}
+          </span>
+        )}
       </button>
 
       {/* Overlay Sombra Suave */}
@@ -115,7 +132,10 @@ export default function NavigationControls({
             </div>
           ) : (
             cartItems.map((item) => (
-              <div key={item.id} className={styles.cartItem}>
+              <div
+                key={item.id}
+                className={`${styles.cartItem} ${removingId === item.id ? styles.cartItemRemoving : ''}`}
+              >
                 {item.img_url && (
                   <img src={item.img_url} alt={item.title} className={styles.cartItemImg} />
                 )}
@@ -125,16 +145,23 @@ export default function NavigationControls({
 
                   {/* Selector de Cantidad */}
                   <div className={styles.quantityControls}>
-                    <button onClick={() => onUpdateQuantity(item.id, -1)}>-</button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => onUpdateQuantity(item.id, 1)}>+</button>
+                    <button onClick={() => onUpdateQuantity(item.id, -1)} aria-label="Restar uno">
+                      -
+                    </button>
+                    {/* key={item.quantity} fuerza el remount del número, así la animación
+                        "pop" se reproduce en cada cambio de cantidad, no solo al montar */}
+                    <span key={item.quantity}>{item.quantity}</span>
+                    <button onClick={() => onUpdateQuantity(item.id, 1)} aria-label="Sumar uno">
+                      +
+                    </button>
                   </div>
                 </div>
 
                 <button
                   className={styles.deleteBtn}
-                  onClick={() => onRemoveItem(item.id)}
+                  onClick={() => handleRemoveClick(item.id)}
                   title="Eliminar producto"
+                  aria-label="Eliminar producto"
                 >
                   ✕
                 </button>
@@ -143,14 +170,33 @@ export default function NavigationControls({
           )}
         </div>
 
-        {/* Total y Finalizar Compra */}
+        {/* Resumen de compra: un renglón por producto + total */}
         {cartItems.length > 0 && (
           <div className={styles.cartFooter}>
+            {cartItems.map((item) => (
+              <div key={item.id} className={styles.summaryRow}>
+                <span className={styles.summaryRowLabel}>
+                  {item.title}
+                  {item.quantity > 1 && <span className={styles.summaryRowQty}> ×{item.quantity}</span>}
+                </span>
+                <span className={styles.summaryRowValue}>
+                  {formatCLP(item.final_price * item.quantity)}
+                </span>
+              </div>
+            ))}
+
+            <hr className={styles.summaryDivider} />
+
             <div className={styles.totalRow}>
-              <span>Total acumulado:</span>
-              <span className={styles.totalPrice}>{formattedTotal}</span>
+              <span>Total</span>
+              <span className={styles.totalPrice}>{formatCLP(total)}</span>
             </div>
-            <Link href="/pedidos" className={styles.cartCheckoutBtn} style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>
+
+            <Link
+              href="/pedidos"
+              className={styles.cartCheckoutBtn}
+              style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}
+            >
               Ir a Pagar
             </Link>
           </div>

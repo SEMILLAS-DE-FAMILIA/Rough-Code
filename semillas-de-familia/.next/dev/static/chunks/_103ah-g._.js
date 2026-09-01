@@ -82,8 +82,8 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 
 __turbopack_context__.v({
   "active": "AppLayout-module__RrbURa__active",
-  "addToCartBtn": "AppLayout-module__RrbURa__addToCartBtn",
   "adminBadge": "AppLayout-module__RrbURa__adminBadge",
+  "badgePop": "AppLayout-module__RrbURa__badgePop",
   "cartBadge": "AppLayout-module__RrbURa__cartBadge",
   "cartCheckoutBtn": "AppLayout-module__RrbURa__cartCheckoutBtn",
   "cartDrawer": "AppLayout-module__RrbURa__cartDrawer",
@@ -92,6 +92,7 @@ __turbopack_context__.v({
   "cartItem": "AppLayout-module__RrbURa__cartItem",
   "cartItemImg": "AppLayout-module__RrbURa__cartItemImg",
   "cartItemPrice": "AppLayout-module__RrbURa__cartItemPrice",
+  "cartItemRemoving": "AppLayout-module__RrbURa__cartItemRemoving",
   "cartItemTitle": "AppLayout-module__RrbURa__cartItemTitle",
   "cartList": "AppLayout-module__RrbURa__cartList",
   "closeBtn": "AppLayout-module__RrbURa__closeBtn",
@@ -99,14 +100,7 @@ __turbopack_context__.v({
   "emptyCartState": "AppLayout-module__RrbURa__emptyCartState",
   "isOpen": "AppLayout-module__RrbURa__isOpen",
   "menuFloatingBtn": "AppLayout-module__RrbURa__menuFloatingBtn",
-  "productCard": "AppLayout-module__RrbURa__productCard",
-  "productCardPrice": "AppLayout-module__RrbURa__productCardPrice",
-  "productCardTitle": "AppLayout-module__RrbURa__productCardTitle",
-  "productImgWrapper": "AppLayout-module__RrbURa__productImgWrapper",
-  "productsGrid": "AppLayout-module__RrbURa__productsGrid",
-  "productsHeader": "AppLayout-module__RrbURa__productsHeader",
-  "productsSection": "AppLayout-module__RrbURa__productsSection",
-  "productsTitle": "AppLayout-module__RrbURa__productsTitle",
+  "qtyPop": "AppLayout-module__RrbURa__qtyPop",
   "quantityControls": "AppLayout-module__RrbURa__quantityControls",
   "sidebar": "AppLayout-module__RrbURa__sidebar",
   "sidebarHeader": "AppLayout-module__RrbURa__sidebarHeader",
@@ -114,6 +108,11 @@ __turbopack_context__.v({
   "sidebarNav": "AppLayout-module__RrbURa__sidebarNav",
   "sidebarOverlay": "AppLayout-module__RrbURa__sidebarOverlay",
   "slideUp": "AppLayout-module__RrbURa__slideUp",
+  "summaryDivider": "AppLayout-module__RrbURa__summaryDivider",
+  "summaryRow": "AppLayout-module__RrbURa__summaryRow",
+  "summaryRowLabel": "AppLayout-module__RrbURa__summaryRowLabel",
+  "summaryRowQty": "AppLayout-module__RrbURa__summaryRowQty",
+  "summaryRowValue": "AppLayout-module__RrbURa__summaryRowValue",
   "toastNotification": "AppLayout-module__RrbURa__toastNotification",
   "totalPrice": "AppLayout-module__RrbURa__totalPrice",
   "totalRow": "AppLayout-module__RrbURa__totalRow",
@@ -525,12 +524,25 @@ const formatCLP = (value)=>new Intl.NumberFormat('es-CL', {
         style: 'currency',
         currency: 'CLP'
     }).format(value);
+// Duración de la animación de salida antes de sacar el item del estado real
+const REMOVE_ANIMATION_MS = 220;
 function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveItem, lastAddedProduct }) {
     _s();
     const [isSidebarOpen, setIsSidebarOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isCartOpen, setIsCartOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const calculateTotal = ()=>cartItems.reduce((acc, item)=>acc + item.final_price * item.quantity, 0);
-    const formattedTotal = formatCLP(calculateTotal());
+    // Solo controla la animación visual de salida; el carrito real (estado/lógica)
+    // no se toca hasta que la animación termina.
+    const [removingId, setRemovingId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const subtotal = cartItems.reduce((acc, item)=>acc + item.final_price * item.quantity, 0);
+    // El envío se define en el siguiente paso (según retiro/despacho), no se cobra desde el carrito
+    const total = subtotal;
+    const handleRemoveClick = (id)=>{
+        setRemovingId(id);
+        setTimeout(()=>{
+            onRemoveItem(id);
+            setRemovingId(null);
+        }, REMOVE_ANIMATION_MS);
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -549,7 +561,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                             r: "2"
                         }, void 0, false, {
                             fileName: "[project]/app/components/NavigationControls.tsx",
-                            lineNumber: 43,
+                            lineNumber: 56,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -558,7 +570,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                             r: "2"
                         }, void 0, false, {
                             fileName: "[project]/app/components/NavigationControls.tsx",
-                            lineNumber: 44,
+                            lineNumber: 57,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -567,18 +579,18 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                             r: "2"
                         }, void 0, false, {
                             fileName: "[project]/app/components/NavigationControls.tsx",
-                            lineNumber: 45,
+                            lineNumber: 58,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/NavigationControls.tsx",
-                    lineNumber: 42,
+                    lineNumber: 55,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/components/NavigationControls.tsx",
-                lineNumber: 37,
+                lineNumber: 50,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -599,26 +611,26 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                             d: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                         }, void 0, false, {
                             fileName: "[project]/app/components/NavigationControls.tsx",
-                            lineNumber: 56,
+                            lineNumber: 69,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 55,
+                        lineNumber: 68,
                         columnNumber: 9
                     }, this),
                     itemCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cartBadge,
                         children: itemCount
-                    }, void 0, false, {
+                    }, itemCount, false, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 63,
-                        columnNumber: 27
+                        lineNumber: 77,
+                        columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/NavigationControls.tsx",
-                lineNumber: 50,
+                lineNumber: 63,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -629,7 +641,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                 }
             }, void 0, false, {
                 fileName: "[project]/app/components/NavigationControls.tsx",
-                lineNumber: 67,
+                lineNumber: 84,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -642,7 +654,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                 children: "Menú"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 80,
+                                lineNumber: 97,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -651,13 +663,13 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                 children: "✕"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 81,
+                                lineNumber: 98,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 79,
+                        lineNumber: 96,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -670,14 +682,14 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                         children: "👤"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 87,
+                                        lineNumber: 104,
                                         columnNumber: 13
                                     }, this),
                                     " Mi Cuenta"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 86,
+                                lineNumber: 103,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -687,14 +699,14 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                         children: "📦"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 90,
+                                        lineNumber: 107,
                                         columnNumber: 13
                                     }, this),
                                     " Mis Pedidos"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 89,
+                                lineNumber: 106,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("hr", {
@@ -704,7 +716,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 92,
+                                lineNumber: 109,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -718,7 +730,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                         children: "🛠️"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 94,
+                                        lineNumber: 111,
                                         columnNumber: 13
                                     }, this),
                                     " Panel Admin",
@@ -727,25 +739,25 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                         children: "ADMIN"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 95,
+                                        lineNumber: 112,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 93,
+                                lineNumber: 110,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 85,
+                        lineNumber: 102,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/NavigationControls.tsx",
-                lineNumber: 78,
+                lineNumber: 95,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -762,7 +774,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 103,
+                                lineNumber: 120,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -771,13 +783,13 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                 children: "✕"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 104,
+                                lineNumber: 121,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 102,
+                        lineNumber: 119,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -789,23 +801,23 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                     children: "🌱"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/NavigationControls.tsx",
-                                    lineNumber: 113,
+                                    lineNumber: 130,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     children: "Tu carrito está vacío por ahora."
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/NavigationControls.tsx",
-                                    lineNumber: 114,
+                                    lineNumber: 131,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/NavigationControls.tsx",
-                            lineNumber: 112,
+                            lineNumber: 129,
                             columnNumber: 13
                         }, this) : cartItems.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cartItem,
+                                className: `${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cartItem} ${removingId === item.id ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cartItemRemoving : ''}`,
                                 children: [
                                     item.img_url && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                         src: item.img_url,
@@ -813,7 +825,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cartItemImg
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 120,
+                                        lineNumber: 140,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -826,7 +838,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                                 children: item.title
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                                lineNumber: 123,
+                                                lineNumber: 143,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -834,7 +846,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                                 children: formatCLP(item.final_price)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                                lineNumber: 124,
+                                                lineNumber: 144,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -842,85 +854,133 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                         onClick: ()=>onUpdateQuantity(item.id, -1),
+                                                        "aria-label": "Restar uno",
                                                         children: "-"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                                        lineNumber: 128,
+                                                        lineNumber: 148,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: item.quantity
-                                                    }, void 0, false, {
+                                                    }, item.quantity, false, {
                                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                                        lineNumber: 129,
+                                                        lineNumber: 153,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                         onClick: ()=>onUpdateQuantity(item.id, 1),
+                                                        "aria-label": "Sumar uno",
                                                         children: "+"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                                        lineNumber: 130,
+                                                        lineNumber: 154,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                                lineNumber: 127,
+                                                lineNumber: 147,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 122,
+                                        lineNumber: 142,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].deleteBtn,
-                                        onClick: ()=>onRemoveItem(item.id),
+                                        onClick: ()=>handleRemoveClick(item.id),
                                         title: "Eliminar producto",
+                                        "aria-label": "Eliminar producto",
                                         children: "✕"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 134,
+                                        lineNumber: 160,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, item.id, true, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 118,
+                                lineNumber: 135,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 110,
+                        lineNumber: 127,
                         columnNumber: 9
                     }, this),
                     cartItems.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cartFooter,
                         children: [
+                            cartItems.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].summaryRow,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].summaryRowLabel,
+                                            children: [
+                                                item.title,
+                                                item.quantity > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].summaryRowQty,
+                                                    children: [
+                                                        " ×",
+                                                        item.quantity
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/components/NavigationControls.tsx",
+                                                    lineNumber: 180,
+                                                    columnNumber: 41
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/components/NavigationControls.tsx",
+                                            lineNumber: 178,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].summaryRowValue,
+                                            children: formatCLP(item.final_price * item.quantity)
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/components/NavigationControls.tsx",
+                                            lineNumber: 182,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, item.id, true, {
+                                    fileName: "[project]/app/components/NavigationControls.tsx",
+                                    lineNumber: 177,
+                                    columnNumber: 15
+                                }, this)),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("hr", {
+                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].summaryDivider
+                            }, void 0, false, {
+                                fileName: "[project]/app/components/NavigationControls.tsx",
+                                lineNumber: 188,
+                                columnNumber: 13
+                            }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].totalRow,
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        children: "Total acumulado:"
+                                        children: "Total"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 150,
+                                        lineNumber: 191,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AppLayout$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].totalPrice,
-                                        children: formattedTotal
+                                        children: formatCLP(total)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/NavigationControls.tsx",
-                                        lineNumber: 151,
+                                        lineNumber: 192,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 149,
+                                lineNumber: 190,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -934,19 +994,19 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                 children: "Ir a Pagar"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 153,
+                                lineNumber: 195,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 148,
+                        lineNumber: 175,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/NavigationControls.tsx",
-                lineNumber: 101,
+                lineNumber: 118,
                 columnNumber: 7
             }, this),
             lastAddedProduct && !isCartOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -959,7 +1019,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                         children: "🌿"
                     }, void 0, false, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 163,
+                        lineNumber: 209,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -971,7 +1031,7 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                 children: "Agregado a tu selección"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 165,
+                                lineNumber: 211,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -982,29 +1042,29 @@ function NavigationControls({ cartItems, itemCount, onUpdateQuantity, onRemoveIt
                                 children: lastAddedProduct
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NavigationControls.tsx",
-                                lineNumber: 166,
+                                lineNumber: 212,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/NavigationControls.tsx",
-                        lineNumber: 164,
+                        lineNumber: 210,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/NavigationControls.tsx",
-                lineNumber: 162,
+                lineNumber: 208,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/NavigationControls.tsx",
-        lineNumber: 35,
+        lineNumber: 48,
         columnNumber: 5
     }, this);
 }
-_s(NavigationControls, "vNApCqRcJGjvufMPgmkkY6S2JVc=");
+_s(NavigationControls, "C8b87fHDv1Vy6rIBc2YJlrNuE9M=");
 _c = NavigationControls;
 var _c;
 __turbopack_context__.k.register(_c, "NavigationControls");

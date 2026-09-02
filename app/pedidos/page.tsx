@@ -1,14 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useCart, CartItem } from '../../src/lib/useCart';
+import { useCartStore, CartItem } from '../../src/lib/useCartStore';
 import { supabase } from '../../src/lib/supabaseClient';
 import { isValidRut, formatRut } from '../../src/lib/rut';
 import styles from './pedidos.module.css';
 
 const formatCLP = (value: number) =>
   new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
+
+function useIsHydrated() {
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => setIsHydrated(true), []);
+  return isHydrated;
+}
 
 function buildWhatsAppMessage(
   items: CartItem[],
@@ -43,7 +49,14 @@ function buildWhatsAppMessage(
 }
 
 export default function PedidosPage() {
-  const { cart, total, isLoaded, clearCart } = useCart();
+  const isHydrated = useIsHydrated();
+
+  // Suscripción al store de Zustand
+  const storeCart = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  const cart = isHydrated ? storeCart : [];
+  const total = cart.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
 
   const [name, setName] = useState('');
   const [rut, setRut] = useState('');
@@ -125,8 +138,7 @@ export default function PedidosPage() {
     setOrderSent(true);
   };
 
-  // Esperamos a que se cargue el carrito desde localStorage antes de decidir qué mostrar
-  if (!isLoaded) {
+  if (!isHydrated) {
     return <div className={styles.stateWrapper}>Cargando...</div>;
   }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { supabase } from '../../../src/lib/supabaseClient';
 import ImageUploadField from './ImageUploadField';
 import styles from './Admin.module.css';
@@ -184,7 +185,15 @@ export default function ProductsManager() {
               style={{ gridTemplateColumns: '44px 1fr auto auto' }}
             >
               {p.img_url ? (
-                <img src={p.img_url} alt={p.title} className={styles.rowThumb} />
+                <div className={styles.rowThumb} style={{ position: 'relative', overflow: 'hidden' }}>
+                  <Image
+                    src={p.img_url}
+                    alt={`Imagen de ${p.title}`}
+                    width={44}
+                    height={44}
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
               ) : (
                 <div className={styles.rowThumb} />
               )}
@@ -324,6 +333,7 @@ export default function ProductsManager() {
                 value={form.img_url || null}
                 onChange={(url) => setForm({ ...form, img_url: url })}
                 label="Imagen del producto"
+                altText={form.title}
               />
 
               <label className={styles.switchRow} style={{ marginTop: '1.1rem' }}>

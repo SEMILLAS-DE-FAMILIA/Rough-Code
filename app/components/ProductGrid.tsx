@@ -61,7 +61,6 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
     };
   }, []);
 
-  // Cerrar el modal con la tecla Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setSelectedProduct(null);
@@ -115,7 +114,7 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
                   {product.img_url && (
                     <Image
                       src={product.img_url}
-                      alt={product.title}
+                      alt={`${product.title} - ${product.category}`}
                       fill
                       className={styles.productImage}
                       sizes="(max-width: 768px) 100vw, 300px"
@@ -167,7 +166,7 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
               <div className={styles.modalImageWrap}>
                 <Image
                   src={selectedProduct.img_url}
-                  alt={selectedProduct.title}
+                  alt={`Detalle del producto ${selectedProduct.title}`}
                   fill
                   className={styles.modalImage}
                   sizes="(max-width: 768px) 100vw, 480px"

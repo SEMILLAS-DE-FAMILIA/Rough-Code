@@ -1,45 +1,50 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './AppLayout.module.css';
-import { CartItem } from '../page';
+import { useCartStore } from '../../src/lib/useCartStore';
 
 interface NavigationControlsProps {
-  cartItems: CartItem[];
-  itemCount: number;
-  onUpdateQuantity: (id: number, delta: number) => void;
-  onRemoveItem: (id: number) => void;
   lastAddedProduct: string | null;
 }
 
 const formatCLP = (value: number) =>
   new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
-// Duración de la animación de salida antes de sacar el item del estado real
 const REMOVE_ANIMATION_MS = 220;
 
-export default function NavigationControls({
-  cartItems,
-  itemCount,
-  onUpdateQuantity,
-  onRemoveItem,
-  lastAddedProduct,
-}: NavigationControlsProps) {
+// Hook para evitar errores de hidratación (Hydration mismatch) en Next.js
+function useIsHydrated() {
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => setIsHydrated(true), []);
+  return isHydrated;
+}
+
+export default function NavigationControls({ lastAddedProduct }: NavigationControlsProps) {
+  const isHydrated = useIsHydrated();
+  
+  // Extraemos del store
+  const storeCart = useCartStore((state) => state.cart);
+  const storeItemCount = useCartStore((state) => state.itemCount());
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+
+  // Evitamos renderizar datos de localStorage en el servidor
+  const cartItems = isHydrated ? storeCart : [];
+  const itemCount = isHydrated ? storeItemCount : 0;
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  // Solo controla la animación visual de salida; el carrito real (estado/lógica)
-  // no se toca hasta que la animación termina.
   const [removingId, setRemovingId] = useState<number | null>(null);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
-  // El envío se define en el siguiente paso (según retiro/despacho), no se cobra desde el carrito
   const total = subtotal;
 
   const handleRemoveClick = (id: number) => {
     setRemovingId(id);
     setTimeout(() => {
-      onRemoveItem(id);
+      removeItem(id);
       setRemovingId(null);
     }, REMOVE_ANIMATION_MS);
   };
@@ -114,7 +119,7 @@ export default function NavigationControls({
         </nav>
       </aside>
 
-      {/* Panel Desplegable del Carrito (Warm Theme) */}
+      {/* Panel Desplegable del Carrito */}
       <aside className={`${styles.cartDrawer} ${isCartOpen ? styles.isOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <h3>Tu Carrito ({itemCount})</h3>
@@ -145,13 +150,11 @@ export default function NavigationControls({
 
                   {/* Selector de Cantidad */}
                   <div className={styles.quantityControls}>
-                    <button onClick={() => onUpdateQuantity(item.id, -1)} aria-label="Restar uno">
+                    <button onClick={() => updateQuantity(item.id, -1)} aria-label="Restar uno">
                       -
                     </button>
-                    {/* key={item.quantity} fuerza el remount del número, así la animación
-                        "pop" se reproduce en cada cambio de cantidad, no solo al montar */}
                     <span key={item.quantity}>{item.quantity}</span>
-                    <button onClick={() => onUpdateQuantity(item.id, 1)} aria-label="Sumar uno">
+                    <button onClick={() => updateQuantity(item.id, 1)} aria-label="Sumar uno">
                       +
                     </button>
                   </div>
@@ -170,7 +173,7 @@ export default function NavigationControls({
           )}
         </div>
 
-        {/* Resumen de compra: un renglón por producto + total */}
+        {/* Resumen de compra */}
         {cartItems.length > 0 && (
           <div className={styles.cartFooter}>
             {cartItems.map((item) => (
@@ -203,7 +206,7 @@ export default function NavigationControls({
         )}
       </aside>
 
-      {/* Toast Flotante CÁLIDO (producto agregado) */}
+      {/* Toast Flotante */}
       {lastAddedProduct && !isCartOpen && (
         <div className={styles.toastNotification}>
           <span style={{ fontSize: '1.2rem' }}>🌿</span>

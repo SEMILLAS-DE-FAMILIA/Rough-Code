@@ -7,12 +7,10 @@ import ProductGrid, { Product } from './components/ProductGrid';
 import NavigationControls from './components/NavigationControls';
 import TrustBanner from './components/TrustBanner';
 import AlertBanner from './components/AlertBanner';
-import { useCart } from '../src/lib/useCart';
-
-export type { CartItem } from '../src/lib/useCart';
+import { useCartStore } from '../src/lib/useCartStore';
 
 export default function Home() {
-  const { cart, addToCart, updateQuantity, removeItem, itemCount } = useCart();
+  const addToCart = useCartStore((state) => state.addToCart);
   const [lastAdded, setLastAdded] = useState<string | null>(null);
 
   const handleAddToCart = (product: Product) => {
@@ -24,15 +22,7 @@ export default function Home() {
   return (
     <main style={{ backgroundColor: '#fdfcf1', minHeight: '100vh' }}>
       <AlertBanner />
-
-      <NavigationControls
-        cartItems={cart}
-        itemCount={itemCount}
-        onUpdateQuantity={updateQuantity}
-        onRemoveItem={removeItem}
-        lastAddedProduct={lastAdded}
-      />
-
+      <NavigationControls lastAddedProduct={lastAdded} />
       <CarouselHero />
       <NovedadesCarousel onAddToCart={handleAddToCart} />
       <ProductGrid onAddToCart={handleAddToCart} />

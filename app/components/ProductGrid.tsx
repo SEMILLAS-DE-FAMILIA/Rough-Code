@@ -78,7 +78,7 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
       <div className={styles.catalogContainer}>
         <div className={styles.catalogHeader}>
           <span className={styles.preTitle}>Catálogo Seleccionado</span>
-          <h2 className={styles.catalogTitle}>Productos para la Siembra</h2>
+          <h2 className={styles.catalogTitle}>Sabores y Esencias</h2>
 
           <div className={styles.categoriesWrapper}>
             {categories.map((cat) => (

@@ -1,7 +1,7 @@
 .pageWrapper {
   min-height: 100vh;
-  background-color: var(--color-bg-light);
-  color: var(--color-dark-brown);
+  background-color: var(--color-bg-light, #F7F5F0);
+  color: var(--color-dark-brown, #2A1A17);
   padding: 2.5rem 1.5rem 4rem;
 }
 
@@ -17,6 +17,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 1rem;
+  transition: color 0.15s ease;
 }
 
 .backLink:hover {
@@ -27,6 +28,7 @@
   font-size: 1.9rem;
   font-weight: 800;
   margin-bottom: 2rem;
+  color: var(--color-dark-brown, #2A1A17);
 }
 
 .layoutGrid {
@@ -54,6 +56,7 @@
   font-size: 1.05rem;
   font-weight: 800;
   margin-bottom: 1.1rem;
+  color: #1c1917;
 }
 
 .summaryRow {
@@ -77,6 +80,7 @@
   font-size: 0.88rem;
   font-weight: 700;
   margin: 0 0 0.15rem 0;
+  color: #1c1917;
 }
 
 .summaryMeta {
@@ -89,6 +93,7 @@
   font-size: 0.85rem;
   font-weight: 700;
   white-space: nowrap;
+  color: #1c1917;
 }
 
 .summaryTotalRow {
@@ -100,10 +105,11 @@
   border-top: 1px solid #f1f5f9;
   font-weight: 800;
   font-size: 1.1rem;
+  color: #1c1917;
 }
 
 .summaryTotalValue {
-  color: var(--color-primary-green);
+  color: var(--color-primary-green, #2F6732);
 }
 
 /* ---------- Formulario ---------- */
@@ -134,12 +140,13 @@
   border: 1px solid #e2e8f0;
   font-size: 0.9rem;
   background: #fafaf9;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .field input:focus,
 .field textarea:focus {
   outline: none;
-  border-color: #16a34a;
+  border-color: var(--color-primary-green, #16a34a);
   background: #ffffff;
 }
 
@@ -158,12 +165,13 @@
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .toggleBtnActive {
-  background: var(--color-primary-brown);
+  background: var(--color-primary-brown, #4E2C1D);
   color: #ffffff;
-  border-color: var(--color-primary-brown);
+  border-color: var(--color-primary-brown, #4E2C1D);
 }
 
 .errorText {
@@ -174,8 +182,9 @@
 
 .primaryBtn {
   display: inline-block;
+  width: 100%;
   text-align: center;
-  background: var(--color-primary-brown);
+  background: var(--color-primary-brown, #4E2C1D);
   color: #ffffff;
   border: none;
   padding: 0.9rem 1.5rem;
@@ -184,11 +193,11 @@
   font-size: 0.95rem;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.2s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .primaryBtn:hover {
-  background: var(--color-dark-brown);
+  background: var(--color-dark-brown, #2A1A17);
 }
 
 .primaryBtn:active:not(:disabled) {
@@ -226,7 +235,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-bg-light);
+  background-color: var(--color-bg-light, #F7F5F0);
   padding: 1.5rem;
 }
 
@@ -247,6 +256,7 @@
   font-size: 1.3rem;
   font-weight: 800;
   margin: 0.5rem 0 0.25rem;
+  color: #1c1917;
 }
 
 .confirmCard p {

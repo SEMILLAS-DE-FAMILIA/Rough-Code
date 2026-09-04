@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useCartStore, CartItem } from '../../src/lib/useCartStore';
 import { supabase } from '../../src/lib/supabaseClient';
@@ -93,40 +93,27 @@ export default function PedidosPage() {
     setSubmitting(true);
     const formattedRut = formatRut(rut);
 
-    const { data: order, error: orderError } = await supabase
-      .from('orders')
-      .insert({
-        customer_name: name.trim(),
-        rut: formattedRut,
-        delivery_type: deliveryType,
-        delivery_address: deliveryType === 'delivery' ? address.trim() : null,
-        notes: notes.trim() || null,
-        total,
-        status: 'pendiente',
-      })
-      .select()
-      .single();
-
-    if (orderError || !order) {
-      setSubmitting(false);
-      setError('No se pudo registrar el pedido. Intenta de nuevo.');
-      return;
-    }
-
     const itemsPayload = cart.map((item) => ({
-      order_id: order.id,
       product_id: item.id,
       product_title: item.title,
       quantity: item.quantity,
       unit_price: item.final_price,
     }));
 
-    const { error: itemsError } = await supabase.from('order_items').insert(itemsPayload);
+    const { error: orderError } = await supabase.rpc('create_order', {
+      p_customer_name: name.trim(),
+      p_rut: formattedRut,
+      p_delivery_type: deliveryType,
+      p_delivery_address: deliveryType === 'delivery' ? address.trim() : null,
+      p_notes: notes.trim() || null,
+      p_total: total,
+      p_items: itemsPayload,
+    });
 
     setSubmitting(false);
 
-    if (itemsError) {
-      setError('El pedido se creó pero hubo un problema al guardar los productos. Contacta a la tienda.');
+    if (orderError) {
+      setError(`No se pudo registrar el pedido: ${orderError.message} (código: ${orderError.code ?? 's/n'})`);
       return;
     }
 

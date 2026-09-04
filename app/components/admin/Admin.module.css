@@ -1,6 +1,6 @@
 .adminWrapper {
   min-height: 100vh;
-  background-color: #fdfcf1;
+  background-color: var(--color-bg-light, #fdfcf1);
   color: #1c1917;
 }
 
@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fdfcf1;
+  background-color: var(--color-bg-light, #fdfcf1);
   padding: 1.5rem;
 }
 
@@ -28,6 +28,7 @@
   font-size: 1.4rem;
   font-weight: 800;
   margin-bottom: 0.25rem;
+  color: #1c1917;
 }
 
 .loginSubtitle {
@@ -59,30 +60,31 @@
   border: 1px solid #e2e8f0;
   font-size: 0.9rem;
   background: #fafaf9;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
   outline: none;
-  border-color: #16a34a;
+  border-color: var(--color-primary-green, #16a34a);
   background: #ffffff;
 }
 
 .primaryBtn {
   width: 100%;
-  background: #1c1917;
+  background: var(--color-primary-brown, #1c1917);
   color: #ffffff;
   border: none;
   padding: 0.85rem;
   border-radius: 0.75rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
 .primaryBtn:hover {
-  background: #292524;
+  background: var(--color-dark-brown, #292524);
 }
 
 .primaryBtn:disabled {
@@ -92,7 +94,7 @@
 
 .errorText {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.55rem;
   background: #fef2f2;
   border: 1px solid #fecaca;
@@ -116,18 +118,16 @@
   color: #ffffff;
   font-size: 0.7rem;
   font-weight: 800;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: 0.05rem;
 }
 
 /* ---------- LAYOUT DEL PANEL ---------- */
-/* ---------- LAYOUT DEL PANEL (barra lateral) ---------- */
 .adminLayout {
   display: flex;
   min-height: 100vh;
-  background-color: #fdfcf1;
+  background-color: var(--color-bg-light, #fdfcf1);
 }
 
 .sidebar {
@@ -185,7 +185,7 @@
   font-weight: 600;
   text-align: left;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .sidebarNavItem:hover {
@@ -195,7 +195,7 @@
 
 .sidebarNavItemActive {
   background: #f0fdf4;
-  color: #15803d;
+  color: var(--color-primary-green, #15803d);
 }
 
 .navDot {
@@ -204,12 +204,12 @@
   border-radius: 50%;
   border: 1.5px solid #d6d3d1;
   flex-shrink: 0;
-  transition: all 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .sidebarNavItemActive .navDot {
-  background: #16a34a;
-  border-color: #16a34a;
+  background: var(--color-primary-green, #16a34a);
+  border-color: var(--color-primary-green, #16a34a);
 }
 
 .sidebarLogout {
@@ -222,6 +222,7 @@
   color: #78716c;
   cursor: pointer;
   margin-top: 1rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .sidebarLogout:hover {
@@ -248,6 +249,8 @@
     overflow-x: auto;
     padding: 1rem;
     gap: 1rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   .sidebarBrand {
@@ -281,6 +284,7 @@
 .panelHeader h1 {
   font-size: 1.2rem;
   font-weight: 800;
+  color: #1c1917;
 }
 
 .logoutBtn {
@@ -292,6 +296,7 @@
   font-weight: 600;
   cursor: pointer;
   color: #57534e;
+  transition: background-color 0.15s ease;
 }
 
 .logoutBtn:hover {
@@ -322,7 +327,7 @@
 }
 
 .addBtn {
-  background: #16a34a;
+  background: var(--color-primary-green, #16a34a);
   color: #ffffff;
   border: none;
   padding: 0.65rem 1.2rem;
@@ -330,10 +335,11 @@
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .addBtn:hover {
-  background: #15803d;
+  background: var(--color-accent-green, #15803d);
 }
 
 /* ---------- TABLA / LISTA ---------- */
@@ -351,7 +357,7 @@
   padding: 0.9rem 1.25rem;
   border-bottom: 1px solid #f1f5f9;
   gap: 1rem;
-  transition: background 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .dataRow:hover {
@@ -415,6 +421,10 @@
   border-radius: 0.5rem;
   cursor: pointer;
   font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
 }
 
 .iconActionBtn:hover {
@@ -509,7 +519,7 @@
   background: #e2e8f0;
   border-radius: 9999px;
   flex-shrink: 0;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .switchThumb {
@@ -525,7 +535,7 @@
 }
 
 .switchInput:checked + .switchTrack {
-  background: #16a34a;
+  background: var(--color-primary-green, #16a34a);
 }
 
 .switchInput:checked + .switchTrack .switchThumb {
@@ -553,6 +563,11 @@
   font-weight: 600;
   cursor: pointer;
   color: #57534e;
+  transition: background-color 0.15s ease;
+}
+
+.secondaryBtn:hover {
+  background: #f1f5f9;
 }
 
 .modalActions .primaryBtn {
@@ -585,11 +600,11 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .uploadBox:hover {
-  border-color: #16a34a;
+  border-color: var(--color-primary-green, #16a34a);
   background: #f0fdf4;
 }
 
@@ -618,7 +633,7 @@
   border-radius: 1rem;
   padding: 1.5rem;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  border-left: 3px solid #16a34a;
+  border-left: 3px solid var(--color-primary-green, #16a34a);
 }
 
 .statCard .statLabel {
@@ -639,7 +654,7 @@
 
 .statCard .statSub {
   font-size: 0.78rem;
-  color: #16a34a;
+  color: var(--color-primary-green, #16a34a);
   margin-top: 0.3rem;
   font-weight: 600;
 }
@@ -685,7 +700,7 @@
   height: 22px;
   border-radius: 50%;
   background: #f0fdf4;
-  color: #16a34a;
+  color: var(--color-primary-green, #16a34a);
   font-size: 0.75rem;
   font-weight: 800;
   display: flex;

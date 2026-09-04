@@ -49,7 +49,7 @@ export default function CategoriesManager() {
     setSaving(false);
 
     if (insertError) {
-      setError('No se pudo crear la categoría.');
+      setError(`No se pudo crear la categoría: ${insertError.message} (código: ${insertError.code})`);
       return;
     }
 

@@ -15,6 +15,7 @@ interface AdminProduct {
   final_price: number;
   description: string | null;
   img_url: string | null;
+  images: string[] | null; // <--- Nuevo campo en la DB
   badge: string | null;
   stock: number;
   active: boolean;
@@ -27,7 +28,7 @@ const emptyForm = {
   price: '',
   discount_percent: '0',
   description: '',
-  img_url: '',
+  images: [] as string[], // <--- Maneja lista de imágenes
   badge: '',
   stock: '0',
   active: true,
@@ -77,13 +78,19 @@ export default function ProductsManager() {
 
   const openEditModal = (p: AdminProduct) => {
     setEditingId(p.id);
+
+    // Si tiene 'images', usa eso; si no, toma 'img_url' en un arreglo
+    const initialImages = p.images && p.images.length > 0 
+      ? p.images 
+      : p.img_url ? [p.img_url] : [];
+
     setForm({
       title: p.title,
       category: p.category,
       price: String(p.price),
       discount_percent: String(p.discount_percent),
       description: p.description ?? '',
-      img_url: p.img_url ?? '',
+      images: initialImages,
       badge: p.badge ?? '',
       stock: String(p.stock),
       active: p.active,
@@ -114,13 +121,16 @@ export default function ProductsManager() {
     setSaving(true);
     setFormError(null);
 
+    const mainImageUrl = form.images.length > 0 ? form.images[0] : null;
+
     const payload = {
       title: form.title.trim(),
       category: form.category.trim(),
       price: priceNum,
       discount_percent: discountNum,
       description: form.description.trim() || null,
-      img_url: form.img_url || null,
+      img_url: mainImageUrl, // Guarda la primera como imagen principal
+      images: form.images,    // Guarda el arreglo completo
       badge: form.badge.trim() || null,
       stock: isNaN(stockNum) ? 0 : stockNum,
       active: form.active,
@@ -328,11 +338,12 @@ export default function ProductsManager() {
                 />
               </div>
 
+              {/* Componente actualizado para manejar la lista de imágenes */}
               <ImageUploadField
                 bucket="product-images"
-                value={form.img_url || null}
-                onChange={(url) => setForm({ ...form, img_url: url })}
-                label="Imagen del producto"
+                value={form.images}
+                onChange={(urls) => setForm({ ...form, images: urls })}
+                label="Imágenes del producto (La primera será la imagen principal)"
                 altText={form.title}
               />
 

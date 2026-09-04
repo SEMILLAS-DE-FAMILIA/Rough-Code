@@ -6,13 +6,12 @@ import styles from './Admin.module.css';
 
 interface ImageUploadFieldProps {
   bucket: 'product-images' | 'carousel-images';
-  value: string | null;
-  onChange: (url: string) => void;
+  value: string[]; // <--- Ahora recibe una lista de URLs
+  onChange: (urls: string[]) => void; // <--- Retorna la nueva lista de URLs
   label?: string;
   altText?: string;
 }
 
-// Función auxiliar para comprimir la imagen a WebP antes de subirla
 const compressImage = (file: File, maxWidth = 1200, quality = 0.82): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -48,7 +47,7 @@ const compressImage = (file: File, maxWidth = 1200, quality = 0.82): Promise<Blo
 
 export default function ImageUploadField({
   bucket,
-  value,
+  value = [],
   onChange,
   label,
   altText,
@@ -58,66 +57,134 @@ export default function ImageUploadField({
   const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    if (!file.type.startsWith('image/')) {
-      setError('El archivo debe ser una imagen.');
-      return;
+    // Validar tipo de imagen para todos los archivos
+    for (let i = 0; i < files.length; i++) {
+      if (!files[i].type.startsWith('image/')) {
+        setError('Todos los archivos deben ser imágenes.');
+        return;
+      }
     }
 
     setError(null);
     setUploading(true);
 
     try {
-      // 1. Compresión en el navegador
-      const compressedBlob = await compressImage(file, 1200, 0.82);
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
+      const uploadedUrls: string[] = [];
 
-      // 2. Subida a Supabase Storage con caché prolongado
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(fileName, compressedBlob, {
-          cacheControl: '31536000',
-          contentType: 'image/webp',
-          upsert: false,
-        });
+      for (const file of Array.from(files)) {
+        const compressedBlob = await compressImage(file, 1200, 0.82);
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
 
-      if (uploadError) throw uploadError;
+        const { error: uploadError } = await supabase.storage
+          .from(bucket)
+          .upload(fileName, compressedBlob, {
+            cacheControl: '31536000',
+            contentType: 'image/webp',
+            upsert: false,
+          });
 
-      // 3. Obtención de URL pública
-      const { data } = supabase.storage.from(bucket).getPublicUrl(fileName);
-      onChange(data.publicUrl);
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage.from(bucket).getPublicUrl(fileName);
+        uploadedUrls.push(data.publicUrl);
+      }
+
+      // Concatenar imágenes previas con las nuevas
+      onChange([...value, ...uploadedUrls]);
     } catch (err) {
-      setError('No se pudo procesar o subir la imagen. Intenta de nuevo.');
+      setError('No se pudo procesar o subir una o más imágenes.');
     } finally {
       setUploading(false);
+      if (inputRef.current) inputRef.current.value = '';
     }
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    const filtered = value.filter((_, idx) => idx !== indexToRemove);
+    onChange(filtered);
   };
 
   return (
     <div className={styles.field}>
       {label && <label>{label}</label>}
-      <div className={styles.uploadBox} onClick={() => inputRef.current?.click()}>
-        {value ? (
-          <img
-            src={value}
-            alt={altText ? `Vista previa de ${altText}` : 'Vista previa de la imagen'}
-            className={styles.uploadPreview}
-          />
-        ) : (
-          <span className={styles.uploadHint}>
-            {uploading ? 'Comprimiendo y subiendo...' : 'Haz clic para subir una imagen'}
-          </span>
-        )}
-        {value && !uploading && (
-          <span className={styles.uploadHint}>Haz clic para cambiar la imagen</span>
-        )}
+
+      {/* Rejilla con vistas previas de todas las imágenes */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
+        {value.map((url, idx) => (
+          <div
+            key={url + idx}
+            style={{
+              position: 'relative',
+              width: '70px',
+              height: '70px',
+              borderRadius: '6px',
+              overflow: 'hidden',
+              border: idx === 0 ? '2px solid #16a34a' : '1px solid #e2e8f0', // La primera se marca como principal
+            }}
+          >
+            <img
+              src={url}
+              alt={altText ? `${altText} ${idx + 1}` : 'Vista previa'}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <button
+              type="button"
+              onClick={() => handleRemoveImage(idx)}
+              style={{
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                background: 'rgba(239, 68, 68, 0.85)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: '18px',
+                height: '18px',
+                fontSize: '11px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              title="Eliminar imagen"
+            >
+              ✕
+            </button>
+            {idx === 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  bottom: '0',
+                  left: '0',
+                  right: '0',
+                  background: '#16a34a',
+                  color: 'white',
+                  fontSize: '8px',
+                  textAlign: 'center',
+                  padding: '1px 0',
+                }}
+              >
+                Principal
+              </span>
+            )}
+          </div>
+        ))}
       </div>
+
+      <div className={styles.uploadBox} onClick={() => inputRef.current?.click()}>
+        <span className={styles.uploadHint}>
+          {uploading ? 'Comprimiendo y subiendo...' : '+ Agregar más imágenes'}
+        </span>
+      </div>
+
       <input
         ref={inputRef}
         type="file"
         accept="image/*"
+        multiple // <--- Permite seleccionar múltiples archivos
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />

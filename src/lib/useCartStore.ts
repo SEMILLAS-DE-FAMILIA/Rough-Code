@@ -8,7 +8,7 @@ export interface CartItem extends Product {
 
 interface CartStore {
   cart: CartItem[];
-  lastUpdated: number | null; // Timestamp en ms
+  lastUpdated: number | null;
   addToCart: (product: Product) => void;
   updateQuantity: (id: number, delta: number) => void;
   removeItem: (id: number) => void;
@@ -30,9 +30,20 @@ export const useCartStore = create<CartStore>()(
           let newCart: CartItem[];
 
           if (existingIndex > -1) {
+            const current = state.cart[existingIndex];
+            
+            // Si la cantidad en el carrito ya es igual o mayor al stock disponible, se bloquea la acción
+            if (current.quantity >= product.stock) return state;
+
             newCart = [...state.cart];
-            newCart[existingIndex].quantity += 1;
+            newCart[existingIndex] = {
+              ...product, // Actualiza datos por si cambiaron en BD (precio, imagen, stock)
+              quantity: current.quantity + 1,
+            };
           } else {
+            // Si el producto no tiene stock, no se agrega al carrito
+            if (product.stock <= 0) return state;
+
             newCart = [...state.cart, { ...product, quantity: 1 }];
           }
 
@@ -46,7 +57,12 @@ export const useCartStore = create<CartStore>()(
             .map((item) => {
               if (item.id === id) {
                 const newQty = item.quantity + delta;
-                return newQty > 0 ? { ...item, quantity: newQty } : null;
+                if (newQty <= 0) return null;
+                
+                // Si intenta incrementar y supera el stock máximo, no hace cambios
+                if (delta > 0 && newQty > item.stock) return item;
+                
+                return { ...item, quantity: newQty };
               }
               return item;
             })
@@ -71,11 +87,9 @@ export const useCartStore = create<CartStore>()(
     {
       name: 'cart-storage',
       storage: createJSONStorage(() => localStorage),
-      // Se ejecuta apenas Zustand lee los datos de localStorage al cargar la página
       onRehydrateStorage: () => (state) => {
         if (state && state.lastUpdated) {
           const now = Date.now();
-          // Si pasaron más de 3 días desde la última modificación, vaciamos el carrito
           if (now - state.lastUpdated > THREE_DAYS_IN_MS) {
             state.clearCart();
           }

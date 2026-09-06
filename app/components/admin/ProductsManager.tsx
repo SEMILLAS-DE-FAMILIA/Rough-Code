@@ -9,13 +9,14 @@ import styles from './Admin.module.css';
 interface AdminProduct {
   id: number;
   title: string;
-  category: string;
+  category_id: number | null;
+  category_name?: string;
   price: number;
   discount_percent: number;
   final_price: number;
   description: string | null;
   img_url: string | null;
-  images: string[] | null; // <--- Nuevo campo en la DB
+  images: string[] | null;
   badge: string | null;
   stock: number;
   active: boolean;
@@ -24,11 +25,11 @@ interface AdminProduct {
 
 const emptyForm = {
   title: '',
-  category: '',
+  category_id: '',
   price: '',
   discount_percent: '0',
   description: '',
-  images: [] as string[], // <--- Maneja lista de imágenes
+  images: [] as string[],
   badge: '',
   stock: '0',
   active: true,
@@ -52,15 +53,27 @@ export default function ProductsManager() {
     setLoading(true);
     const { data, error } = await supabase
       .from('products')
-      .select('*')
+      .select(`
+        *,
+        categories!fk_products_categories ( name )
+      `)
       .order('created_at', { ascending: false });
 
-    if (!error && data) setProducts(data);
+    if (!error && data) {
+      const mappedProducts: AdminProduct[] = data.map((p: any) => ({
+        ...p,
+        category_name: p.categories?.name || 'Sin categoría',
+      }));
+      setProducts(mappedProducts);
+    }
     setLoading(false);
   };
 
   const fetchCategories = async () => {
-    const { data, error } = await supabase.from('categories').select('id, name').order('name', { ascending: true });
+    const { data, error } = await supabase
+      .from('categories')
+      .select('id, name')
+      .order('name', { ascending: true });
     if (!error && data) setCategories(data);
   };
 
@@ -79,14 +92,16 @@ export default function ProductsManager() {
   const openEditModal = (p: AdminProduct) => {
     setEditingId(p.id);
 
-    // Si tiene 'images', usa eso; si no, toma 'img_url' en un arreglo
-    const initialImages = p.images && p.images.length > 0 
-      ? p.images 
-      : p.img_url ? [p.img_url] : [];
+    const initialImages =
+      p.images && p.images.length > 0
+        ? p.images
+        : p.img_url
+        ? [p.img_url]
+        : [];
 
     setForm({
       title: p.title,
-      category: p.category,
+      category_id: p.category_id ? String(p.category_id) : '',
       price: String(p.price),
       discount_percent: String(p.discount_percent),
       description: p.description ?? '',
@@ -108,8 +123,9 @@ export default function ProductsManager() {
     const priceNum = parseFloat(form.price);
     const discountNum = parseFloat(form.discount_percent || '0');
     const stockNum = parseInt(form.stock || '0', 10);
+    const categoryIdNum = form.category_id ? parseInt(form.category_id, 10) : null;
 
-    if (!form.title.trim() || !form.category.trim() || isNaN(priceNum) || priceNum < 0) {
+    if (!form.title.trim() || !categoryIdNum || isNaN(priceNum) || priceNum < 0) {
       setFormError('Completa título, categoría y un precio válido.');
       return;
     }
@@ -125,12 +141,12 @@ export default function ProductsManager() {
 
     const payload = {
       title: form.title.trim(),
-      category: form.category.trim(),
+      category_id: categoryIdNum,
       price: priceNum,
       discount_percent: discountNum,
       description: form.description.trim() || null,
-      img_url: mainImageUrl, // Guarda la primera como imagen principal
-      images: form.images,    // Guarda el arreglo completo
+      img_url: mainImageUrl,
+      images: form.images,
       badge: form.badge.trim() || null,
       stock: isNaN(stockNum) ? 0 : stockNum,
       active: form.active,
@@ -144,7 +160,8 @@ export default function ProductsManager() {
     setSaving(false);
 
     if (error) {
-      setFormError('No se pudo guardar el producto. Intenta de nuevo.');
+      console.error('Error al guardar el producto:', error);
+      setFormError(`No se pudo guardar el producto: ${error.message}`);
       return;
     }
 
@@ -210,7 +227,7 @@ export default function ProductsManager() {
               <div>
                 <div className={styles.rowTitle}>{p.title}</div>
                 <div className={styles.rowMeta}>
-                  {p.category} · {formatCLP(p.final_price)}
+                  {p.category_name} · {formatCLP(p.final_price)}
                   {p.discount_percent > 0 && ` (−${p.discount_percent}% de ${formatCLP(p.price)})`}
                   {' · Stock: '}
                   {p.stock}
@@ -265,15 +282,15 @@ export default function ProductsManager() {
                     </p>
                   ) : (
                     <select
-                      value={form.category}
-                      onChange={(e) => setForm({ ...form, category: e.target.value })}
+                      value={form.category_id}
+                      onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                       required
                     >
                       <option value="" disabled>
                         Selecciona una categoría
                       </option>
                       {categories.map((c) => (
-                        <option key={c.id} value={c.name}>
+                        <option key={c.id} value={c.id}>
                           {c.name}
                         </option>
                       ))}
@@ -338,7 +355,6 @@ export default function ProductsManager() {
                 />
               </div>
 
-              {/* Componente actualizado para manejar la lista de imágenes */}
               <ImageUploadField
                 bucket="product-images"
                 value={form.images}

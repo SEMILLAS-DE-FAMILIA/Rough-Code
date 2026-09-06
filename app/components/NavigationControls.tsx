@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './AppLayout.module.css';
 import { useCartStore } from '../../src/lib/useCartStore';
 
@@ -14,7 +15,6 @@ const formatCLP = (value: number) =>
 
 const REMOVE_ANIMATION_MS = 220;
 
-// Hook para evitar errores de hidratación (Hydration mismatch) en Next.js
 function useIsHydrated() {
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => setIsHydrated(true), []);
@@ -24,17 +24,14 @@ function useIsHydrated() {
 export default function NavigationControls({ lastAddedProduct }: NavigationControlsProps) {
   const isHydrated = useIsHydrated();
   
-  // Extraemos del store
   const storeCart = useCartStore((state) => state.cart);
   const storeItemCount = useCartStore((state) => state.itemCount());
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
 
-  // Evitamos renderizar datos de localStorage en el servidor
   const cartItems = isHydrated ? storeCart : [];
   const itemCount = isHydrated ? storeItemCount : 0;
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [removingId, setRemovingId] = useState<number | null>(null);
 
@@ -49,22 +46,38 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
     }, REMOVE_ANIMATION_MS);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <>
-      {/* 1. Botón 3 Puntos (Izquierda) */}
+      {/* 1. Logo Flotante Abajo-Izquierda (Sube al inicio) */}
       <button
         className={styles.menuFloatingBtn}
-        onClick={() => setIsSidebarOpen(true)}
-        aria-label="Abrir Menú"
+        onClick={scrollToTop}
+        aria-label="Ir al inicio"
+        style={{
+          padding: '0',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '64px',
+          height: '64px',
+          cursor: 'pointer',
+        }}
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-          <circle cx="5" cy="12" r="2" />
-          <circle cx="12" cy="12" r="2" />
-          <circle cx="19" cy="12" r="2" />
-        </svg>
+        <Image
+          src="/images/logo/logo.png"
+          alt="Inicio"
+          width={62}
+          height={62}
+          style={{ objectFit: 'contain' }}
+        />
       </button>
 
-      {/* 2. Botón Carrito Flotante (Derecha) */}
+      {/* 2. Botón Carrito Flotante Abajo-Derecha */}
       <button
         className={styles.cartFloatingBtn}
         onClick={() => setIsCartOpen(true)}
@@ -85,39 +98,11 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
         )}
       </button>
 
-      {/* Overlay Sombra Suave */}
+      {/* Overlay Sombra para el Carrito */}
       <div
-        className={`${styles.sidebarOverlay} ${
-          isSidebarOpen || isCartOpen ? styles.isOpen : ''
-        }`}
-        onClick={() => {
-          setIsSidebarOpen(false);
-          setIsCartOpen(false);
-        }}
+        className={`${styles.sidebarOverlay} ${isCartOpen ? styles.isOpen : ''}`}
+        onClick={() => setIsCartOpen(false)}
       />
-
-      {/* Sidebar Menú Lateral */}
-      <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.isOpen : ''}`}>
-        <div className={styles.sidebarHeader}>
-          <h3>Menú</h3>
-          <button className={styles.closeBtn} onClick={() => setIsSidebarOpen(false)}>
-            ✕
-          </button>
-        </div>
-        <nav className={styles.sidebarNav}>
-          <button className={`${styles.sidebarLink} ${styles.active}`}>
-            <span>👤</span> Mi Cuenta
-          </button>
-          <button className={styles.sidebarLink}>
-            <span>📦</span> Mis Pedidos
-          </button>
-          <hr style={{ border: '0.5px solid #e2e8f0', margin: '0.75rem 0' }} />
-          <a href="/admin" className={styles.sidebarLink} style={{ textDecoration: 'none' }}>
-            <span>🛠️</span> Panel Admin
-            <span className={styles.adminBadge}>ADMIN</span>
-          </a>
-        </nav>
-      </aside>
 
       {/* Panel Desplegable del Carrito */}
       <aside className={`${styles.cartDrawer} ${isCartOpen ? styles.isOpen : ''}`}>
@@ -148,7 +133,6 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
                   <h4 className={styles.cartItemTitle}>{item.title}</h4>
                   <p className={styles.cartItemPrice}>{formatCLP(item.final_price)}</p>
 
-                  {/* Selector de Cantidad */}
                   <div className={styles.quantityControls}>
                     <button onClick={() => updateQuantity(item.id, -1)} aria-label="Restar uno">
                       -
@@ -206,7 +190,7 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
         )}
       </aside>
 
-      {/* Toast Flotante */}
+      {/* Toast Flotante (Aparece justo por encima del carrito) */}
       {lastAddedProduct && !isCartOpen && (
         <div className={styles.toastNotification}>
           <span style={{ fontSize: '1.2rem' }}>🌿</span>

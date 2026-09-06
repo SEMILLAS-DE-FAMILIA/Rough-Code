@@ -9,7 +9,9 @@ import styles from './ProductGrid.module.css';
 export interface Product {
   id: number;
   title: string;
-  category: string;
+  category_id: number | null;
+  category_name?: string;
+  category?: string; // Compatibilidad para componentes antiguos
   price: number;
   discount_percent: number;
   final_price: number;
@@ -24,7 +26,7 @@ export interface Product {
 const formatCLP = (value: number) =>
   new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
-/* Subcomponente para cada Tarjeta del Catálogo Principal con transición de opacidad */
+/* Subcomponente para cada Tarjeta del Catálogo Principal */
 function ProductCard({
   product,
   quantityInCart,
@@ -73,7 +75,6 @@ function ProductCard({
           <span className={styles.discountBadge}>-{product.discount_percent}%</span>
         )}
 
-        {/* Galería apilada con transición suave */}
         <div className={styles.fadeImageWrap}>
           {images.map((img, idx) => (
             <Image
@@ -91,7 +92,7 @@ function ProductCard({
       </div>
 
       <div className={styles.cardContent}>
-        <span className={styles.productCategory}>{product.category}</span>
+        <span className={styles.productCategory}>{product.category_name || 'Sin categoría'}</span>
         <h3 className={styles.productTitle}>{product.title}</h3>
 
         <p
@@ -131,7 +132,7 @@ function ProductCard({
   );
 }
 
-/* Subcomponente para el Modal de Detalle con transición de opacidad */
+/* Subcomponente para el Modal de Detalle */
 function ProductModalDetails({
   product,
   cart,
@@ -230,7 +231,7 @@ function ProductModalDetails({
         )}
 
         <div className={styles.modalInfoBox}>
-          <span className={styles.productCategory}>{product.category}</span>
+          <span className={styles.productCategory}>{product.category_name || 'Sin categoría'}</span>
           <h3 className={styles.modalTitle}>{product.title}</h3>
 
           {product.description && (
@@ -290,24 +291,51 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
 
     async function fetchProducts() {
       setLoading(true);
+
       const { data, error } = await supabase
         .from('products')
-        .select('id, title, category, price, discount_percent, final_price, description, img_url, images, badge, is_new, stock')
+        .select(`
+          id,
+          title,
+          category_id,
+          price,
+          discount_percent,
+          final_price,
+          description,
+          img_url,
+          images,
+          badge,
+          is_new,
+          stock,
+          categories!fk_products_categories ( name )
+        `)
         .eq('active', true)
         .order('created_at', { ascending: false });
 
       if (!isMounted) return;
 
       if (error) {
+        console.error('Error fetching products:', error);
         setError('No se pudieron cargar los productos. Intenta de nuevo más tarde.');
         setLoading(false);
         return;
       }
 
-      const fetched = data ?? [];
+      const fetched: Product[] = (data || []).map((item: any) => {
+        const catName = item.categories?.name || 'Sin categoría';
+        return {
+          ...item,
+          category_name: catName,
+          category: catName,
+        };
+      });
+
       setProducts(fetched);
-      const uniqueCategories = Array.from(new Set(fetched.map((p) => p.category)));
-      setCategories(['Todos', ...uniqueCategories]);
+
+      const categoryNames = Array.from(
+        new Set(fetched.map((p) => p.category_name).filter((name): name is string => Boolean(name)))
+      );
+      setCategories(['Todos', ...categoryNames]);
       setLoading(false);
     }
 
@@ -326,7 +354,9 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (product: Pr
   }, []);
 
   const filteredProducts = (
-    activeCategory === 'Todos' ? products : products.filter((p) => p.category === activeCategory)
+    activeCategory === 'Todos'
+      ? products
+      : products.filter((p) => p.category_name === activeCategory)
   ).sort((a, b) => (b.stock > 0 ? 1 : 0) - (a.stock > 0 ? 1 : 0));
 
   return (

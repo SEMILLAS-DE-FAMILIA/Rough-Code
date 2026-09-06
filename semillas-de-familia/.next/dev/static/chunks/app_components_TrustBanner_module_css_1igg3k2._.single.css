@@ -3,32 +3,32 @@
   border-bottom: 1px solid var(--color-border, #1c191714);
   z-index: 10;
   background-color: #fff;
-  padding: 2.5rem 1.5rem;
+  padding: 4.5rem 2rem;
   position: relative;
   box-shadow: 0 4px 20px #00000008;
 }
 
 .TrustBanner-module__Rko1JG__trustGrid {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   align-items: center;
-  gap: 2rem;
-  max-width: 1100px;
+  gap: 2.5rem;
+  max-width: 1200px;
   margin: 0 auto;
   display: grid;
 }
 
 .TrustBanner-module__Rko1JG__trustItem {
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   display: flex;
 }
 
 .TrustBanner-module__Rko1JG__trustIcon {
-  width: 44px;
-  height: 44px;
+  width: 54px;
+  height: 54px;
   color: var(--color-primary-green, #16a34a);
   background: #f0fdf4;
-  border-radius: 12px;
+  border-radius: 14px;
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
@@ -37,15 +37,15 @@
 
 .TrustBanner-module__Rko1JG__trustText h4 {
   color: var(--foreground, #1c1917);
-  margin-bottom: .15rem;
-  font-size: .95rem;
+  margin-bottom: .2rem;
+  font-size: 1.05rem;
   font-weight: 700;
 }
 
 .TrustBanner-module__Rko1JG__trustText p {
   color: #78716c;
   margin: 0;
-  font-size: .8rem;
+  font-size: .88rem;
 }
 
 /*# sourceMappingURL=app_components_TrustBanner_module_css_1igg3k2._.single.css.map*/

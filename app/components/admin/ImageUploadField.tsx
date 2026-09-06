@@ -6,8 +6,8 @@ import styles from './Admin.module.css';
 
 interface ImageUploadFieldProps {
   bucket: 'product-images' | 'carousel-images';
-  value: string[]; // <--- Ahora recibe una lista de URLs
-  onChange: (urls: string[]) => void; // <--- Retorna la nueva lista de URLs
+  value: string[]; // Recibe la lista de URLs
+  onChange: (urls: string[]) => void; // Retorna la nueva lista de URLs
   label?: string;
   altText?: string;
 }
@@ -56,11 +56,13 @@ export default function ImageUploadField({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Garantizar que siempre trabajemos con un arreglo válido
+  const safeValue = value || [];
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // Validar tipo de imagen para todos los archivos
     for (let i = 0; i < files.length; i++) {
       if (!files[i].type.startsWith('image/')) {
         setError('Todos los archivos deben ser imágenes.');
@@ -92,8 +94,7 @@ export default function ImageUploadField({
         uploadedUrls.push(data.publicUrl);
       }
 
-      // Concatenar imágenes previas con las nuevas
-      onChange([...value, ...uploadedUrls]);
+      onChange([...safeValue, ...uploadedUrls]);
     } catch (err) {
       setError('No se pudo procesar o subir una o más imágenes.');
     } finally {
@@ -103,7 +104,7 @@ export default function ImageUploadField({
   };
 
   const handleRemoveImage = (indexToRemove: number) => {
-    const filtered = value.filter((_, idx) => idx !== indexToRemove);
+    const filtered = safeValue.filter((_, idx) => idx !== indexToRemove);
     onChange(filtered);
   };
 
@@ -111,9 +112,9 @@ export default function ImageUploadField({
     <div className={styles.field}>
       {label && <label>{label}</label>}
 
-      {/* Rejilla con vistas previas de todas las imágenes */}
+      {/* Rejilla protegida contra valores nulos */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
-        {value.map((url, idx) => (
+        {safeValue.map((url, idx) => (
           <div
             key={url + idx}
             style={{
@@ -122,7 +123,7 @@ export default function ImageUploadField({
               height: '70px',
               borderRadius: '6px',
               overflow: 'hidden',
-              border: idx === 0 ? '2px solid #16a34a' : '1px solid #e2e8f0', // La primera se marca como principal
+              border: idx === 0 ? '2px solid #16a34a' : '1px solid #e2e8f0',
             }}
           >
             <img
@@ -176,7 +177,7 @@ export default function ImageUploadField({
 
       <div className={styles.uploadBox} onClick={() => inputRef.current?.click()}>
         <span className={styles.uploadHint}>
-          {uploading ? 'Comprimiendo y subiendo...' : '+ Agregar más imágenes'}
+          {uploading ? 'Comprimiendo y subiendo...' : '+ Agregar imágenes'}
         </span>
       </div>
 
@@ -184,7 +185,7 @@ export default function ImageUploadField({
         ref={inputRef}
         type="file"
         accept="image/*"
-        multiple // <--- Permite seleccionar múltiples archivos
+        multiple
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />

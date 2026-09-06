@@ -23,14 +23,33 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
     async function fetchNovedades() {
       const { data, error } = await supabase
         .from('products')
-        .select('id, title, category, price, discount_percent, final_price, description, img_url, badge, is_new, stock')
+        .select(`
+          id, 
+          title, 
+          category_id, 
+          price, 
+          discount_percent, 
+          final_price, 
+          description, 
+          img_url, 
+          badge, 
+          is_new, 
+          stock,
+          categories!fk_products_categories ( name )
+        `)
         .eq('active', true)
         .eq('is_new', true)
         .order('created_at', { ascending: false });
 
       if (!isMounted) return;
 
-      if (!error && data) setProducts(data);
+      if (!error && data) {
+        const mappedProducts: Product[] = data.map((p: any) => ({
+          ...p,
+          category: p.categories?.name || 'Sin categoría',
+        }));
+        setProducts(mappedProducts);
+      }
       setLoading(false);
     }
 

@@ -26,7 +26,6 @@ export default function Home() {
       <CarouselHero />
       <NovedadesCarousel onAddToCart={handleAddToCart} />
       <ProductGrid onAddToCart={handleAddToCart} />
-      <TrustBanner />
     </main>
   );
 }

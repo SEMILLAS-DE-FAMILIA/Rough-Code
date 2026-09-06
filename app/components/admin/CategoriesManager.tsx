@@ -20,7 +20,11 @@ export default function CategoriesManager() {
 
   const fetchCategories = async () => {
     setLoading(true);
-    const { data, error } = await supabase.from('categories').select('*').order('name', { ascending: true });
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .order('name', { ascending: true });
+
     if (!error && data) setCategories(data);
     setLoading(false);
   };
@@ -34,8 +38,10 @@ export default function CategoriesManager() {
     const trimmed = newName.trim();
     if (!trimmed) return;
 
-    // Evitamos duplicados aunque cambie mayúsculas/espacios
-    const alreadyExists = categories.some((c) => c.name.toLowerCase() === trimmed.toLowerCase());
+    // Evitamos duplicados ignorando mayúsculas/minúsculas
+    const alreadyExists = categories.some(
+      (c) => c.name.toLowerCase() === trimmed.toLowerCase()
+    );
     if (alreadyExists) {
       setError('Esa categoría ya existe.');
       return;
@@ -44,7 +50,9 @@ export default function CategoriesManager() {
     setSaving(true);
     setError(null);
 
-    const { error: insertError } = await supabase.from('categories').insert({ name: trimmed });
+    const { error: insertError } = await supabase
+      .from('categories')
+      .insert({ name: trimmed });
 
     setSaving(false);
 
@@ -83,7 +91,12 @@ export default function CategoriesManager() {
     setSaving(true);
     setError(null);
 
-    const { error: updateError } = await supabase.from('categories').update({ name: trimmed }).eq('id', id);
+    // Al actualizar el nombre de la categoría en la DB, todos los productos 
+    // vinculados por category_id reflejarán el nuevo nombre automáticamente
+    const { error: updateError } = await supabase
+      .from('categories')
+      .update({ name: trimmed })
+      .eq('id', id);
 
     setSaving(false);
 
@@ -92,15 +105,29 @@ export default function CategoriesManager() {
       return;
     }
 
-    // Nota: esto NO actualiza el texto ya guardado en productos existentes,
-    // solo cambia el nombre disponible para elegir de aquí en adelante.
     cancelEdit();
     fetchCategories();
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Eliminar esta categoría? Los productos que ya la tienen asignada no se modifican, solo dejará de estar disponible para elegir en nuevos productos.')) return;
-    await supabase.from('categories').delete().eq('id', id);
+    if (
+      !confirm(
+        '¿Eliminar esta categoría? Los productos asociados quedarán sin categoría asignada (ON DELETE SET NULL).'
+      )
+    ) {
+      return;
+    }
+
+    const { error: deleteError } = await supabase
+      .from('categories')
+      .delete()
+      .eq('id', id);
+
+    if (deleteError) {
+      setError('No se pudo eliminar la categoría.');
+      return;
+    }
+
     fetchCategories();
   };
 
@@ -158,7 +185,12 @@ export default function CategoriesManager() {
               <div className={styles.rowActions}>
                 {editingId === c.id ? (
                   <>
-                    <button className={styles.iconActionBtn} onClick={() => handleRename(c.id)} title="Guardar">
+                    <button
+                      className={styles.iconActionBtn}
+                      onClick={() => handleRename(c.id)}
+                      title="Guardar"
+                      disabled={saving}
+                    >
                       ✓
                     </button>
                     <button className={styles.iconActionBtn} onClick={cancelEdit} title="Cancelar">

@@ -25,6 +25,22 @@ const FALLBACK_SLIDE: SlideItem = {
 
 const AUTOPLAY_DELAY = 5000;
 
+// Parsea y extrae una URL limpia en caso de que en la DB exista un JSON/Array mal formateado
+const cleanImageUrl = (rawUrl: string | null | undefined): string => {
+  if (!rawUrl) return '/images/slider/image1.png';
+  if (typeof rawUrl === 'string' && rawUrl.startsWith('[')) {
+    try {
+      const parsed = JSON.parse(rawUrl);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed[0];
+      }
+    } catch {
+      // Si falla el parseo, se utiliza el valor original
+    }
+  }
+  return rawUrl;
+};
+
 export default function CarouselHero() {
   const [slides, setSlides] = useState<SlideItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +64,7 @@ export default function CarouselHero() {
         setSlides(
           data.map((slide) => ({
             id: slide.id,
-            src: slide.img_url || '/images/slider/image1.png',
+            src: cleanImageUrl(slide.img_url),
             alt: slide.title,
             title: slide.title,
             description: slide.subtitle || '',
@@ -56,8 +72,6 @@ export default function CarouselHero() {
           }))
         );
       } else {
-        // Solo caemos al slide de bienvenida si Supabase realmente no tiene
-        // ningún slide activo (o falló la consulta), nunca como estado inicial.
         setSlides([FALLBACK_SLIDE]);
       }
       setCurrentIndex(0);
@@ -70,7 +84,6 @@ export default function CarouselHero() {
     };
   }, []);
 
-  // Arranca (o reinicia) el temporizador de autoplay
   const startAutoplay = useCallback(() => {
     if (autoplayRef.current) clearInterval(autoplayRef.current);
     if (slides.length > 1) {
@@ -87,7 +100,6 @@ export default function CarouselHero() {
     };
   }, [startAutoplay]);
 
-  // Cada vez que cambia el índice actual, desplazamos el contenedor hasta ese slide
   useEffect(() => {
     const container = viewportRef.current;
     if (!container) return;
@@ -99,7 +111,6 @@ export default function CarouselHero() {
 
   const goToSlide = (index: number) => {
     setCurrentIndex(((index % slides.length) + slides.length) % slides.length);
-    // Navegación manual: le damos otros 5s completos antes del próximo avance automático
     startAutoplay();
   };
 
@@ -118,8 +129,6 @@ export default function CarouselHero() {
   return (
     <section className={styles.heroContainer}>
       {currentSlide && (
-        // key={currentSlide.id} fuerza a React a remontar la imagen en cada cambio
-        // de slide, lo que reinicia la animación de zoom (Ken Burns) desde cero.
         <div className={styles.backgroundImageWrapper} key={currentSlide.id}>
           <Image
             src={currentSlide.src}
@@ -136,7 +145,6 @@ export default function CarouselHero() {
       <div className={styles.heroContentGrid}>
         <div className={styles.textColumn}>
           {currentSlide && (
-            // key en el wrapper de texto reinicia la animación de entrada (fade + slide up)
             <div className={styles.textInner} key={currentSlide.id}>
               <h1 className={styles.mainTitle}>{currentSlide.title}</h1>
               {currentSlide.description && (

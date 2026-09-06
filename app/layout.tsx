@@ -3,6 +3,10 @@ import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "./styles/tokens.css";
 
+// Importación de componentes globales
+import TrustBanner from "./components/TrustBanner"; // Ajusta la ruta según la ubicación exacta de tu componente
+import Footer from "./components/Footer";           // Ajusta la ruta según la ubicación exacta de tu componente
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -62,7 +66,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className={`min-h-full flex flex-col ${displayFont.variable}`}>
-        {children}
+        {/* Contenido dinámico de las páginas */}
+        <div className="flex-1">
+          {children}
+        </div>
+
+        {/* Sección inferior global */}
+        <TrustBanner />
+        <Footer />
       </body>
     </html>
   );

@@ -1,17 +1,28 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { Product } from '../../app/components/ProductGrid';
 
-export interface CartItem extends Product {
+export interface CartItem {
+  id: string; // clave compuesta: `${variant_id}-${flavor_id}`
+  product_id: number;
+  product_title: string;
+  variant_id: number;
+  flavor_id: number;
+  selected_weight: string;
+  selected_flavor: string;
+  unit_price: number;
   quantity: number;
+  img_url: string | null;
+  max_stock: number;
 }
+
+export type NewCartItem = Omit<CartItem, 'id'>; // incluye quantity: la cantidad que se quiere agregar
 
 interface CartStore {
   cart: CartItem[];
   lastUpdated: number | null;
-  addToCart: (product: Product) => void;
-  updateQuantity: (id: number, delta: number) => void;
-  removeItem: (id: number) => void;
+  addToCart: (item: NewCartItem) => void;
+  updateQuantity: (id: string, delta: number) => void;
+  removeItem: (id: string) => void;
   clearCart: () => void;
   itemCount: () => number;
 }
@@ -24,29 +35,45 @@ export const useCartStore = create<CartStore>()(
       cart: [],
       lastUpdated: null,
 
-      addToCart: (product) => {
+      addToCart: (item) => {
         set((state) => {
-          const existingIndex = state.cart.findIndex((item) => item.id === product.id);
+          const compositeId = `${item.variant_id}-${item.flavor_id}`;
+          const existingIndex = state.cart.findIndex((c) => c.id === compositeId);
+          const incomingQty = Number.isFinite(item.quantity) && item.quantity > 0 ? item.quantity : 1;
+          const itemMaxStock = Number.isFinite(item.max_stock) ? item.max_stock : 0;
           let newCart: CartItem[];
+
+          console.log('[addToCart] item recibido:', item);
+          console.log('[addToCart] compositeId:', compositeId, 'incomingQty:', incomingQty, 'itemMaxStock:', itemMaxStock);
 
           if (existingIndex > -1) {
             const current = state.cart[existingIndex];
-            
-            // Si la cantidad en el carrito ya es igual o mayor al stock disponible, se bloquea la acción
-            if (current.quantity >= product.stock) return state;
+            const currentQty = Number.isFinite(current.quantity) ? current.quantity : 0;
+            const newQty = Math.min(currentQty + incomingQty, itemMaxStock);
+
+            if (newQty <= currentQty) {
+              console.warn('[addToCart] BLOQUEADO: ya en el tope de stock', { currentQty, itemMaxStock });
+              return state;
+            }
 
             newCart = [...state.cart];
             newCart[existingIndex] = {
-              ...product, // Actualiza datos por si cambiaron en BD (precio, imagen, stock)
-              quantity: current.quantity + 1,
+              ...current,
+              unit_price: item.unit_price,
+              max_stock: itemMaxStock,
+              quantity: newQty,
             };
           } else {
-            // Si el producto no tiene stock, no se agrega al carrito
-            if (product.stock <= 0) return state;
+            if (itemMaxStock <= 0) {
+              console.warn('[addToCart] BLOQUEADO: itemMaxStock <= 0', item);
+              return state;
+            }
 
-            newCart = [...state.cart, { ...product, quantity: 1 }];
+            const cappedQty = Math.min(incomingQty, itemMaxStock);
+            newCart = [...state.cart, { ...item, id: compositeId, quantity: cappedQty, max_stock: itemMaxStock }];
           }
 
+          console.log('[addToCart] carrito resultante:', newCart);
           return { cart: newCart, lastUpdated: Date.now() };
         });
       },
@@ -56,12 +83,13 @@ export const useCartStore = create<CartStore>()(
           cart: state.cart
             .map((item) => {
               if (item.id === id) {
-                const newQty = item.quantity + delta;
+                const currentQty = Number.isFinite(item.quantity) ? item.quantity : 0;
+                const maxStock = Number.isFinite(item.max_stock) ? item.max_stock : 0;
+                const newQty = currentQty + delta;
+
                 if (newQty <= 0) return null;
-                
-                // Si intenta incrementar y supera el stock máximo, no hace cambios
-                if (delta > 0 && newQty > item.stock) return item;
-                
+                if (delta > 0 && newQty > maxStock) return item;
+
                 return { ...item, quantity: newQty };
               }
               return item;
@@ -80,15 +108,29 @@ export const useCartStore = create<CartStore>()(
 
       clearCart: () => set({ cart: [], lastUpdated: null }),
 
-      itemCount: () => {
-        return get().cart.reduce((total, item) => total + item.quantity, 0);
-      },
+      itemCount: () => get().cart.reduce((total, item) => total + (Number.isFinite(item.quantity) ? item.quantity : 0), 0),
     }),
     {
       name: 'cart-storage',
       storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => (state) => {
-        if (state && state.lastUpdated) {
+        if (!state) return;
+
+        // Descarta cualquier ítem corrupto o de una versión anterior del carrito
+        // (forma vieja, quantity/max_stock inválidos, etc.) antes de que llegue a renderizarse.
+        state.cart = (state.cart || []).filter(
+          (item) =>
+            item &&
+            typeof item.id === 'string' &&
+            typeof item.variant_id === 'number' &&
+            typeof item.flavor_id === 'number' &&
+            Number.isFinite(item.quantity) &&
+            item.quantity > 0 &&
+            Number.isFinite(item.max_stock) &&
+            Number.isFinite(item.unit_price)
+        );
+
+        if (state.lastUpdated) {
           const now = Date.now();
           if (now - state.lastUpdated > THREE_DAYS_IN_MS) {
             state.clearCart();

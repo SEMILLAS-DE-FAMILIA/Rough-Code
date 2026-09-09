@@ -33,12 +33,12 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
   const itemCount = isHydrated ? storeItemCount : 0;
 
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [removingId, setRemovingId] = useState<number | null>(null);
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
+  const subtotal = cartItems.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
   const total = subtotal;
 
-  const handleRemoveClick = (id: number) => {
+  const handleRemoveClick = (id: string) => {
     setRemovingId(id);
     setTimeout(() => {
       removeItem(id);
@@ -127,11 +127,11 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
                 className={`${styles.cartItem} ${removingId === item.id ? styles.cartItemRemoving : ''}`}
               >
                 {item.img_url && (
-                  <img src={item.img_url} alt={item.title} className={styles.cartItemImg} />
+                  <img src={item.img_url} alt={item.product_title} className={styles.cartItemImg} />
                 )}
                 <div style={{ flex: 1 }}>
-                  <h4 className={styles.cartItemTitle}>{item.title}</h4>
-                  <p className={styles.cartItemPrice}>{formatCLP(item.final_price)}</p>
+                  <h4 className={styles.cartItemTitle}>{item.product_title}</h4>
+                  <p className={styles.cartItemPrice}>{formatCLP(item.unit_price)}</p>
 
                   <div className={styles.quantityControls}>
                     <button onClick={() => updateQuantity(item.id, -1)} aria-label="Restar uno">
@@ -163,11 +163,11 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
             {cartItems.map((item) => (
               <div key={item.id} className={styles.summaryRow}>
                 <span className={styles.summaryRowLabel}>
-                  {item.title}
+                  {item.product_title}
                   {item.quantity > 1 && <span className={styles.summaryRowQty}> ×{item.quantity}</span>}
                 </span>
                 <span className={styles.summaryRowValue}>
-                  {formatCLP(item.final_price * item.quantity)}
+                  {formatCLP(item.unit_price * item.quantity)}
                 </span>
               </div>
             ))}
@@ -190,7 +190,7 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
         )}
       </aside>
 
-      {/* Toast Flotante (Aparece justo por encima del carrito) */}
+      {/* Toast Flotante */}
       {lastAddedProduct && !isCartOpen && (
         <div className={styles.toastNotification}>
           <span style={{ fontSize: '1.2rem' }}>🌿</span>

@@ -3,19 +3,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { supabase } from '../../src/lib/supabaseClient';
-import { useCartStore } from '../../src/lib/useCartStore';
-import { Product } from './ProductGrid';
+import { Product, ProductModalDetails } from './ProductGrid';
+import { NewCartItem } from '../../src/lib/useCartStore';
 import styles from './NovedadesCarousel.module.css';
 
 const formatCLP = (value: number) =>
   new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
-export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (product: Product) => void }) {
+export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (item: NewCartItem) => void }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const cart = useCartStore((state) => state.cart);
 
   useEffect(() => {
     let isMounted = true;
@@ -24,18 +23,23 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
       const { data, error } = await supabase
         .from('products')
         .select(`
-          id, 
-          title, 
-          category_id, 
-          price, 
-          discount_percent, 
-          final_price, 
-          description, 
-          img_url, 
-          badge, 
-          is_new, 
-          stock,
-          categories!fk_products_categories ( name )
+          id,
+          title,
+          category_id,
+          description,
+          img_url,
+          images,
+          badge,
+          is_new,
+          categories ( name ),
+          product_variants (
+            id,
+            weight,
+            price,
+            discount_percent,
+            variant_flavor_stock ( flavor_id, stock )
+          ),
+          product_flavors ( id, flavor_name )
         `)
         .eq('active', true)
         .eq('is_new', true)
@@ -44,11 +48,19 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
       if (!isMounted) return;
 
       if (!error && data) {
-        const mappedProducts: Product[] = data.map((p: any) => ({
-          ...p,
-          category: p.categories?.name || 'Sin categoría',
+        const fetched: Product[] = data.map((item: any) => ({
+          ...item,
+          category_name: item.categories?.name || 'Sin categoría',
+          variants: (item.product_variants || []).map((v: any) => ({
+            id: v.id,
+            weight: v.weight,
+            price: v.price,
+            discount_percent: v.discount_percent,
+            stocks: (v.variant_flavor_stock || []).map((s: any) => ({ flavor_id: s.flavor_id, stock: s.stock })),
+          })),
+          flavors: item.product_flavors || [],
         }));
-        setProducts(mappedProducts);
+        setProducts(fetched);
       }
       setLoading(false);
     }
@@ -65,8 +77,6 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
 
   if (loading || products.length === 0) return null;
 
-  const sortedProducts = [...products].sort((a, b) => (b.stock > 0 ? 1 : 0) - (a.stock > 0 ? 1 : 0));
-
   return (
     <section className={styles.section}>
       <div className={styles.container}>
@@ -74,7 +84,7 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
           <div>
             <h2 className={styles.title}>Novedades</h2>
           </div>
-          {sortedProducts.length > 1 && (
+          {products.length > 1 && (
             <div className={styles.arrowGroup}>
               <button type="button" className={styles.arrowBtn} onClick={() => scroll(-1)} aria-label="Anterior">
                 &#10094;
@@ -87,48 +97,47 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
         </div>
 
         <div className={styles.scrollRow} ref={scrollRef}>
-          {sortedProducts.map((p) => {
-            const hasDiscount = p.discount_percent > 0;
-            const isOutOfStock = p.stock <= 0;
-
-            const cartItem = cart.find((item) => item.id === p.id);
-            const quantityInCart = cartItem ? cartItem.quantity : 0;
-            const isLimitReached = isOutOfStock || quantityInCart >= p.stock;
+          {products.map((p) => {
+            const firstVariant = p.variants[0];
+            const hasDiscount = firstVariant && firstVariant.discount_percent > 0;
+            const totalStock = p.variants.reduce(
+              (sum, v) => sum + v.stocks.reduce((s, entry) => s + entry.stock, 0),
+              0
+            );
 
             return (
-              <div 
-                key={p.id} 
-                className={`${styles.card} ${isOutOfStock ? styles.outOfStockCard : ''}`}
-              >
+              <div key={p.id} className={styles.card}>
                 <div className={styles.imageWrap}>
-                  {isOutOfStock && <span className={styles.outOfStockBadge}>Sin stock</span>}
-                  {hasDiscount && <span className={styles.discountBadge}>-{p.discount_percent}%</span>}
+                  {hasDiscount && <span className={styles.discountBadge}>-{firstVariant.discount_percent}%</span>}
                   {p.img_url && (
                     <Image src={p.img_url} alt={p.title} fill className={styles.image} sizes="240px" />
                   )}
                 </div>
 
                 <div className={styles.cardContent}>
-                  <span className={styles.category}>{p.category}</span>
+                  <span className={styles.category}>{p.category_name}</span>
                   <h3 className={styles.productTitle}>{p.title}</h3>
-
-                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0.1rem 0 0.4rem 0' }}>
-                    {p.stock > 0 ? `Stock: ${p.stock} un.` : 'Sin stock'}
-                  </p>
 
                   <div className={styles.footer}>
                     <div className={styles.priceGroup}>
-                      {hasDiscount && <span className={styles.originalPrice}>{formatCLP(p.price)}</span>}
-                      <span className={styles.price}>{formatCLP(p.final_price)}</span>
+                      {firstVariant && (
+                        <>
+                          {hasDiscount && <span className={styles.originalPrice}>{formatCLP(firstVariant.price)}</span>}
+                          <span className={styles.price}>
+                            Desde {formatCLP(hasDiscount ? firstVariant.price * (1 - firstVariant.discount_percent / 100) : firstVariant.price)}
+                          </span>
+                        </>
+                      )}
                     </div>
-                    <button 
-                      type="button" 
-                      className={styles.addBtn} 
-                      onClick={() => onAddToCart(p)} 
-                      disabled={isLimitReached} 
-                      aria-label="Agregar al carrito"
+                    <button
+                      type="button"
+                      className={styles.addBtn}
+                      onClick={() => setSelectedProduct(p)}
+                      aria-label="Ver opciones"
+                      disabled={totalStock <= 0}
+                      style={{ opacity: totalStock <= 0 ? 0.5 : 1, cursor: totalStock <= 0 ? 'not-allowed' : 'pointer' }}
                     >
-                      {isOutOfStock ? '—' : quantityInCart >= p.stock ? 'Max' : '+'}
+                      +
                     </button>
                   </div>
                 </div>
@@ -137,6 +146,14 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (produ
           })}
         </div>
       </div>
+
+      {selectedProduct && (
+        <ProductModalDetails
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={onAddToCart}
+        />
+      )}
     </section>
   );
 }

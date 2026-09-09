@@ -1020,7 +1020,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$ne
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/image.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/supabaseClient.ts [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCartStore$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/useCartStore.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/ProductGrid.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__ = __turbopack_context__.i("[project]/app/components/NovedadesCarousel.module.css [app-client] (css module)");
 ;
 var _s = __turbopack_context__.k.signature();
@@ -1038,39 +1038,57 @@ function NovedadesCarousel({ onAddToCart }) {
     _s();
     const [products, setProducts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [selectedProduct, setSelectedProduct] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const scrollRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const cart = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCartStore$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCartStore"])({
-        "NovedadesCarousel.useCartStore[cart]": (state)=>state.cart
-    }["NovedadesCarousel.useCartStore[cart]"]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "NovedadesCarousel.useEffect": ()=>{
             let isMounted = true;
             async function fetchNovedades() {
                 const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from('products').select(`
-          id, 
-          title, 
-          category_id, 
-          price, 
-          discount_percent, 
-          final_price, 
-          description, 
-          img_url, 
-          badge, 
-          is_new, 
-          stock,
-          categories!fk_products_categories ( name )
+          id,
+          title,
+          category_id,
+          description,
+          img_url,
+          images,
+          badge,
+          is_new,
+          categories ( name ),
+          product_variants (
+            id,
+            weight,
+            price,
+            discount_percent,
+            variant_flavor_stock ( flavor_id, stock )
+          ),
+          product_flavors ( id, flavor_name )
         `).eq('active', true).eq('is_new', true).order('created_at', {
                     ascending: false
                 });
                 if (!isMounted) return;
                 if (!error && data) {
-                    const mappedProducts = data.map({
-                        "NovedadesCarousel.useEffect.fetchNovedades.mappedProducts": (p)=>({
-                                ...p,
-                                category: p.categories?.name || 'Sin categoría'
+                    const fetched = data.map({
+                        "NovedadesCarousel.useEffect.fetchNovedades.fetched": (item)=>({
+                                ...item,
+                                category_name: item.categories?.name || 'Sin categoría',
+                                variants: (item.product_variants || []).map({
+                                    "NovedadesCarousel.useEffect.fetchNovedades.fetched": (v)=>({
+                                            id: v.id,
+                                            weight: v.weight,
+                                            price: v.price,
+                                            discount_percent: v.discount_percent,
+                                            stocks: (v.variant_flavor_stock || []).map({
+                                                "NovedadesCarousel.useEffect.fetchNovedades.fetched": (s)=>({
+                                                        flavor_id: s.flavor_id,
+                                                        stock: s.stock
+                                                    })
+                                            }["NovedadesCarousel.useEffect.fetchNovedades.fetched"])
+                                        })
+                                }["NovedadesCarousel.useEffect.fetchNovedades.fetched"]),
+                                flavors: item.product_flavors || []
                             })
-                    }["NovedadesCarousel.useEffect.fetchNovedades.mappedProducts"]);
-                    setProducts(mappedProducts);
+                    }["NovedadesCarousel.useEffect.fetchNovedades.fetched"]);
+                    setProducts(fetched);
                 }
                 setLoading(false);
             }
@@ -1089,232 +1107,227 @@ function NovedadesCarousel({ onAddToCart }) {
         });
     };
     if (loading || products.length === 0) return null;
-    const sortedProducts = [
-        ...products
-    ].sort((a, b)=>(b.stock > 0 ? 1 : 0) - (a.stock > 0 ? 1 : 0));
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].section,
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].container,
-            children: [
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].header,
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].title,
-                                children: "Novedades"
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].container,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].header,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].title,
+                                    children: "Novedades"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                    lineNumber: 85,
+                                    columnNumber: 13
+                                }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                lineNumber: 75,
+                                lineNumber: 84,
+                                columnNumber: 11
+                            }, this),
+                            products.length > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowGroup,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowBtn,
+                                        onClick: ()=>scroll(-1),
+                                        "aria-label": "Anterior",
+                                        children: "❮"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                        lineNumber: 89,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowBtn,
+                                        onClick: ()=>scroll(1),
+                                        "aria-label": "Siguiente",
+                                        children: "❯"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                        lineNumber: 92,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                lineNumber: 88,
                                 columnNumber: 13
                             }, this)
-                        }, void 0, false, {
-                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                            lineNumber: 74,
-                            columnNumber: 11
-                        }, this),
-                        sortedProducts.length > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowGroup,
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    type: "button",
-                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowBtn,
-                                    onClick: ()=>scroll(-1),
-                                    "aria-label": "Anterior",
-                                    children: "❮"
-                                }, void 0, false, {
-                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                    lineNumber: 79,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    type: "button",
-                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].arrowBtn,
-                                    onClick: ()=>scroll(1),
-                                    "aria-label": "Siguiente",
-                                    children: "❯"
-                                }, void 0, false, {
-                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                    lineNumber: 82,
-                                    columnNumber: 15
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                            lineNumber: 78,
-                            columnNumber: 13
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                    lineNumber: 73,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].scrollRow,
-                    ref: scrollRef,
-                    children: sortedProducts.map((p)=>{
-                        const hasDiscount = p.discount_percent > 0;
-                        const isOutOfStock = p.stock <= 0;
-                        const cartItem = cart.find((item)=>item.id === p.id);
-                        const quantityInCart = cartItem ? cartItem.quantity : 0;
-                        const isLimitReached = isOutOfStock || quantityInCart >= p.stock;
-                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: `${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].card} ${isOutOfStock ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].outOfStockCard : ''}`,
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].imageWrap,
-                                    children: [
-                                        isOutOfStock && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].outOfStockBadge,
-                                            children: "Sin stock"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                            lineNumber: 104,
-                                            columnNumber: 36
-                                        }, this),
-                                        hasDiscount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].discountBadge,
-                                            children: [
-                                                "-",
-                                                p.discount_percent,
-                                                "%"
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                            lineNumber: 105,
-                                            columnNumber: 35
-                                        }, this),
-                                        p.img_url && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                            src: p.img_url,
-                                            alt: p.title,
-                                            fill: true,
-                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].image,
-                                            sizes: "240px"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                            lineNumber: 107,
-                                            columnNumber: 21
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                    lineNumber: 103,
-                                    columnNumber: 17
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cardContent,
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].category,
-                                            children: p.category
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                            lineNumber: 112,
-                                            columnNumber: 19
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].productTitle,
-                                            children: p.title
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                            lineNumber: 113,
-                                            columnNumber: 19
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            style: {
-                                                fontSize: '0.75rem',
-                                                color: '#64748b',
-                                                margin: '0.1rem 0 0.4rem 0'
-                                            },
-                                            children: p.stock > 0 ? `Stock: ${p.stock} un.` : 'Sin stock'
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                            lineNumber: 115,
-                                            columnNumber: 19
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].footer,
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].priceGroup,
-                                                    children: [
-                                                        hasDiscount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].originalPrice,
-                                                            children: formatCLP(p.price)
-                                                        }, void 0, false, {
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                        lineNumber: 83,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].scrollRow,
+                        ref: scrollRef,
+                        children: products.map((p)=>{
+                            const firstVariant = p.variants[0];
+                            const hasDiscount = firstVariant && firstVariant.discount_percent > 0;
+                            const totalStock = p.variants.reduce((sum, v)=>sum + v.stocks.reduce((s, entry)=>s + entry.stock, 0), 0);
+                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].card,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].imageWrap,
+                                        children: [
+                                            hasDiscount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].discountBadge,
+                                                children: [
+                                                    "-",
+                                                    firstVariant.discount_percent,
+                                                    "%"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                lineNumber: 111,
+                                                columnNumber: 35
+                                            }, this),
+                                            p.img_url && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                src: p.img_url,
+                                                alt: p.title,
+                                                fill: true,
+                                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].image,
+                                                sizes: "240px"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                lineNumber: 113,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                        lineNumber: 110,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].cardContent,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].category,
+                                                children: p.category_name
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                lineNumber: 118,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].productTitle,
+                                                children: p.title
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                lineNumber: 119,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].footer,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].priceGroup,
+                                                        children: firstVariant && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                            children: [
+                                                                hasDiscount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].originalPrice,
+                                                                    children: formatCLP(firstVariant.price)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                                    lineNumber: 125,
+                                                                    columnNumber: 43
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].price,
+                                                                    children: [
+                                                                        "Desde ",
+                                                                        formatCLP(hasDiscount ? firstVariant.price * (1 - firstVariant.discount_percent / 100) : firstVariant.price)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                                    lineNumber: 126,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
                                                             fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                                            lineNumber: 121,
-                                                            columnNumber: 39
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].price,
-                                                            children: formatCLP(p.final_price)
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                                            lineNumber: 122,
-                                                            columnNumber: 23
+                                                            lineNumber: 124,
+                                                            columnNumber: 25
                                                         }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                                    lineNumber: 120,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                    type: "button",
-                                                    className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].addBtn,
-                                                    onClick: ()=>onAddToCart(p),
-                                                    disabled: isLimitReached,
-                                                    "aria-label": "Agregar al carrito",
-                                                    children: isOutOfStock ? '—' : quantityInCart >= p.stock ? 'Max' : '+'
-                                                }, void 0, false, {
-                                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                                    lineNumber: 124,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                            lineNumber: 119,
-                                            columnNumber: 19
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                                    lineNumber: 111,
-                                    columnNumber: 17
-                                }, this)
-                            ]
-                        }, p.id, true, {
-                            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                            lineNumber: 99,
-                            columnNumber: 15
-                        }, this);
-                    })
-                }, void 0, false, {
-                    fileName: "[project]/app/components/NovedadesCarousel.tsx",
-                    lineNumber: 89,
-                    columnNumber: 9
-                }, this)
-            ]
-        }, void 0, true, {
-            fileName: "[project]/app/components/NovedadesCarousel.tsx",
-            lineNumber: 72,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                        lineNumber: 122,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        type: "button",
+                                                        className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].addBtn,
+                                                        onClick: ()=>setSelectedProduct(p),
+                                                        "aria-label": "Ver opciones",
+                                                        disabled: totalStock <= 0,
+                                                        style: {
+                                                            opacity: totalStock <= 0 ? 0.5 : 1,
+                                                            cursor: totalStock <= 0 ? 'not-allowed' : 'pointer'
+                                                        },
+                                                        children: "+"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                        lineNumber: 132,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                                lineNumber: 121,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                        lineNumber: 117,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, p.id, true, {
+                                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                                lineNumber: 109,
+                                columnNumber: 15
+                            }, this);
+                        })
+                    }, void 0, false, {
+                        fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                        lineNumber: 99,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                lineNumber: 82,
+                columnNumber: 7
+            }, this),
+            selectedProduct && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ProductModalDetails"], {
+                product: selectedProduct,
+                onClose: ()=>setSelectedProduct(null),
+                onAddToCart: onAddToCart
+            }, void 0, false, {
+                fileName: "[project]/app/components/NovedadesCarousel.tsx",
+                lineNumber: 151,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
         fileName: "[project]/app/components/NovedadesCarousel.tsx",
-        lineNumber: 71,
+        lineNumber: 81,
         columnNumber: 5
     }, this);
 }
-_s(NovedadesCarousel, "qEVRTtiv4liLChyIrWfEvQLNaiI=", false, function() {
-    return [
-        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCartStore$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCartStore"]
-    ];
-});
+_s(NovedadesCarousel, "YKhR/PHppTJawr0brpEDlRynUkE=");
 _c = NovedadesCarousel;
 var _c;
 __turbopack_context__.k.register(_c, "NovedadesCarousel");
@@ -1593,7 +1606,6 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
     _s1();
     const [activeImageIndex, setActiveImageIndex] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
     const [selectedVariantId, setSelectedVariantId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(product.variants[0]?.id || 0);
-    // Mapeo de cantidades por sabor: { [flavorId]: quantity }
     const [flavorQuantities, setFlavorQuantities] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
     const images = product.images && product.images.length > 0 ? product.images : product.img_url ? [
         product.img_url
@@ -1628,12 +1640,12 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
         const basePrice = currentVariant.price;
         const disc = currentVariant.discount_percent || 0;
         const finalPrice = disc > 0 ? basePrice * (1 - disc / 100) : basePrice;
-        // Agregar cada sabor que tenga cantidad > 0 al carrito
         Object.entries(flavorQuantities).forEach(([flavorIdStr, qty])=>{
             if (qty > 0) {
                 const flavorId = parseInt(flavorIdStr, 10);
                 const flavorObj = product.flavors.find((f)=>f.id === flavorId);
                 if (flavorObj) {
+                    const maxStock = stockFor(currentVariant, flavorObj.id);
                     onAddToCart({
                         product_id: product.id,
                         product_title: `${product.title} (${currentVariant.weight} - ${flavorObj.flavor_name})`,
@@ -1643,7 +1655,8 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                         selected_flavor: flavorObj.flavor_name,
                         unit_price: finalPrice,
                         quantity: qty,
-                        img_url: product.img_url
+                        img_url: product.img_url,
+                        max_stock: maxStock
                     });
                 }
             }
@@ -1741,7 +1754,7 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                     children: "Selecciona el Peso:"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 207,
+                                    lineNumber: 206,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1756,7 +1769,7 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                             type: "button",
                                             onClick: ()=>{
                                                 setSelectedVariantId(v.id);
-                                                setFlavorQuantities({}); // Reiniciar cantidades al cambiar de peso
+                                                setFlavorQuantities({});
                                             },
                                             style: {
                                                 padding: '8px 14px',
@@ -1777,19 +1790,19 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                             ]
                                         }, v.id, true, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 212,
+                                            lineNumber: 211,
                                             columnNumber: 19
                                         }, this);
                                     })
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 208,
+                                    lineNumber: 207,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 206,
+                            lineNumber: 205,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1807,7 +1820,7 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                     children: "Elige los sabores y cantidades:"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 241,
+                                    lineNumber: 239,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1842,7 +1855,7 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                                             children: f.flavor_name
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 263,
+                                                            lineNumber: 261,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1853,13 +1866,13 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                                             children: maxStock > 0 ? `Stock disponible: ${maxStock}` : 'Agotado'
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 264,
+                                                            lineNumber: 262,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                                    lineNumber: 262,
+                                                    lineNumber: 260,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1884,7 +1897,7 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                                             children: "-"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 270,
+                                                            lineNumber: 268,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1903,7 +1916,7 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 278,
+                                                            lineNumber: 276,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1921,31 +1934,31 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                                             children: "+"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 284,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                                    lineNumber: 269,
+                                                    lineNumber: 267,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, f.id, true, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 250,
+                                            lineNumber: 248,
                                             columnNumber: 19
                                         }, this);
                                     })
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 244,
+                                    lineNumber: 242,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 240,
+                            lineNumber: 238,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1968,7 +1981,7 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                             children: formatCLP(currentVariant.price)
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 303,
+                                            lineNumber: 301,
                                             columnNumber: 73
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1979,13 +1992,13 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 304,
+                                            lineNumber: 302,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 302,
+                                    lineNumber: 300,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2002,13 +2015,13 @@ function ProductModalDetails({ product, onClose, onAddToCart }) {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 308,
+                                    lineNumber: 306,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 301,
+                            lineNumber: 299,
                             columnNumber: 11
                         }, this)
                     ]
@@ -2126,7 +2139,7 @@ function ProductGrid({ onAddToCart }) {
                                 children: "Catálogo"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 402,
+                                lineNumber: 400,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -2134,7 +2147,7 @@ function ProductGrid({ onAddToCart }) {
                                 children: "Nuestros Productos"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 403,
+                                lineNumber: 401,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2145,18 +2158,18 @@ function ProductGrid({ onAddToCart }) {
                                         children: cat
                                     }, cat, false, {
                                         fileName: "[project]/app/components/ProductGrid.tsx",
-                                        lineNumber: 407,
+                                        lineNumber: 405,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 405,
+                                lineNumber: 403,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 401,
+                        lineNumber: 399,
                         columnNumber: 9
                     }, this),
                     loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2164,7 +2177,7 @@ function ProductGrid({ onAddToCart }) {
                         children: "Cargando..."
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 414,
+                        lineNumber: 412,
                         columnNumber: 21
                     }, this),
                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2172,7 +2185,7 @@ function ProductGrid({ onAddToCart }) {
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 415,
+                        lineNumber: 413,
                         columnNumber: 19
                     }, this),
                     !loading && !error && filteredProducts.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2180,7 +2193,7 @@ function ProductGrid({ onAddToCart }) {
                         children: "No hay productos disponibles."
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 416,
+                        lineNumber: 414,
                         columnNumber: 65
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2190,18 +2203,18 @@ function ProductGrid({ onAddToCart }) {
                                 onOpenModal: (p)=>setSelectedProduct(p)
                             }, product.id, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 420,
+                                lineNumber: 418,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 418,
+                        lineNumber: 416,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/ProductGrid.tsx",
-                lineNumber: 400,
+                lineNumber: 398,
                 columnNumber: 7
             }, this),
             selectedProduct && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProductModalDetails, {
@@ -2210,13 +2223,13 @@ function ProductGrid({ onAddToCart }) {
                 onAddToCart: onAddToCart
             }, void 0, false, {
                 fileName: "[project]/app/components/ProductGrid.tsx",
-                lineNumber: 426,
+                lineNumber: 424,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/ProductGrid.tsx",
-        lineNumber: 399,
+        lineNumber: 397,
         columnNumber: 5
     }, this);
 }
@@ -2360,33 +2373,48 @@ const useCartStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_mo
             set((state)=>{
                 const compositeId = `${item.variant_id}-${item.flavor_id}`;
                 const existingIndex = state.cart.findIndex((c)=>c.id === compositeId);
-                const incomingQty = item.quantity > 0 ? item.quantity : 1;
+                const incomingQty = Number.isFinite(item.quantity) && item.quantity > 0 ? item.quantity : 1;
+                const itemMaxStock = Number.isFinite(item.max_stock) ? item.max_stock : 0;
                 let newCart;
+                console.log('[addToCart] item recibido:', item);
+                console.log('[addToCart] compositeId:', compositeId, 'incomingQty:', incomingQty, 'itemMaxStock:', itemMaxStock);
                 if (existingIndex > -1) {
                     const current = state.cart[existingIndex];
-                    const newQty = Math.min(current.quantity + incomingQty, item.max_stock);
-                    if (newQty <= current.quantity) return state; // ya está en el tope de stock
+                    const currentQty = Number.isFinite(current.quantity) ? current.quantity : 0;
+                    const newQty = Math.min(currentQty + incomingQty, itemMaxStock);
+                    if (newQty <= currentQty) {
+                        console.warn('[addToCart] BLOQUEADO: ya en el tope de stock', {
+                            currentQty,
+                            itemMaxStock
+                        });
+                        return state;
+                    }
                     newCart = [
                         ...state.cart
                     ];
                     newCart[existingIndex] = {
                         ...current,
                         unit_price: item.unit_price,
-                        max_stock: item.max_stock,
+                        max_stock: itemMaxStock,
                         quantity: newQty
                     };
                 } else {
-                    if (item.max_stock <= 0) return state;
-                    const cappedQty = Math.min(incomingQty, item.max_stock);
+                    if (itemMaxStock <= 0) {
+                        console.warn('[addToCart] BLOQUEADO: itemMaxStock <= 0', item);
+                        return state;
+                    }
+                    const cappedQty = Math.min(incomingQty, itemMaxStock);
                     newCart = [
                         ...state.cart,
                         {
                             ...item,
                             id: compositeId,
-                            quantity: cappedQty
+                            quantity: cappedQty,
+                            max_stock: itemMaxStock
                         }
                     ];
                 }
+                console.log('[addToCart] carrito resultante:', newCart);
                 return {
                     cart: newCart,
                     lastUpdated: Date.now()
@@ -2397,9 +2425,11 @@ const useCartStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_mo
             set((state)=>({
                     cart: state.cart.map((item)=>{
                         if (item.id === id) {
-                            const newQty = item.quantity + delta;
+                            const currentQty = Number.isFinite(item.quantity) ? item.quantity : 0;
+                            const maxStock = Number.isFinite(item.max_stock) ? item.max_stock : 0;
+                            const newQty = currentQty + delta;
                             if (newQty <= 0) return null;
-                            if (delta > 0 && newQty > item.max_stock) return item;
+                            if (delta > 0 && newQty > maxStock) return item;
                             return {
                                 ...item,
                                 quantity: newQty
@@ -2420,12 +2450,16 @@ const useCartStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_mo
                 cart: [],
                 lastUpdated: null
             }),
-        itemCount: ()=>get().cart.reduce((total, item)=>total + item.quantity, 0)
+        itemCount: ()=>get().cart.reduce((total, item)=>total + (Number.isFinite(item.quantity) ? item.quantity : 0), 0)
     }), {
     name: 'cart-storage',
     storage: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$zustand$40$5$2e$0$2e$15_$40$types$2b$react_cd645592ff6ce0ffd2f86ae215c2ba25$2f$node_modules$2f$zustand$2f$esm$2f$middleware$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createJSONStorage"])(()=>localStorage),
     onRehydrateStorage: ()=>(state)=>{
-            if (state && state.lastUpdated) {
+            if (!state) return;
+            // Descarta cualquier ítem corrupto o de una versión anterior del carrito
+            // (forma vieja, quantity/max_stock inválidos, etc.) antes de que llegue a renderizarse.
+            state.cart = (state.cart || []).filter((item)=>item && typeof item.id === 'string' && typeof item.variant_id === 'number' && typeof item.flavor_id === 'number' && Number.isFinite(item.quantity) && item.quantity > 0 && Number.isFinite(item.max_stock) && Number.isFinite(item.unit_price));
+            if (state.lastUpdated) {
                 const now = Date.now();
                 if (now - state.lastUpdated > THREE_DAYS_IN_MS) {
                     state.clearCart();
@@ -2439,4 +2473,4 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 }),
 ]);
 
-//# sourceMappingURL=_1v6d_qo._.js.map
+//# sourceMappingURL=_022a45q._.js.map

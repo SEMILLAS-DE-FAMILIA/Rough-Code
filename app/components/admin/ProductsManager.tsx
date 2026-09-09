@@ -6,34 +6,58 @@ import { supabase } from '../../../src/lib/supabaseClient';
 import ImageUploadField from './ImageUploadField';
 import styles from './Admin.module.css';
 
+interface AdminVariant {
+  id?: number;
+  weight: string;
+  price: string;
+  discount_percent: string;
+}
+
+interface AdminFlavor {
+  id?: number;
+  flavor_name: string;
+}
+
 interface AdminProduct {
   id: number;
   title: string;
   category_id: number | null;
   category_name?: string;
-  price: number;
-  discount_percent: number;
-  final_price: number;
   description: string | null;
   img_url: string | null;
   images: string[] | null;
   badge: string | null;
-  stock: number;
   active: boolean;
   is_new: boolean;
+  variants?: AdminVariant[];
+  flavors?: AdminFlavor[];
+  stockMap?: Record<string, number>;
 }
 
-const emptyForm = {
+interface FormState {
+  title: string;
+  category_id: string;
+  description: string;
+  images: string[];
+  badge: string;
+  active: boolean;
+  is_new: boolean;
+  variants: AdminVariant[];
+  flavors: AdminFlavor[];
+  stockMatrix: Record<string, string>;
+}
+
+const emptyForm: FormState = {
   title: '',
   category_id: '',
-  price: '',
-  discount_percent: '0',
   description: '',
-  images: [] as string[],
+  images: [],
   badge: '',
-  stock: '0',
   active: true,
   is_new: false,
+  variants: [],
+  flavors: [],
+  stockMatrix: {},
 };
 
 const formatCLP = (value: number) =>
@@ -45,7 +69,7 @@ export default function ProductsManager() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -55,25 +79,56 @@ export default function ProductsManager() {
       .from('products')
       .select(`
         *,
-        categories!fk_products_categories ( name )
+        categories ( name ),
+        product_variants (
+          id,
+          weight,
+          price,
+          discount_percent,
+          variant_flavor_stock ( flavor_id, stock )
+        ),
+        product_flavors ( id, flavor_name )
       `)
       .order('created_at', { ascending: false });
 
-    if (!error && data) {
-      const mappedProducts: AdminProduct[] = data.map((p: any) => ({
-        ...p,
-        category_name: p.categories?.name || 'Sin categoría',
-      }));
+    if (error) {
+      console.error('Error al cargar productos:', error.message || error);
+      setLoading(false);
+      return;
+    }
+
+    if (data) {
+      const mappedProducts: AdminProduct[] = data.map((p: any) => {
+        const stockMap: Record<string, number> = {};
+        (p.product_variants || []).forEach((v: any) => {
+          (v.variant_flavor_stock || []).forEach((vfs: any) => {
+            stockMap[`${v.id}-${vfs.flavor_id}`] = vfs.stock;
+          });
+        });
+
+        return {
+          ...p,
+          category_name: p.categories?.name || 'Sin categoría',
+          variants: (p.product_variants || []).map((v: any) => ({
+            id: v.id,
+            weight: v.weight,
+            price: String(v.price),
+            discount_percent: String(v.discount_percent ?? 0),
+          })),
+          flavors: (p.product_flavors || []).map((f: any) => ({
+            id: f.id,
+            flavor_name: f.flavor_name,
+          })),
+          stockMap,
+        };
+      });
       setProducts(mappedProducts);
     }
     setLoading(false);
   };
 
   const fetchCategories = async () => {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('id, name')
-      .order('name', { ascending: true });
+    const { data, error } = await supabase.from('categories').select('id, name').order('name', { ascending: true });
     if (!error && data) setCategories(data);
   };
 
@@ -84,7 +139,12 @@ export default function ProductsManager() {
 
   const openCreateModal = () => {
     setEditingId(null);
-    setForm(emptyForm);
+    setForm({
+      ...emptyForm,
+      variants: [{ weight: '500g', price: '5000', discount_percent: '0' }],
+      flavors: [{ flavor_name: 'Natural' }],
+      stockMatrix: { '0-0': '10' },
+    });
     setFormError(null);
     setShowModal(true);
   };
@@ -92,24 +152,30 @@ export default function ProductsManager() {
   const openEditModal = (p: AdminProduct) => {
     setEditingId(p.id);
 
-    const initialImages =
-      p.images && p.images.length > 0
-        ? p.images
-        : p.img_url
-        ? [p.img_url]
-        : [];
+    const initialImages = p.images && p.images.length > 0 ? p.images : p.img_url ? [p.img_url] : [];
+    const variants = p.variants && p.variants.length > 0 ? p.variants : [{ weight: '500g', price: '0', discount_percent: '0' }];
+    const flavors = p.flavors && p.flavors.length > 0 ? p.flavors : [{ flavor_name: 'Natural' }];
+
+    const stockMatrix: Record<string, string> = {};
+    variants.forEach((v, vIdx) => {
+      flavors.forEach((f, fIdx) => {
+        const key = v.id != null && f.id != null ? `${v.id}-${f.id}` : undefined;
+        const stock = key ? p.stockMap?.[key] : undefined;
+        stockMatrix[`${vIdx}-${fIdx}`] = stock != null ? String(stock) : '0';
+      });
+    });
 
     setForm({
       title: p.title,
       category_id: p.category_id ? String(p.category_id) : '',
-      price: String(p.price),
-      discount_percent: String(p.discount_percent),
       description: p.description ?? '',
       images: initialImages,
       badge: p.badge ?? '',
-      stock: String(p.stock),
       active: p.active,
       is_new: p.is_new,
+      variants,
+      flavors,
+      stockMatrix,
     });
     setFormError(null);
     setShowModal(true);
@@ -117,20 +183,89 @@ export default function ProductsManager() {
 
   const closeModal = () => setShowModal(false);
 
+  const updateVariant = (idx: number, patch: Partial<AdminVariant>) => {
+    const updated = [...form.variants];
+    updated[idx] = { ...updated[idx], ...patch };
+    setForm({ ...form, variants: updated });
+  };
+
+  const addVariant = () => {
+    const newIdx = form.variants.length;
+    const newStockMatrix = { ...form.stockMatrix };
+    form.flavors.forEach((_, fIdx) => {
+      newStockMatrix[`${newIdx}-${fIdx}`] = '0';
+    });
+    setForm({
+      ...form,
+      variants: [...form.variants, { weight: '', price: '', discount_percent: '0' }],
+      stockMatrix: newStockMatrix,
+    });
+  };
+
+  const removeVariant = (idx: number) => {
+    const newVariants = form.variants.filter((_, i) => i !== idx);
+    const newStockMatrix: Record<string, string> = {};
+    Object.entries(form.stockMatrix).forEach(([key, val]) => {
+      const [vIdxStr, fIdxStr] = key.split('-');
+      const vIdx = parseInt(vIdxStr, 10);
+      if (vIdx === idx) return;
+      const newVIdx = vIdx > idx ? vIdx - 1 : vIdx;
+      newStockMatrix[`${newVIdx}-${fIdxStr}`] = val;
+    });
+    setForm({ ...form, variants: newVariants, stockMatrix: newStockMatrix });
+  };
+
+  const updateFlavor = (idx: number, patch: Partial<AdminFlavor>) => {
+    const updated = [...form.flavors];
+    updated[idx] = { ...updated[idx], ...patch };
+    setForm({ ...form, flavors: updated });
+  };
+
+  const addFlavor = () => {
+    const newIdx = form.flavors.length;
+    const newStockMatrix = { ...form.stockMatrix };
+    form.variants.forEach((_, vIdx) => {
+      newStockMatrix[`${vIdx}-${newIdx}`] = '0';
+    });
+    setForm({
+      ...form,
+      flavors: [...form.flavors, { flavor_name: '' }],
+      stockMatrix: newStockMatrix,
+    });
+  };
+
+  const removeFlavor = (idx: number) => {
+    const newFlavors = form.flavors.filter((_, i) => i !== idx);
+    const newStockMatrix: Record<string, string> = {};
+    Object.entries(form.stockMatrix).forEach(([key, val]) => {
+      const [vIdxStr, fIdxStr] = key.split('-');
+      const fIdx = parseInt(fIdxStr, 10);
+      if (fIdx === idx) return;
+      const newFIdx = fIdx > idx ? fIdx - 1 : fIdx;
+      newStockMatrix[`${vIdxStr}-${newFIdx}`] = val;
+    });
+    setForm({ ...form, flavors: newFlavors, stockMatrix: newStockMatrix });
+  };
+
+  const updateStock = (vIdx: number, fIdx: number, value: string) => {
+    setForm({ ...form, stockMatrix: { ...form.stockMatrix, [`${vIdx}-${fIdx}`]: value } });
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const priceNum = parseFloat(form.price);
-    const discountNum = parseFloat(form.discount_percent || '0');
-    const stockNum = parseInt(form.stock || '0', 10);
     const categoryIdNum = form.category_id ? parseInt(form.category_id, 10) : null;
 
-    if (!form.title.trim() || !categoryIdNum || isNaN(priceNum) || priceNum < 0) {
-      setFormError('Completa título, categoría y un precio válido.');
+    if (!form.title.trim() || !categoryIdNum) {
+      setFormError('Completa el título y selecciona una categoría.');
       return;
     }
-    if (discountNum < 0 || discountNum > 100) {
-      setFormError('El descuento debe estar entre 0 y 100.');
+    if (form.variants.length === 0 || form.variants.some((v) => !v.weight.trim() || v.price === '')) {
+      setFormError('Agrega al menos un peso con precio.');
+      return;
+    }
+    if (form.flavors.length === 0 || form.flavors.some((f) => !f.flavor_name.trim())) {
+      setFormError('Agrega al menos un sabor con nombre.');
       return;
     }
 
@@ -139,38 +274,105 @@ export default function ProductsManager() {
 
     const mainImageUrl = form.images.length > 0 ? form.images[0] : null;
 
-    const payload = {
+    const productPayload = {
       title: form.title.trim(),
       category_id: categoryIdNum,
-      price: priceNum,
-      discount_percent: discountNum,
       description: form.description.trim() || null,
       img_url: mainImageUrl,
       images: form.images,
       badge: form.badge.trim() || null,
-      stock: isNaN(stockNum) ? 0 : stockNum,
       active: form.active,
       is_new: form.is_new,
     };
 
-    const { error } = editingId
-      ? await supabase.from('products').update(payload).eq('id', editingId)
-      : await supabase.from('products').insert(payload);
+    let targetProductId = editingId;
 
-    setSaving(false);
+    if (editingId) {
+      const { error: updateError } = await supabase.from('products').update(productPayload).eq('id', editingId);
+      if (updateError) {
+        setSaving(false);
+        setFormError(`Error al actualizar: ${updateError.message}`);
+        return;
+      }
+      await supabase.from('product_variants').delete().eq('product_id', targetProductId);
+      await supabase.from('product_flavors').delete().eq('product_id', targetProductId);
+    } else {
+      const { data: insertedData, error: insertError } = await supabase
+        .from('products')
+        .insert(productPayload)
+        .select('id')
+        .single();
 
-    if (error) {
-      console.error('Error al guardar el producto:', error);
-      setFormError(`No se pudo guardar el producto: ${error.message}`);
+      if (insertError || !insertedData) {
+        setSaving(false);
+        setFormError(`Error al crear: ${insertError?.message}`);
+        return;
+      }
+      targetProductId = insertedData.id;
+    }
+
+    const variantIds: number[] = [];
+    for (const v of form.variants) {
+      const { data: insertedVariant, error: variantError } = await supabase
+        .from('product_variants')
+        .insert({
+          product_id: targetProductId,
+          weight: v.weight.trim(),
+          price: parseFloat(v.price) || 0,
+          discount_percent: parseFloat(v.discount_percent || '0'),
+        })
+        .select('id')
+        .single();
+
+      if (variantError || !insertedVariant) {
+        setSaving(false);
+        setFormError(`Error al guardar el peso "${v.weight}": ${variantError?.message}`);
+        return;
+      }
+      variantIds.push(insertedVariant.id);
+    }
+
+    const flavorIds: number[] = [];
+    for (const f of form.flavors) {
+      const { data: insertedFlavor, error: flavorError } = await supabase
+        .from('product_flavors')
+        .insert({
+          product_id: targetProductId,
+          flavor_name: f.flavor_name.trim(),
+        })
+        .select('id')
+        .single();
+
+      if (flavorError || !insertedFlavor) {
+        setSaving(false);
+        setFormError(`Error al guardar el sabor "${f.flavor_name}": ${flavorError?.message}`);
+        return;
+      }
+      flavorIds.push(insertedFlavor.id);
+    }
+
+    const stockPayload = form.variants.flatMap((_, vIdx) =>
+      form.flavors.map((_, fIdx) => ({
+        variant_id: variantIds[vIdx],
+        flavor_id: flavorIds[fIdx],
+        stock: parseInt(form.stockMatrix[`${vIdx}-${fIdx}`] || '0', 10),
+      }))
+    );
+
+    const { error: stockError } = await supabase.from('variant_flavor_stock').insert(stockPayload);
+    if (stockError) {
+      setSaving(false);
+      setFormError(`Error al guardar el stock: ${stockError.message}`);
       return;
     }
 
+    setSaving(false);
     setShowModal(false);
     fetchProducts();
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')) return;
+    if (!confirm('¿Eliminar este producto?')) return;
     await supabase.from('products').delete().eq('id', id);
     fetchProducts();
   };
@@ -180,15 +382,8 @@ export default function ProductsManager() {
     fetchProducts();
   };
 
-  const previewFinalPrice = () => {
-    const priceNum = parseFloat(form.price);
-    const discountNum = parseFloat(form.discount_percent || '0');
-    if (isNaN(priceNum)) return null;
-    const final = Math.round(priceNum * (1 - (isNaN(discountNum) ? 0 : discountNum) / 100));
-    return final;
-  };
-
-  const finalPreview = previewFinalPrice();
+  const totalStockFor = (p: AdminProduct) =>
+    p.stockMap ? Object.values(p.stockMap).reduce((sum, s) => sum + s, 0) : 0;
 
   return (
     <div>
@@ -202,24 +397,14 @@ export default function ProductsManager() {
       {loading ? (
         <p className={styles.emptyState}>Cargando...</p>
       ) : products.length === 0 ? (
-        <p className={styles.emptyState}>Aún no hay productos. Crea el primero.</p>
+        <p className={styles.emptyState}>Aún no hay productos.</p>
       ) : (
         <div className={styles.dataTable}>
           {products.map((p) => (
-            <div
-              key={p.id}
-              className={styles.dataRow}
-              style={{ gridTemplateColumns: '44px 1fr auto auto' }}
-            >
+            <div key={p.id} className={styles.dataRow} style={{ gridTemplateColumns: '44px 1fr auto auto' }}>
               {p.img_url ? (
                 <div className={styles.rowThumb} style={{ position: 'relative', overflow: 'hidden' }}>
-                  <Image
-                    src={p.img_url}
-                    alt={`Imagen de ${p.title}`}
-                    width={44}
-                    height={44}
-                    style={{ objectFit: 'cover' }}
-                  />
+                  <Image src={p.img_url} alt={p.title} width={44} height={44} style={{ objectFit: 'cover' }} />
                 </div>
               ) : (
                 <div className={styles.rowThumb} />
@@ -227,11 +412,7 @@ export default function ProductsManager() {
               <div>
                 <div className={styles.rowTitle}>{p.title}</div>
                 <div className={styles.rowMeta}>
-                  {p.category_name} · {formatCLP(p.final_price)}
-                  {p.discount_percent > 0 && ` (−${p.discount_percent}% de ${formatCLP(p.price)})`}
-                  {' · Stock: '}
-                  {p.stock}
-                  {p.is_new && ' · 🌟 Novedad'}
+                  {p.category_name} · {p.variants?.length || 0} pesos · {p.flavors?.length || 0} sabores · Stock total: {totalStockFor(p)}
                 </div>
               </div>
               <button
@@ -242,16 +423,8 @@ export default function ProductsManager() {
                 {p.active ? 'Activo' : 'Inactivo'}
               </button>
               <div className={styles.rowActions}>
-                <button className={styles.iconActionBtn} onClick={() => openEditModal(p)} title="Editar">
-                  ✎
-                </button>
-                <button
-                  className={`${styles.iconActionBtn} ${styles.deleteActionBtn}`}
-                  onClick={() => handleDelete(p.id)}
-                  title="Eliminar"
-                >
-                  ✕
-                </button>
+                <button className={styles.iconActionBtn} onClick={() => openEditModal(p)}>✎</button>
+                <button className={`${styles.iconActionBtn} ${styles.deleteActionBtn}`} onClick={() => handleDelete(p.id)}>✕</button>
               </div>
             </div>
           ))}
@@ -260,146 +433,191 @@ export default function ProductsManager() {
 
       {showModal && (
         <div className={styles.modalOverlay} onClick={closeModal}>
-          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '760px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h3>{editingId ? 'Editar producto' : 'Nuevo producto'}</h3>
 
             <form onSubmit={handleSave}>
               <div className={styles.field}>
                 <label>Nombre del producto</label>
-                <input
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  required
-                />
+                <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
               </div>
 
               <div className={styles.formGrid}>
                 <div className={styles.field}>
                   <label>Categoría</label>
-                  {categories.length === 0 ? (
-                    <p style={{ fontSize: '0.8rem', color: '#a8a29e' }}>
-                      No hay categorías creadas. Ve a la pestaña "Categorías" y crea al menos una.
-                    </p>
-                  ) : (
-                    <select
-                      value={form.category_id}
-                      onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+                  <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
+                    <option value="" disabled>Selecciona una categoría</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className={styles.field}>
+                  <label>Etiqueta</label>
+                  <input value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} placeholder="Top Ventas..." />
+                </div>
+              </div>
+
+              {/* PESOS */}
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
+                <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
+                  Pesos y Precios
+                </label>
+
+                {form.variants.map((v, vIdx) => {
+                  const basePrice = parseFloat(v.price) || 0;
+                  const disc = parseFloat(v.discount_percent) || 0;
+                  const finalPrice = disc > 0 ? basePrice * (1 - disc / 100) : basePrice;
+
+                  return (
+                    <div key={vIdx} style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', marginBottom: '8px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '8px', alignItems: 'center' }}>
+                        <input
+                          type="text"
+                          value={v.weight}
+                          onChange={(e) => updateVariant(vIdx, { weight: e.target.value })}
+                          placeholder="Ej. 500g"
+                          required
+                        />
+                        <input
+                          type="number"
+                          value={v.price}
+                          onChange={(e) => updateVariant(vIdx, { price: e.target.value })}
+                          placeholder="Precio ($)"
+                          required
+                        />
+                        <input
+                          type="number"
+                          value={v.discount_percent}
+                          onChange={(e) => updateVariant(vIdx, { discount_percent: e.target.value })}
+                          placeholder="% Descuento"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeVariant(vIdx)}
+                          style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer' }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      {basePrice > 0 && (
+                        <div style={{ fontSize: '0.78rem', color: '#16a34a', marginTop: '6px', fontWeight: 600 }}>
+                          Precio final con descuento: {formatCLP(finalPrice)}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  onClick={addVariant}
+                  style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', marginTop: '4px' }}
+                >
+                  + Agregar peso
+                </button>
+              </div>
+
+              {/* SABORES */}
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
+                <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
+                  Sabores
+                </label>
+
+                {form.flavors.map((f, fIdx) => (
+                  <div key={fIdx} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '8px', marginBottom: '8px' }}>
+                    <input
+                      type="text"
+                      value={f.flavor_name}
+                      onChange={(e) => updateFlavor(fIdx, { flavor_name: e.target.value })}
+                      placeholder="Nombre del sabor"
                       required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeFlavor(fIdx)}
+                      style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer' }}
                     >
-                      <option value="" disabled>
-                        Selecciona una categoría
-                      </option>
-                      {categories.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </div>
-                <div className={styles.field}>
-                  <label>Etiqueta (opcional)</label>
-                  <input
-                    value={form.badge}
-                    onChange={(e) => setForm({ ...form, badge: e.target.value })}
-                    placeholder="Orgánico, Top Ventas..."
-                  />
-                </div>
+                      ✕
+                    </button>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={addFlavor}
+                  style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                >
+                  + Agregar sabor
+                </button>
               </div>
 
-              <div className={styles.formGrid}>
-                <div className={styles.field}>
-                  <label>Precio (CLP)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label>Descuento (%)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={form.discount_percent}
-                    onChange={(e) => setForm({ ...form, discount_percent: e.target.value })}
-                  />
-                </div>
-              </div>
+              {/* MATRIZ DE STOCK */}
+              {form.variants.length > 0 && form.flavors.length > 0 && (
+                <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
+                  <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
+                    Stock por combinación (peso × sabor)
+                  </label>
 
-              {finalPreview !== null && (
-                <div className={styles.finalPricePreview}>
-                  Precio final al cliente: {formatCLP(finalPreview)}
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                      <thead>
+                        <tr>
+                          <th style={{ textAlign: 'left', padding: '6px', borderBottom: '1px solid #e2e8f0' }}>Sabor \ Peso</th>
+                          {form.variants.map((v, vIdx) => (
+                            <th key={vIdx} style={{ textAlign: 'center', padding: '6px', borderBottom: '1px solid #e2e8f0', minWidth: '90px' }}>
+                              {v.weight || `Peso ${vIdx + 1}`}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {form.flavors.map((f, fIdx) => (
+                          <tr key={fIdx}>
+                            <td style={{ padding: '6px', fontWeight: 600 }}>{f.flavor_name || `Sabor ${fIdx + 1}`}</td>
+                            {form.variants.map((_, vIdx) => (
+                              <td key={vIdx} style={{ padding: '4px', textAlign: 'center' }}>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={form.stockMatrix[`${vIdx}-${fIdx}`] ?? '0'}
+                                  onChange={(e) => updateStock(vIdx, fIdx, e.target.value)}
+                                  style={{ width: '70px', padding: '4px 6px', borderRadius: '6px', border: '1px solid #e2e8f0', textAlign: 'center' }}
+                                />
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
 
-              <div className={styles.field}>
-                <label>Stock disponible</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={form.stock}
-                  onChange={(e) => setForm({ ...form, stock: e.target.value })}
-                />
+              <div className={styles.field} style={{ marginTop: '1rem' }}>
+                <label>Descripción</label>
+                <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
               </div>
 
-              <div className={styles.field}>
-                <label>Descripción (se muestra al presionar el "+" en la tienda)</label>
-                <textarea
-                  rows={3}
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                />
-              </div>
+              <ImageUploadField bucket="product-images" value={form.images} onChange={(urls) => setForm({ ...form, images: urls })} label="Imágenes" altText={form.title} />
 
-              <ImageUploadField
-                bucket="product-images"
-                value={form.images}
-                onChange={(urls) => setForm({ ...form, images: urls })}
-                label="Imágenes del producto (La primera será la imagen principal)"
-                altText={form.title}
-              />
-
-              <label className={styles.switchRow} style={{ marginTop: '1.1rem' }}>
-                <input
-                  type="checkbox"
-                  className={styles.switchInput}
-                  checked={form.active}
-                  onChange={(e) => setForm({ ...form, active: e.target.checked })}
-                />
-                <span className={styles.switchTrack}>
-                  <span className={styles.switchThumb} />
-                </span>
+              <label className={styles.switchRow} style={{ marginTop: '1rem' }}>
+                <input type="checkbox" className={styles.switchInput} checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} />
+                <span className={styles.switchTrack}><span className={styles.switchThumb} /></span>
                 <span className={styles.switchLabel}>Visible en la tienda</span>
               </label>
 
               <label className={styles.switchRow}>
-                <input
-                  type="checkbox"
-                  className={styles.switchInput}
-                  checked={form.is_new}
-                  onChange={(e) => setForm({ ...form, is_new: e.target.checked })}
-                />
-                <span className={styles.switchTrack}>
-                  <span className={styles.switchThumb} />
-                </span>
-                <span className={styles.switchLabel}>
-                  Marcar como novedad (aparecerá en la sección Novedades de la tienda)
-                </span>
+                <input type="checkbox" className={styles.switchInput} checked={form.is_new} onChange={(e) => setForm({ ...form, is_new: e.target.checked })} />
+                <span className={styles.switchTrack}><span className={styles.switchThumb} /></span>
+                <span className={styles.switchLabel}>Marcar como novedad</span>
               </label>
 
               {formError && <p className={styles.errorText}>{formError}</p>}
 
               <div className={styles.modalActions}>
-                <button type="button" className={styles.secondaryBtn} onClick={closeModal}>
-                  Cancelar
-                </button>
-                <button type="submit" className={styles.primaryBtn} disabled={saving}>
-                  {saving ? 'Guardando...' : 'Guardar producto'}
-                </button>
+                <button type="button" className={styles.secondaryBtn} onClick={closeModal}>Cancelar</button>
+                <button type="submit" className={styles.primaryBtn} disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>
               </div>
             </form>
           </div>

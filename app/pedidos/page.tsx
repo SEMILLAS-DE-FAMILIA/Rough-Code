@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCartStore, CartItem } from '../../src/lib/useCartStore';
 import { supabase } from '../../src/lib/supabaseClient';
@@ -37,7 +37,7 @@ function buildWhatsAppMessage(
   lines.push('');
   lines.push('*Productos:*');
   items.forEach((item) => {
-    lines.push(`- ${item.quantity}x ${item.title} — ${formatCLP(item.final_price * item.quantity)}`);
+    lines.push(`- ${item.quantity}x ${item.product_title} — ${formatCLP(item.unit_price * item.quantity)}`);
   });
   lines.push('');
   lines.push(`*Total: ${formatCLP(total)}*`);
@@ -51,12 +51,11 @@ function buildWhatsAppMessage(
 export default function PedidosPage() {
   const isHydrated = useIsHydrated();
 
-  // Suscripción al store de Zustand
   const storeCart = useCartStore((state) => state.cart);
   const clearCart = useCartStore((state) => state.clearCart);
 
   const cart = isHydrated ? storeCart : [];
-  const total = cart.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
+  const total = cart.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
 
   const [name, setName] = useState('');
   const [rut, setRut] = useState('');
@@ -94,13 +93,17 @@ export default function PedidosPage() {
     const formattedRut = formatRut(rut);
 
     const itemsPayload = cart.map((item) => ({
-      product_id: item.id,
-      product_title: item.title,
+      product_id: item.product_id,
+      product_title: item.product_title,
       quantity: item.quantity,
-      unit_price: item.final_price,
+      unit_price: item.unit_price,
+      variant_id: item.variant_id,
+      flavor_id: item.flavor_id,
+      weight_label: item.selected_weight,
+      flavor_name: item.selected_flavor,
     }));
 
-    const { error: orderError } = await supabase.rpc('create_order', {
+    const { data: newOrderId, error: orderError } = await supabase.rpc('create_order', {
       p_customer_name: name.trim(),
       p_rut: formattedRut,
       p_delivery_type: deliveryType,
@@ -112,8 +115,13 @@ export default function PedidosPage() {
 
     setSubmitting(false);
 
-    if (orderError) {
-      setError(`No se pudo registrar el pedido: ${orderError.message} (código: ${orderError.code ?? 's/n'})`);
+    if (orderError || !newOrderId) {
+      // El RPC lanza excepción explícita si algún sabor/peso ya no tiene stock suficiente
+      setError(
+        orderError?.message?.includes('Sin stock suficiente')
+          ? 'Uno de los productos ya no tiene stock suficiente. Vuelve al catálogo y ajusta tu carrito.'
+          : 'No se pudo registrar el pedido. Intenta de nuevo.'
+      );
       return;
     }
 
@@ -168,17 +176,16 @@ export default function PedidosPage() {
         <h1 className={styles.pageTitle}>Finalizar Pedido</h1>
 
         <div className={styles.layoutGrid}>
-          {/* Resumen del carrito */}
           <div className={styles.summaryCard}>
             <h3>Tu pedido</h3>
             {cart.map((item) => (
               <div key={item.id} className={styles.summaryRow}>
-                {item.img_url && <img src={item.img_url} alt={item.title} className={styles.summaryThumb} />}
+                {item.img_url && <img src={item.img_url} alt={item.product_title} className={styles.summaryThumb} />}
                 <div style={{ flex: 1 }}>
-                  <p className={styles.summaryTitle}>{item.title}</p>
-                  <p className={styles.summaryMeta}>{item.quantity} × {formatCLP(item.final_price)}</p>
+                  <p className={styles.summaryTitle}>{item.product_title}</p>
+                  <p className={styles.summaryMeta}>{item.quantity} × {formatCLP(item.unit_price)}</p>
                 </div>
-                <span className={styles.summaryLineTotal}>{formatCLP(item.final_price * item.quantity)}</span>
+                <span className={styles.summaryLineTotal}>{formatCLP(item.unit_price * item.quantity)}</span>
               </div>
             ))}
             <div className={styles.summaryTotalRow}>
@@ -187,7 +194,6 @@ export default function PedidosPage() {
             </div>
           </div>
 
-          {/* Formulario */}
           <div className={styles.formCard}>
             <form onSubmit={handleSubmit}>
               <div className={styles.field}>

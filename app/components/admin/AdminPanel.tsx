@@ -7,16 +7,17 @@ import ProductsManager from './ProductsManager';
 import CategoriesManager from './CategoriesManager';
 import CarouselManager from './CarouselManager';
 import BannerManager from './BannerManager';
+import DistributorsManager from './DistributorsManager';
 import styles from './Admin.module.css';
 
-type Tab = 'dashboard' | 'products' | 'categories' | 'carousel' | 'banner';
-
+type Tab = 'dashboard' | 'products' | 'categories' | 'carousel' | 'banner' | 'distributors';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'categories', label: 'Categorías' },
   { id: 'products', label: 'Productos' },
   { id: 'carousel', label: 'Carrusel' },
   { id: 'banner', label: 'Banner' },
+  { id: 'distributors', label: 'Distribuidores' },
 ];
 
 // Cierra la sesión automáticamente tras este tiempo sin actividad
@@ -94,6 +95,7 @@ export default function AdminPanel({ onLoggedOut }: { onLoggedOut: (reason?: 'in
           {activeTab === 'products' && <ProductsManager />}
           {activeTab === 'carousel' && <CarouselManager />}
           {activeTab === 'banner' && <BannerManager />}
+          {activeTab === 'distributors' && <DistributorsManager />}
         </div>
       </main>
     </div>

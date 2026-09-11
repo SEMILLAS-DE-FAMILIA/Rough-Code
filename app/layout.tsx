@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Plus_Jakarta_Sans, Pacifico } from "next/font/google";
 import "./globals.css";
 import "./styles/tokens.css";
 
 // Importación de componentes globales
-import TrustBanner from "./components/TrustBanner"; // Ajusta la ruta según la ubicación exacta de tu componente
-import Footer from "./components/Footer";           // Ajusta la ruta según la ubicación exacta de tu componente
+import TrustBanner from "./components/TrustBanner";
+import Footer from "./components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +20,13 @@ const geistMono = Geist_Mono({
 const displayFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-display",
+});
+
+// Configuración de la tipografía Pacifico para el logo
+const pacifico = Pacifico({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-pacifico",
 });
 
 export const metadata: Metadata = {
@@ -38,11 +45,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Semillas de Familia | Frutos Secos e Infusiones",
     description: "Encuentra frutos secos seleccionados, snacks saludables e infusiones. Envíos y retiros disponibles.",
-    url: "https://tusitio.vercel.app", // Reemplaza por tu dominio final
+    url: "https://tusitio.vercel.app",
     siteName: "Semillas de Familia",
     images: [
       {
-        url: "/og-image.jpg", // Imagen promocional de tus frutos secos/infusiones en /public
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Semillas de Familia - Frutos Secos e Infusiones",
@@ -63,15 +70,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} h-full antialiased`}
     >
       <body className={`min-h-full flex flex-col ${displayFont.variable}`}>
-        {/* Contenido dinámico de las páginas */}
         <div className="flex-1">
           {children}
         </div>
 
-        {/* Sección inferior global */}
         <TrustBanner />
         <Footer />
       </body>

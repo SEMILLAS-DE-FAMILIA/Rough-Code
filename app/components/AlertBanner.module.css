@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+
 .banner {
   position: relative;
   z-index: 50;
@@ -5,12 +7,16 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: 0.75rem 2.5rem 0.75rem 1.5rem;
+  padding: 0.85rem 2.5rem 0.85rem 1.5rem;
   text-align: center;
-  font-size: 0.85rem;
-  font-weight: 600;
+  /* Fuente moderna y tamaño de texto más grande */
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
+/* Colores pastel originales */
 .info {
   background-color: var(--color-accent-soft, #f0fdf4);
   color: var(--color-accent-hover, #15803d);
@@ -23,17 +29,19 @@
 
 .message {
   margin: 0;
+  line-height: 1.3;
 }
 
 .closeBtn {
   position: absolute;
-  right: 1rem;
+  right: 1.25rem;
   top: 50%;
   transform: translateY(-50%) scale(1);
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  font-weight: 800;
   color: inherit;
   opacity: 0.7;
   transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
@@ -45,4 +53,11 @@
 
 .closeBtn:active {
   transform: translateY(-50%) scale(0.88);
+}
+
+@media (max-width: 640px) {
+  .banner {
+    font-size: 0.9rem;
+    padding: 0.75rem 2.25rem 0.75rem 1rem;
+  }
 }

@@ -7,7 +7,7 @@
   color: #1C1917;
   padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) clamp(3rem, 8vw, 6rem);
   position: relative;
-  z-index: 2;
+  z-index: 20; /* Elevado a 20 para estar por encima del TrustBanner (z-index: 10) */
 }
 
 .catalogContainer {
@@ -100,21 +100,48 @@
   }
 }
 
+/* Tarjeta de Producto con feedback visual notorio */
 .productCard {
   background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.07);
-  border-radius: 1.25rem;
-  box-shadow: 0 1px 2px rgba(87, 68, 46, 0.04), 0 4px 12px rgba(87, 68, 46, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  position: relative;
+  
+  /* Borde de 3px para mayor visibilidad */
+  border: 3px solid transparent;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
 }
 
+/* Iluminación verde viva y resplandor al pasar el cursor (Hover) */
 .productCard:hover {
-  transform: translateY(-6px);
-  border-color: rgba(22, 163, 74, 0.18);
-  box-shadow: 0 20px 25px -5px rgba(87, 68, 46, 0.12), 0 8px 10px -6px rgba(87, 68, 46, 0.06);
+  border-color: #22c55e; /* Verde primario vistoso */
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.4), 0 10px 25px rgba(0, 0, 0, 0.08); /* Resplandor intenso */
+  transform: translateY(-4px);
+}
+
+/* Feedback al hacer clic (Active / Pinchar) */
+.productCard:active {
+  border-color: #15803d; /* Verde oscuro intenso al presionar */
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+  transform: translateY(-1px) scale(0.99);
+}
+
+/* Comportamiento para tarjetas sin stock */
+.outOfStockCard {
+  opacity: 0.65;
+  filter: grayscale(0.85);
+  background: #f8fafc;
+  cursor: not-allowed;
+}
+
+.outOfStockCard:hover {
+  border-color: transparent;
+  box-shadow: 0 1px 2px rgba(87, 68, 46, 0.04);
+  transform: none;
 }
 
 .imageContainer {
@@ -258,7 +285,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 300;
+  z-index: 999;
   padding: 1.5rem;
   animation: overlayFadeIn 0.2s ease-out;
 }
@@ -442,18 +469,6 @@
     padding: 0.7rem 1rem;
     text-align: center;
   }
-}
-
-.outOfStockCard {
-  opacity: 0.65;
-  filter: grayscale(0.85);
-  background: #f8fafc;
-}
-
-.outOfStockCard:hover {
-  transform: none;
-  box-shadow: 0 1px 2px rgba(87, 68, 46, 0.04);
-  border-color: rgba(15, 23, 42, 0.07);
 }
 
 .outOfStockBadge {

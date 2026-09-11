@@ -2,13 +2,13 @@
 .Footer-module__nhiC3q__footer {
   background-color: var(--color-primary-brown, #4e2c1d);
   color: var(--color-bg-light, #f7f5f0);
-  z-index: 20;
+  z-index: 30;
   width: 100%;
   position: relative;
 }
 
 .Footer-module__nhiC3q__waveContainer {
-  z-index: 25;
+  z-index: 31;
   width: 100%;
   height: 90px;
   margin-top: -75px;
@@ -23,7 +23,7 @@
 }
 
 .Footer-module__nhiC3q__socialIcons {
-  z-index: 30;
+  z-index: 32;
   gap: 1.25rem;
   display: flex;
   position: absolute;

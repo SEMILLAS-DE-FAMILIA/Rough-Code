@@ -1,14 +1,14 @@
 .trustSection {
   background-color: #ffffff;
   border-bottom: 1px solid var(--color-border, rgba(28, 25, 23, 0.08));
-  padding: 4.5rem 2rem; /* Aumentado para dar mayor altura y protagonismo */
+  padding: 4.5rem 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   position: relative;
-  z-index: 10;
+  z-index: 10; /* Controlado a 10 para mantenerse siempre debajo del catálogo y modales */
 }
 
 .trustGrid {
-  max-width: 1200px; /* Un poco más amplio para que la cuadrícula respire */
+  max-width: 1200px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -19,11 +19,11 @@
 .trustItem {
   display: flex;
   align-items: center;
-  gap: 1.25rem; /* Mayor separación entre el icono y el bloque de texto */
+  gap: 1.25rem;
 }
 
 .trustIcon {
-  width: 54px; /* Iconos con mayor presencia visual */
+  width: 54px;
   height: 54px;
   border-radius: 14px;
   background: #f0fdf4;
@@ -35,14 +35,14 @@
 }
 
 .trustText h4 {
-  font-size: 1.05rem; /* Título con más cuerpo */
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--foreground, #1c1917);
   margin-bottom: 0.2rem;
 }
 
 .trustText p {
-  font-size: 0.88rem; /* Texto secundario más legible */
+  font-size: 0.88rem;
   color: #78716c;
   margin: 0;
 }

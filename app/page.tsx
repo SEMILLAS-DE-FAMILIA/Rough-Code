@@ -15,8 +15,10 @@ export default function Home() {
   const addToCart = useCartStore((state) => state.addToCart);
   const cartItems = useCartStore((state) => state.cart);
   const removeFromCart = useCartStore((state) => state.removeItem);
+  
   const [lastAdded, setLastAdded] = useState<string | null>(null);
   const [isDistributorModalOpen, setIsDistributorModalOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>(''); // <- Estado de búsqueda
 
   const handleAddToCart = (item: NewCartItem) => {
     const result = addToCart(item);
@@ -43,17 +45,26 @@ export default function Home() {
           }
         }}
         onOpenDistributorModal={() => setIsDistributorModalOpen(true)}
+        onSearch={(query) => setSearchQuery(query)} // <- Captura la búsqueda
       />
       <NavigationControls lastAddedProduct={lastAdded} />
-      <CarouselHero />
-      <NovedadesCarousel onAddToCart={handleAddToCart} />
       
+      {/* Oculta los carruseles superiores si el usuario está buscando algo */}
+      {!searchQuery && (
+        <>
+          <CarouselHero />
+          <NovedadesCarousel onAddToCart={handleAddToCart} />
+        </>
+      )}
+      
+      {/* Pasar el texto de búsqueda al catálogo */}
       <ProductGrid 
+        searchQuery={searchQuery}
         onAddToCart={handleAddToCart} 
         onOpenDistributorModal={() => setIsDistributorModalOpen(true)}
       />
 
-     {isDistributorModalOpen && <WholesaleAuthModal onClose={() => setIsDistributorModalOpen(false)} />}
+      {isDistributorModalOpen && <WholesaleAuthModal onClose={() => setIsDistributorModalOpen(false)} />}
     </main>
   );
 }

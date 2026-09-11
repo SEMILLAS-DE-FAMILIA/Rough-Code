@@ -1,0 +1,34 @@
+/* [project]/app/BrandLogo.module.css [app-client] (css) */
+.BrandLogo-module__k0xq9W__brandContainer {
+  line-height: 1;
+  font-family: var(--font-pacifico), cursive;
+  -webkit-user-select: none;
+  user-select: none;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.BrandLogo-module__k0xq9W__brandSemillas {
+  color: #fff;
+  letter-spacing: .5px;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.BrandLogo-module__k0xq9W__brandFamilia {
+  color: #f5e0b8;
+  margin-top: -4px;
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+
+.BrandLogo-module__k0xq9W__brandDivider {
+  background: linear-gradient(90deg, #0000, #f5e0b8, #0000);
+  border-radius: 999px;
+  width: 80%;
+  height: 2px;
+  margin-top: 4px;
+}
+
+/*# sourceMappingURL=app_BrandLogo_module_css_1igg3k2._.single.css.map*/

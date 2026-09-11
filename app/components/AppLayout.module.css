@@ -1,11 +1,95 @@
 /* =========================================
-   1. BOTONES FLOTANTES INFERIORES (IZQ / DER)
+   1. HEADER SUPERIOR (VERDE OSCURO)
+   ========================================= */
+
+.topHeaderNav {
+  background-color: var(--color-primary-green);
+  color: var(--color-bg-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.brandSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brandLogo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--color-bg-light);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Barra de Búsqueda (Fondo Blanco) */
+.searchContainer {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 1rem;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.55rem 1.2rem;
+  border-radius: 9999px;
+  border: 1px solid #ffffff;
+  background-color: #ffffff;
+  color: var(--color-dark-brown);
+  outline: none;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.searchInput::placeholder {
+  color: #78716c;
+  opacity: 1;
+}
+
+.searchInput:focus {
+  border-color: var(--color-warm-cream);
+  box-shadow: 0 0 0 3px rgba(223, 183, 115, 0.35);
+}
+
+/* Botón Distribuidor */
+.navActions {
+  display: flex;
+  align-items: center;
+}
+
+.distributorBtn {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 9999px;
+  background-color: var(--color-primary-brown);
+  color: var(--color-bg-light);
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.distributorBtn:hover {
+  background-color: var(--color-dark-brown);
+}
+
+/* =========================================
+   2. BOTONES FLOTANTES INFERIORES
    ========================================= */
 
 .menuFloatingBtn,
 .cartFloatingBtn {
   position: fixed;
-  bottom: 1.5rem; /* Posicionados en la parte inferior */
+  bottom: 1.5rem;
   z-index: 80;
   background: #ffffff;
   color: #1c1917;
@@ -30,8 +114,8 @@
 /* Botón Carrito (Abajo a la Derecha) */
 .cartFloatingBtn {
   right: 1.5rem;
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   padding: 0.75rem;
 }
 
@@ -49,8 +133,8 @@
   color: #ffffff;
   font-size: 0.7rem;
   font-weight: 800;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -65,7 +149,7 @@
 }
 
 /* =========================================
-   2. OVERLAY Y PANELES (SIDEBAR & CARRITO)
+   3. OVERLAY Y CARRITO DESPLEGABLE (DRAWER)
    ========================================= */
 
 .sidebarOverlay {
@@ -84,35 +168,29 @@
   pointer-events: auto;
 }
 
-.sidebar,
 .cartDrawer {
   position: fixed;
   top: 0;
   bottom: 0;
+  right: 0;
   width: 100%;
-  max-width: 380px;
+  max-width: 400px;
+  height: 100vh;
+  height: 100dvh; /* Soporte de altura para navegadores móviles */
   background-color: var(--color-bg-light, #F7F5F0);
   box-shadow: -4px 0 25px rgba(0, 0, 0, 0.08);
   z-index: 100;
   display: flex;
   flex-direction: column;
-  padding: 1.75rem 1.5rem;
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.sidebar {
-  left: 0;
-  transform: translateX(-100%);
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.cartDrawer {
-  right: 0;
   transform: translateX(100%);
   border-left: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Scroll general en caso de que la pantalla vertical sea muy baja */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.sidebar.isOpen,
 .cartDrawer.isOpen {
   transform: translateX(0);
 }
@@ -121,9 +199,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 1.25rem;
+  padding: 1.5rem 1.5rem 1rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.25rem;
+  background-color: var(--color-bg-light, #F7F5F0);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
 }
 
 .sidebarHeader h3 {
@@ -147,63 +229,26 @@
   color: #1c1917;
 }
 
-.sidebarNav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.sidebarLink {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.85rem 1rem;
-  border-radius: 0.85rem;
-  color: #44403c;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-}
-
-.sidebarLink:hover,
-.sidebarLink.active {
-  background: rgba(0, 0, 0, 0.04);
-  color: #1c1917;
-}
-
-.adminBadge {
-  margin-left: auto;
-  background: rgba(47, 103, 50, 0.1);
-  color: var(--color-primary-green, #2F6732);
-  font-size: 0.7rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.5rem;
-  font-weight: 700;
-}
-
 /* =========================================
-   3. ELEMENTOS DEL CARRITO
+   4. ELEMENTOS INTERNOS DEL CARRITO
    ========================================= */
 
+/* Lista deslizable de ítems */
 .cartList {
   flex: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  padding-right: 0.25rem;
-  margin: 0.5rem 0;
+  padding: 1.25rem;
+  -webkit-overflow-scrolling: touch;
 }
 
 .emptyCartState {
   text-align: center;
   color: #78716c;
-  margin-top: 4rem;
+  margin: auto 0;
+  padding: 3rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -214,6 +259,7 @@
   font-size: 2.5rem;
 }
 
+/* Tarjeta de Producto */
 .cartItem {
   display: flex;
   align-items: center;
@@ -224,8 +270,8 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
   transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.25s ease, margin 0.25s ease, padding 0.25s ease;
-  max-height: 120px;
-  overflow: hidden;
+  min-height: 80px;
+  flex-shrink: 0; /* Impide que la tarjeta se achique cuando hay muchos elementos */
 }
 
 .cartItemRemoving {
@@ -239,12 +285,12 @@
 }
 
 .cartItemImg {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
   border-radius: 0.6rem;
   background: #f1f5f9;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Previene la deformación de la imagen */
 }
 
 .cartItemTitle {
@@ -326,11 +372,13 @@
   transform: scale(0.9);
 }
 
+/* Pie del carrito fijo al fondo */
 .cartFooter {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding-top: 1.1rem;
+  padding: 1.25rem;
   margin-top: auto;
   background: var(--color-bg-light, #fdfcf1);
+  flex-shrink: 0; /* Previene compresión del botón y el total */
 }
 
 .summaryRow {
@@ -416,7 +464,7 @@
 /* Toast flotante posicionado sobre el botón del carrito */
 .toastNotification {
   position: fixed;
-  bottom: 5.5rem; /* Se despega 88px del fondo para flotar justo sobre el carrito */
+  bottom: 5.5rem;
   right: 1.5rem;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);

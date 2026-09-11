@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { supabase } from '../../src/lib/supabaseClient';
 import { useDistributorStore } from '../../src/lib/useDistributorStore';
@@ -92,8 +93,19 @@ function ProductCard({
 
   const showDistributorPrice = viewingDistributorTab && isDistributorLoggedIn && cheapestDistributor != null;
 
+  const handleCardClick = () => {
+    if (isLocked) {
+      onOpenDistributorModal();
+    } else if (!isOutOfStock) {
+      onOpenModal(product);
+    }
+  };
+
   return (
-    <div className={`${styles.productCard} ${isOutOfStock ? styles.outOfStockCard : ''} ${isLocked ? styles.outOfStockCard : ''}`}>
+    <div
+      className={`${styles.productCard} ${isOutOfStock ? styles.outOfStockCard : ''} ${isLocked ? styles.outOfStockCard : ''}`}
+      onClick={handleCardClick}
+    >
       <div className={styles.imageContainer}>
         <div className={styles.topLeftBadges}>
           {isOutOfStock ? (
@@ -152,11 +164,25 @@ function ProductCard({
           </div>
 
           {isLocked ? (
-            <button className={styles.addBtn} style={{ background: '#334155' }} onClick={onOpenDistributorModal}>
+            <button
+              className={styles.addBtn}
+              style={{ background: '#334155' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenDistributorModal();
+              }}
+            >
               Acceso
             </button>
           ) : (
-            <button className={styles.addBtn} onClick={() => onOpenModal(product)} disabled={isOutOfStock}>
+            <button
+              className={styles.addBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenModal(product);
+              }}
+              disabled={isOutOfStock}
+            >
               Ver Opciones
             </button>
           )}
@@ -177,11 +203,16 @@ export function ProductModalDetails({
   onAddToCart: (item: any) => void;
   distributorPrices?: Record<number, number>;
 }) {
+  const [mounted, setMounted] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedVariantId, setSelectedVariantId] = useState<number>(product.variants[0]?.id || 0);
   const [flavorQuantities, setFlavorQuantities] = useState<Record<number, number>>({});
 
   const cart = useCartStore((s) => s.cart);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const alreadyInCart = (variantId: number, flavorId: number) => {
     const compositeId = `${variantId}-${flavorId}`;
@@ -246,7 +277,9 @@ export function ProductModalDetails({
 
   const totalSelectedCount = Object.values(flavorQuantities).reduce((sum, q) => sum + q, 0);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalCard} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '520px', maxHeight: '90vh', overflowY: 'auto' }}>
         <button className={styles.modalCloseBtn} onClick={onClose}>✕</button>
@@ -389,16 +422,22 @@ export function ProductModalDetails({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
 interface ProductGridProps {
+  searchQuery?: string;
   onAddToCart: (item: any) => void;
   onOpenDistributorModal: () => void;
 }
 
-export default function ProductGrid({ onAddToCart, onOpenDistributorModal }: ProductGridProps) {
+export default function ProductGrid({
+  searchQuery = '',
+  onAddToCart,
+  onOpenDistributorModal,
+}: ProductGridProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>(['Todos']);
   const [activeCategory, setActiveCategory] = useState('Todos');
@@ -406,6 +445,15 @@ export default function ProductGrid({ onAddToCart, onOpenDistributorModal }: Pro
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [prevSearch, setPrevSearch] = useState(searchQuery);
+  const [prevCategory, setPrevCategory] = useState(activeCategory);
+
+  if (searchQuery !== prevSearch || activeCategory !== prevCategory) {
+    setPrevSearch(searchQuery);
+    setPrevCategory(activeCategory);
+    setCurrentPage(1);
+  }
 
   const ITEMS_PER_PAGE = 12;
 
@@ -476,11 +524,6 @@ export default function ProductGrid({ onAddToCart, onOpenDistributorModal }: Pro
     fetchProducts();
   }, []);
 
-  // Vuelve a la página 1 cada vez que cambia el filtro de categoría
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeCategory]);
-
   const goToPage = (page: number) => {
     setCurrentPage(page);
     const catalogSection = document.getElementById('catalogo');
@@ -491,11 +534,22 @@ export default function ProductGrid({ onAddToCart, onOpenDistributorModal }: Pro
 
   const viewingDistributorTab = activeCategory === 'Distribuidor';
 
-  const filteredProducts = viewingDistributorTab
-    ? products.filter((p) => p.is_distributor)
-    : activeCategory === 'Todos'
-    ? products
-    : products.filter((p) => p.category_name === activeCategory);
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory = viewingDistributorTab
+      ? p.is_distributor
+      : activeCategory === 'Todos'
+      ? true
+      : p.category_name === activeCategory;
+
+    const query = searchQuery.trim().toLowerCase();
+    const matchesSearch = !query
+      ? true
+      : p.title.toLowerCase().includes(query) ||
+        (p.description && p.description.toLowerCase().includes(query)) ||
+        (p.category_name && p.category_name.toLowerCase().includes(query));
+
+    return matchesCategory && matchesSearch;
+  });
 
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
   const paginatedProducts = filteredProducts.slice(
@@ -503,7 +557,6 @@ export default function ProductGrid({ onAddToCart, onOpenDistributorModal }: Pro
     currentPage * ITEMS_PER_PAGE
   );
 
-  // Ventana de números visibles alrededor de la página actual (máx. 7 botones + flechas)
   const getVisiblePages = (): (number | 'ellipsis')[] => {
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
 
@@ -538,7 +591,11 @@ export default function ProductGrid({ onAddToCart, onOpenDistributorModal }: Pro
 
         {loading && <p className={styles.stateMessage}>Cargando...</p>}
         {error && <p className={styles.stateMessage}>{error}</p>}
-        {!loading && !error && filteredProducts.length === 0 && <p className={styles.stateMessage}>No hay productos disponibles.</p>}
+        {!loading && !error && filteredProducts.length === 0 && (
+          <p className={styles.stateMessage}>
+            {searchQuery ? `No encontramos productos para "${searchQuery}"` : 'No hay productos disponibles.'}
+          </p>
+        )}
 
         <div className={styles.productGrid}>
           {paginatedProducts.map((product) => (

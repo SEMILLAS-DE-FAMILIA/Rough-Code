@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { supabase } from '../../../src/lib/supabaseClient';
+import { extractStoragePath } from '../../../src/lib/storageUtils';
 import ImageUploadField from './ImageUploadField';
 import styles from './Admin.module.css';
 
@@ -399,7 +400,17 @@ export default function ProductsManager() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Eliminar este producto?')) return;
+    if (!confirm('¿Eliminar este producto? Esto también borrará sus imágenes.')) return;
+
+    const product = products.find((p) => p.id === id);
+    const paths = (product?.images || [])
+      .map((url) => extractStoragePath(url, 'product-images'))
+      .filter((p): p is string => Boolean(p));
+
+    if (paths.length > 0) {
+      await supabase.storage.from('product-images').remove(paths);
+    }
+
     await supabase.from('products').delete().eq('id', id);
     fetchProducts();
   };

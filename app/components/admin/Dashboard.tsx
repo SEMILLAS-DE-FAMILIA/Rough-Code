@@ -34,6 +34,13 @@ interface DayStat {
   total: number;
 }
 
+interface LowStockItem {
+  title: string;
+  weight: string;
+  flavor_name: string;
+  stock: number;
+}
+
 const formatCLP = (value: number) =>
   new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
@@ -48,6 +55,7 @@ export default function Dashboard() {
   const [monthOrdersCount, setMonthOrdersCount] = useState(0);
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [dailySales, setDailySales] = useState<DayStat[]>([]);
+  const [lowStockItems, setLowStockItems] = useState<LowStockItem[]>([]);
 
   useEffect(() => {
     async function loadDashboard() {
@@ -56,7 +64,7 @@ export default function Dashboard() {
       const [{ count: activeCount }, { count: totalCount }, { count: noStockCount }] = await Promise.all([
         supabase.from('products').select('*', { count: 'exact', head: true }).eq('active', true),
         supabase.from('products').select('*', { count: 'exact', head: true }),
-        supabase.from('products').select('*', { count: 'exact', head: true }).lte('stock', 0),
+        supabase.from('variant_flavor_stock').select('*', { count: 'exact', head: true }).lte('stock', 0),
       ]);
 
       setActiveProductsCount(activeCount ?? 0);
@@ -120,6 +128,27 @@ export default function Dashboard() {
         .map(({ label, total }) => ({ label, total }));
 
       setDailySales(formattedDays);
+
+      const { data: stockRows } = await supabase
+        .from('variant_flavor_stock')
+        .select(`
+          stock,
+          product_flavors ( flavor_name ),
+          product_variants ( weight, products ( title, active ) )
+        `)
+        .lte('stock', 5)
+        .order('stock', { ascending: true });
+
+      const lowStock = (stockRows || [])
+        .filter((row: any) => row.product_variants?.products?.active)
+        .map((row: any) => ({
+          title: row.product_variants?.products?.title || 'Producto',
+          weight: row.product_variants?.weight || '',
+          flavor_name: row.product_flavors?.flavor_name || '',
+          stock: row.stock,
+        }));
+      setLowStockItems(lowStock);
+
       setLoading(false);
     }
 
@@ -174,9 +203,33 @@ export default function Dashboard() {
             <div className={styles.kpiIconBox}><AlertCircle size={18} /></div>
           </div>
           <div className={styles.kpiValue}>{outOfStockCount}</div>
-          <span className={styles.kpiSubtext}>Productos con stock 0</span>
+          <span className={styles.kpiSubtext}>Variantes con stock 0</span>
         </div>
       </div>
+
+      {lowStockItems.length > 0 && (
+        <div className={styles.dashboardPanel} style={{ borderLeft: '3px solid #dc2626' }}>
+          <h3 style={{ color: '#dc2626' }}>⚠️ Stock bajo o agotado ({lowStockItems.length})</h3>
+          {lowStockItems.map((item, i) => (
+            <div key={i} className={styles.rankRow}>
+              <div className={styles.rankLeft}>
+                <span
+                  className={styles.rankNumber}
+                  style={{ background: item.stock === 0 ? '#fee2e2' : '#fef9c3', color: item.stock === 0 ? '#dc2626' : '#854d0e' }}
+                >
+                  {item.stock}
+                </span>
+                <span>
+                  {item.title} ({item.weight} - {item.flavor_name})
+                </span>
+              </div>
+              <span className={styles.rankValue} style={{ color: item.stock === 0 ? '#dc2626' : '#854d0e' }}>
+                {item.stock === 0 ? 'Agotado' : 'Stock bajo'}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className={styles.chartsGrid}>
         <div className={styles.chartCard}>

@@ -1,3 +1,5 @@
+// ImageUploadField.tsx
+
 'use client';
 
 import React, { useRef, useState } from 'react';
@@ -45,6 +47,14 @@ const compressImage = (file: File, maxWidth = 1200, quality = 0.82): Promise<Blo
   });
 };
 
+async function computeContentHash(blob: Blob): Promise<string> {
+  const buffer = await blob.arrayBuffer();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 export default function ImageUploadField({
   bucket,
   value = [],
@@ -78,7 +88,8 @@ export default function ImageUploadField({
 
       for (const file of Array.from(files)) {
         const compressedBlob = await compressImage(file, 1200, 0.82);
-        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
+        const hash = await computeContentHash(compressedBlob);
+        const fileName = `${hash}.webp`;
 
         const { error: uploadError } = await supabase.storage
           .from(bucket)
@@ -88,7 +99,11 @@ export default function ImageUploadField({
             upsert: false,
           });
 
-        if (uploadError) throw uploadError;
+        // Si el error es "ya existe" (mismo contenido subido antes), no es un fallo real:
+        // simplemente reutilizamos el archivo que ya está en el bucket.
+        if (uploadError && !uploadError.message?.includes('already exists') && !uploadError.message?.includes('Duplicate')) {
+          throw uploadError;
+        }
 
         const { data } = supabase.storage.from(bucket).getPublicUrl(fileName);
         uploadedUrls.push(data.publicUrl);

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../src/lib/supabaseClient';
+import { extractStoragePath } from '../../../src/lib/storageUtils';
 import ImageUploadField from './ImageUploadField';
 import styles from './Admin.module.css';
 
@@ -134,6 +135,13 @@ export default function CarouselManager() {
 
   const handleDelete = async (id: number) => {
     if (!confirm('¿Eliminar este slide del carrusel?')) return;
+
+    const slide = slides.find((s) => s.id === id);
+    const path = extractStoragePath(slide?.img_url, 'carousel-images');
+    if (path) {
+      await supabase.storage.from('carousel-images').remove([path]);
+    }
+
     await supabase.from('carousel_slides').delete().eq('id', id);
     fetchSlides();
   };

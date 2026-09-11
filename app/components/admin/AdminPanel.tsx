@@ -8,11 +8,13 @@ import CategoriesManager from './CategoriesManager';
 import CarouselManager from './CarouselManager';
 import BannerManager from './BannerManager';
 import DistributorsManager from './DistributorsManager';
+import OrdersManager from './OrdersManager';
 import styles from './Admin.module.css';
 
-type Tab = 'dashboard' | 'products' | 'categories' | 'carousel' | 'banner' | 'distributors';
+type Tab = 'dashboard' | 'products' | 'categories' | 'carousel' | 'banner' | 'distributors' | 'orders';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
+  { id: 'orders', label: 'Pedidos' },
   { id: 'categories', label: 'Categorías' },
   { id: 'products', label: 'Productos' },
   { id: 'carousel', label: 'Carrusel' },
@@ -91,6 +93,7 @@ export default function AdminPanel({ onLoggedOut }: { onLoggedOut: (reason?: 'in
       <main className={styles.mainArea}>
         <div className={styles.panelBody}>
           {activeTab === 'dashboard' && <Dashboard />}
+          {activeTab === 'orders' && <OrdersManager />}
           {activeTab === 'categories' && <CategoriesManager />}
           {activeTab === 'products' && <ProductsManager />}
           {activeTab === 'carousel' && <CarouselManager />}

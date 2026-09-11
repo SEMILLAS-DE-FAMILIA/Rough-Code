@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { supabase } from '../../src/lib/supabaseClient';
 import { useDistributorStore } from '../../src/lib/useDistributorStore';
+import { useCartStore } from '../../src/lib/useCartStore';
 import styles from './ProductGrid.module.css';
 
 export interface ProductFlavor {
@@ -180,6 +181,13 @@ export function ProductModalDetails({
   const [selectedVariantId, setSelectedVariantId] = useState<number>(product.variants[0]?.id || 0);
   const [flavorQuantities, setFlavorQuantities] = useState<Record<number, number>>({});
 
+  const cart = useCartStore((s) => s.cart);
+
+  const alreadyInCart = (variantId: number, flavorId: number) => {
+    const compositeId = `${variantId}-${flavorId}`;
+    return cart.find((c) => c.id === compositeId)?.quantity ?? 0;
+  };
+
   const images = product.images && product.images.length > 0 ? product.images : product.img_url ? [product.img_url] : [];
 
   useEffect(() => {
@@ -217,6 +225,7 @@ export function ProductModalDetails({
         if (flavorObj) {
           const maxStock = stockFor(currentVariant, flavorObj.id);
           onAddToCart({
+            id: `${currentVariant.id}-${flavorObj.id}`,
             product_id: product.id,
             product_title: `${product.title} (${currentVariant.weight} - ${flavorObj.flavor_name})`,
             variant_id: currentVariant.id,
@@ -300,6 +309,8 @@ export function ProductModalDetails({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {product.flavors.map((f) => {
                 const maxStock = stockFor(currentVariant, f.id);
+                const inCart = currentVariant ? alreadyInCart(currentVariant.id, f.id) : 0;
+                const remainingRoom = Math.max(0, maxStock - inCart);
                 const currentQty = flavorQuantities[f.id] || 0;
 
                 return (
@@ -317,16 +328,20 @@ export function ProductModalDetails({
                   >
                     <div>
                       <span style={{ fontWeight: 600, fontSize: '0.9rem', color: '#1e293b', display: 'block' }}>{f.flavor_name}</span>
-                      <span style={{ fontSize: '0.75rem', color: maxStock > 0 ? '#64748b' : '#dc2626' }}>
-                        {maxStock > 0 ? `Stock disponible: ${maxStock}` : 'Agotado'}
+                      <span style={{ fontSize: '0.75rem', color: remainingRoom > 0 ? '#64748b' : '#dc2626' }}>
+                        {remainingRoom > 0
+                          ? `Disponible: ${remainingRoom}${inCart > 0 ? ` (ya tienes ${inCart} en el carrito)` : ''}`
+                          : inCart > 0
+                          ? 'Ya tienes el máximo disponible en tu carrito'
+                          : 'Agotado'}
                       </span>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <button
                         type="button"
-                        disabled={maxStock <= 0 || currentQty <= 0}
-                        onClick={() => handleQuantityChange(f.id, currentQty - 1, maxStock)}
+                        disabled={remainingRoom <= 0 || currentQty <= 0}
+                        onClick={() => handleQuantityChange(f.id, currentQty - 1, remainingRoom)}
                         style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer' }}
                       >
                         -
@@ -334,15 +349,15 @@ export function ProductModalDetails({
                       <input
                         type="number"
                         min="0"
-                        max={maxStock}
+                        max={remainingRoom}
                         value={currentQty}
-                        onChange={(e) => handleQuantityChange(f.id, parseInt(e.target.value) || 0, maxStock)}
+                        onChange={(e) => handleQuantityChange(f.id, parseInt(e.target.value) || 0, remainingRoom)}
                         style={{ width: '45px', textAlign: 'center', padding: '4px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
                       />
                       <button
                         type="button"
-                        disabled={maxStock <= 0 || currentQty >= maxStock}
-                        onClick={() => handleQuantityChange(f.id, currentQty + 1, maxStock)}
+                        disabled={remainingRoom <= 0 || currentQty >= remainingRoom}
+                        onClick={() => handleQuantityChange(f.id, currentQty + 1, remainingRoom)}
                         style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer' }}
                       >
                         +
@@ -390,8 +405,12 @@ export default function ProductGrid({ onAddToCart, onOpenDistributorModal }: Pro
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved');  const distributorPrices = useDistributorStore((s) => s.prices);
+  const ITEMS_PER_PAGE = 12;
+
+  const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved');
+  const distributorPrices = useDistributorStore((s) => s.prices);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -457,6 +476,19 @@ const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved'
     fetchProducts();
   }, []);
 
+  // Vuelve a la página 1 cada vez que cambia el filtro de categoría
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory]);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    const catalogSection = document.getElementById('catalogo');
+    if (catalogSection) {
+      catalogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const viewingDistributorTab = activeCategory === 'Distribuidor';
 
   const filteredProducts = viewingDistributorTab
@@ -464,6 +496,29 @@ const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved'
     : activeCategory === 'Todos'
     ? products
     : products.filter((p) => p.category_name === activeCategory);
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  // Ventana de números visibles alrededor de la página actual (máx. 7 botones + flechas)
+  const getVisiblePages = (): (number | 'ellipsis')[] => {
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    const pages = new Set<number>([1, totalPages, currentPage, currentPage - 1, currentPage + 1]);
+    const sorted = Array.from(pages)
+      .filter((p) => p >= 1 && p <= totalPages)
+      .sort((a, b) => a - b);
+
+    const withEllipsis: (number | 'ellipsis')[] = [];
+    sorted.forEach((p, idx) => {
+      if (idx > 0 && p - sorted[idx - 1] > 1) withEllipsis.push('ellipsis');
+      withEllipsis.push(p);
+    });
+    return withEllipsis;
+  };
 
   return (
     <section id="catalogo" className={styles.catalogSection}>
@@ -486,7 +541,7 @@ const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved'
         {!loading && !error && filteredProducts.length === 0 && <p className={styles.stateMessage}>No hay productos disponibles.</p>}
 
         <div className={styles.productGrid}>
-          {filteredProducts.map((product) => (
+          {paginatedProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -498,6 +553,84 @@ const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved'
             />
           ))}
         </div>
+
+        {!loading && !error && totalPages > 1 && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '0.4rem',
+              marginTop: '2.5rem',
+              flexWrap: 'wrap',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => goToPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '9999px',
+                border: '1px solid #e2e8f0',
+                background: '#fff',
+                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                opacity: currentPage === 1 ? 0.4 : 1,
+                fontSize: '0.9rem',
+              }}
+              aria-label="Página anterior"
+            >
+              ‹
+            </button>
+
+            {getVisiblePages().map((p, idx) =>
+              p === 'ellipsis' ? (
+                <span key={`ellipsis-${idx}`} style={{ padding: '0 0.3rem', color: '#a8a29e' }}>
+                  …
+                </span>
+              ) : (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => goToPage(p)}
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '9999px',
+                    border: p === currentPage ? 'none' : '1px solid #e2e8f0',
+                    background: p === currentPage ? '#1c1917' : '#fff',
+                    color: p === currentPage ? '#fff' : '#334155',
+                    fontWeight: p === currentPage ? 700 : 500,
+                    cursor: 'pointer',
+                    fontSize: '0.85rem',
+                  }}
+                >
+                  {p}
+                </button>
+              )
+            )}
+
+            <button
+              type="button"
+              onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '9999px',
+                border: '1px solid #e2e8f0',
+                background: '#fff',
+                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                opacity: currentPage === totalPages ? 0.4 : 1,
+                fontSize: '0.9rem',
+              }}
+              aria-label="Página siguiente"
+            >
+              ›
+            </button>
+          </div>
+        )}
       </div>
 
       {selectedProduct && (

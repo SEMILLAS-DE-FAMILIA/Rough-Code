@@ -13,13 +13,21 @@ import { useCartStore, NewCartItem } from '../src/lib/useCartStore';
 
 export default function Home() {
   const addToCart = useCartStore((state) => state.addToCart);
-  const cartItems = useCartStore((state) => state.cart);  const removeFromCart = useCartStore((state) => state.removeItem);
+  const cartItems = useCartStore((state) => state.cart);
+  const removeFromCart = useCartStore((state) => state.removeItem);
   const [lastAdded, setLastAdded] = useState<string | null>(null);
   const [isDistributorModalOpen, setIsDistributorModalOpen] = useState<boolean>(false);
 
   const handleAddToCart = (item: NewCartItem) => {
-    addToCart(item);
-    setLastAdded(item.product_title);
+    const result = addToCart(item);
+
+    if (result.added <= 0) {
+      setLastAdded(`⚠️ ${item.product_title}: ya tienes el máximo disponible en tu carrito`);
+    } else if (result.added < result.requested) {
+      setLastAdded(`${item.product_title}: se agregaron ${result.added} de ${result.requested} (stock limitado)`);
+    } else {
+      setLastAdded(item.product_title);
+    }
     setTimeout(() => setLastAdded(null), 3500);
   };
 
@@ -38,7 +46,7 @@ export default function Home() {
       />
       <NavigationControls lastAddedProduct={lastAdded} />
       <CarouselHero />
-+     <NovedadesCarousel onAddToCart={handleAddToCart} />
+      <NovedadesCarousel onAddToCart={handleAddToCart} />
       
       <ProductGrid 
         onAddToCart={handleAddToCart} 

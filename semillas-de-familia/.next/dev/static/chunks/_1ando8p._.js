@@ -1897,10 +1897,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$ne
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.3.2_@babel+core@7.2_bdc055ee4ad2e6131e2219227af943df/node_modules/next/image.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/supabaseClient.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useDistributorStore$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/useDistributorStore.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCartStore$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/useCartStore.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__ = __turbopack_context__.i("[project]/app/components/ProductGrid.module.css [app-client] (css module)");
 ;
 var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature();
 'use client';
+;
 ;
 ;
 ;
@@ -1962,14 +1964,14 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                 children: "Sin stock"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 99,
+                                lineNumber: 100,
                                 columnNumber: 13
                             }, this) : product.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].tagBadge,
                                 children: product.badge
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 101,
+                                lineNumber: 102,
                                 columnNumber: 30
                             }, this),
                             product.is_distributor && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1984,13 +1986,13 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                 children: "MAYORISTA"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 104,
+                                lineNumber: 105,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 97,
+                        lineNumber: 98,
                         columnNumber: 9
                     }, this),
                     hasDiscount && !isLocked && !showDistributorPrice && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2002,7 +2004,7 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 109,
+                        lineNumber: 110,
                         columnNumber: 63
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2015,18 +2017,18 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                 sizes: "(max-width: 768px) 100vw, 300px"
                             }, img + idx, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 113,
+                                lineNumber: 114,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 111,
+                        lineNumber: 112,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/ProductGrid.tsx",
-                lineNumber: 96,
+                lineNumber: 97,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2037,7 +2039,7 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                         children: product.category_name || 'Sin categoría'
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 126,
+                        lineNumber: 127,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -2045,7 +2047,7 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                         children: product.title
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 127,
+                        lineNumber: 128,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2058,7 +2060,7 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                         children: totalStock > 0 ? `${product.variants.length} opciones de peso` : 'Agotado'
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 128,
+                        lineNumber: 129,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2075,7 +2077,7 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                     children: "Inicia sesión para ver precio"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 135,
+                                    lineNumber: 136,
                                     columnNumber: 15
                                 }, this) : showDistributorPrice ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                     children: [
@@ -2084,7 +2086,7 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                             children: formatCLP(cheapestDistributor.v.price)
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 138,
+                                            lineNumber: 139,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2098,13 +2100,13 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 139,
+                                            lineNumber: 140,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 137,
+                                    lineNumber: 138,
                                     columnNumber: 15
                                 }, this) : firstVariant ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                     children: [
@@ -2113,7 +2115,7 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                             children: formatCLP(firstVariant.price)
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 145,
+                                            lineNumber: 146,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2124,18 +2126,18 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 146,
+                                            lineNumber: 147,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 144,
+                                    lineNumber: 145,
                                     columnNumber: 15
                                 }, this) : null
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 133,
+                                lineNumber: 134,
                                 columnNumber: 11
                             }, this),
                             isLocked ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2147,7 +2149,7 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                 children: "Acceso"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 154,
+                                lineNumber: 155,
                                 columnNumber: 13
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 className: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].addBtn,
@@ -2156,25 +2158,25 @@ function ProductCard({ product, onOpenModal, viewingDistributorTab, isDistributo
                                 children: "Ver Opciones"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 158,
+                                lineNumber: 159,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 132,
+                        lineNumber: 133,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/ProductGrid.tsx",
-                lineNumber: 125,
+                lineNumber: 126,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/ProductGrid.tsx",
-        lineNumber: 95,
+        lineNumber: 96,
         columnNumber: 5
     }, this);
 }
@@ -2185,6 +2187,13 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
     const [activeImageIndex, setActiveImageIndex] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
     const [selectedVariantId, setSelectedVariantId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(product.variants[0]?.id || 0);
     const [flavorQuantities, setFlavorQuantities] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const cart = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCartStore$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCartStore"])({
+        "ProductModalDetails.useCartStore[cart]": (s)=>s.cart
+    }["ProductModalDetails.useCartStore[cart]"]);
+    const alreadyInCart = (variantId, flavorId)=>{
+        const compositeId = `${variantId}-${flavorId}`;
+        return cart.find((c)=>c.id === compositeId)?.quantity ?? 0;
+    };
     const images = product.images && product.images.length > 0 ? product.images : product.img_url ? [
         product.img_url
     ] : [];
@@ -2230,6 +2239,7 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                 if (flavorObj) {
                     const maxStock = stockFor(currentVariant, flavorObj.id);
                     onAddToCart({
+                        id: `${currentVariant.id}-${flavorObj.id}`,
                         product_id: product.id,
                         product_title: `${product.title} (${currentVariant.weight} - ${flavorObj.flavor_name})`,
                         variant_id: currentVariant.id,
@@ -2265,7 +2275,7 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                     children: "✕"
                 }, void 0, false, {
                     fileName: "[project]/app/components/ProductGrid.tsx",
-                    lineNumber: 243,
+                    lineNumber: 252,
                     columnNumber: 9
                 }, this),
                 images.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2282,17 +2292,17 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                 className: `${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].modalImage} ${__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].fadeImage} ${activeImageIndex === idx ? __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].fadeImageActive : ''}`
                             }, img + idx, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 249,
+                                lineNumber: 258,
                                 columnNumber: 17
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 247,
+                        lineNumber: 256,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/components/ProductGrid.tsx",
-                    lineNumber: 246,
+                    lineNumber: 255,
                     columnNumber: 11
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2303,7 +2313,7 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                             children: product.category_name || 'Sin categoría'
                         }, void 0, false, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 256,
+                            lineNumber: 265,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -2311,7 +2321,7 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                             children: product.title
                         }, void 0, false, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 257,
+                            lineNumber: 266,
                             columnNumber: 11
                         }, this),
                         product.description && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2319,7 +2329,7 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                             children: product.description
                         }, void 0, false, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 258,
+                            lineNumber: 267,
                             columnNumber: 35
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2337,7 +2347,7 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                     children: "Selecciona el Peso:"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 261,
+                                    lineNumber: 270,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2374,19 +2384,19 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                             ]
                                         }, v.id, true, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 267,
+                                            lineNumber: 276,
                                             columnNumber: 19
                                         }, this);
                                     })
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 262,
+                                    lineNumber: 271,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 260,
+                            lineNumber: 269,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2404,7 +2414,7 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                     children: "Elige los sabores y cantidades:"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 297,
+                                    lineNumber: 306,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2415,6 +2425,8 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                     },
                                     children: product.flavors.map((f)=>{
                                         const maxStock = stockFor(currentVariant, f.id);
+                                        const inCart = currentVariant ? alreadyInCart(currentVariant.id, f.id) : 0;
+                                        const remainingRoom = Math.max(0, maxStock - inCart);
                                         const currentQty = flavorQuantities[f.id] || 0;
                                         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             style: {
@@ -2439,24 +2451,24 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                                             children: f.flavor_name
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 319,
+                                                            lineNumber: 330,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             style: {
                                                                 fontSize: '0.75rem',
-                                                                color: maxStock > 0 ? '#64748b' : '#dc2626'
+                                                                color: remainingRoom > 0 ? '#64748b' : '#dc2626'
                                                             },
-                                                            children: maxStock > 0 ? `Stock disponible: ${maxStock}` : 'Agotado'
+                                                            children: remainingRoom > 0 ? `Disponible: ${remainingRoom}${inCart > 0 ? ` (ya tienes ${inCart} en el carrito)` : ''}` : inCart > 0 ? 'Ya tienes el máximo disponible en tu carrito' : 'Agotado'
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 320,
+                                                            lineNumber: 331,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                                    lineNumber: 318,
+                                                    lineNumber: 329,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2468,8 +2480,8 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                             type: "button",
-                                                            disabled: maxStock <= 0 || currentQty <= 0,
-                                                            onClick: ()=>handleQuantityChange(f.id, currentQty - 1, maxStock),
+                                                            disabled: remainingRoom <= 0 || currentQty <= 0,
+                                                            onClick: ()=>handleQuantityChange(f.id, currentQty - 1, remainingRoom),
                                                             style: {
                                                                 width: '28px',
                                                                 height: '28px',
@@ -2481,15 +2493,15 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                                             children: "-"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 326,
+                                                            lineNumber: 341,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                             type: "number",
                                                             min: "0",
-                                                            max: maxStock,
+                                                            max: remainingRoom,
                                                             value: currentQty,
-                                                            onChange: (e)=>handleQuantityChange(f.id, parseInt(e.target.value) || 0, maxStock),
+                                                            onChange: (e)=>handleQuantityChange(f.id, parseInt(e.target.value) || 0, remainingRoom),
                                                             style: {
                                                                 width: '45px',
                                                                 textAlign: 'center',
@@ -2500,13 +2512,13 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 334,
+                                                            lineNumber: 349,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                             type: "button",
-                                                            disabled: maxStock <= 0 || currentQty >= maxStock,
-                                                            onClick: ()=>handleQuantityChange(f.id, currentQty + 1, maxStock),
+                                                            disabled: remainingRoom <= 0 || currentQty >= remainingRoom,
+                                                            onClick: ()=>handleQuantityChange(f.id, currentQty + 1, remainingRoom),
                                                             style: {
                                                                 width: '28px',
                                                                 height: '28px',
@@ -2518,31 +2530,31 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                                             children: "+"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                                            lineNumber: 342,
+                                                            lineNumber: 357,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                                    lineNumber: 325,
+                                                    lineNumber: 340,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, f.id, true, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 306,
+                                            lineNumber: 317,
                                             columnNumber: 19
                                         }, this);
                                     })
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 300,
+                                    lineNumber: 309,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 296,
+                            lineNumber: 305,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2565,7 +2577,7 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                             children: formatCLP(currentVariant.price)
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 360,
+                                            lineNumber: 375,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2579,13 +2591,13 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/ProductGrid.tsx",
-                                            lineNumber: 362,
+                                            lineNumber: 377,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 358,
+                                    lineNumber: 373,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2602,34 +2614,38 @@ function ProductModalDetails({ product, onClose, onAddToCart, distributorPrices 
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 366,
+                                    lineNumber: 381,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/ProductGrid.tsx",
-                            lineNumber: 357,
+                            lineNumber: 372,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/ProductGrid.tsx",
-                    lineNumber: 255,
+                    lineNumber: 264,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/components/ProductGrid.tsx",
-            lineNumber: 242,
+            lineNumber: 251,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/components/ProductGrid.tsx",
-        lineNumber: 241,
+        lineNumber: 250,
         columnNumber: 5
     }, this);
 }
-_s1(ProductModalDetails, "c91fKGq+ODjsGolVs160/FA2w84=");
+_s1(ProductModalDetails, "Mu8vFf9ILimjgT7VFS++kU8fG58=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$useCartStore$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCartStore"]
+    ];
+});
 _c1 = ProductModalDetails;
 function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
     _s2();
@@ -2782,7 +2798,7 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                                 children: "Catálogo"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 512,
+                                lineNumber: 527,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -2790,7 +2806,7 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                                 children: "Nuestros Productos"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 513,
+                                lineNumber: 528,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2801,18 +2817,18 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                                         children: cat === 'Distribuidor' ? '🤝 Zona Distribuidores' : cat
                                     }, cat, false, {
                                         fileName: "[project]/app/components/ProductGrid.tsx",
-                                        lineNumber: 517,
+                                        lineNumber: 532,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 515,
+                                lineNumber: 530,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 511,
+                        lineNumber: 526,
                         columnNumber: 9
                     }, this),
                     loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2820,7 +2836,7 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                         children: "Cargando..."
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 524,
+                        lineNumber: 539,
                         columnNumber: 21
                     }, this),
                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2828,7 +2844,7 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 525,
+                        lineNumber: 540,
                         columnNumber: 19
                     }, this),
                     !loading && !error && filteredProducts.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2836,7 +2852,7 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                         children: "No hay productos disponibles."
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 526,
+                        lineNumber: 541,
                         columnNumber: 65
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2850,12 +2866,12 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                                 onOpenDistributorModal: onOpenDistributorModal
                             }, product.id, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 530,
+                                lineNumber: 545,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 528,
+                        lineNumber: 543,
                         columnNumber: 9
                     }, this),
                     !loading && !error && totalPages > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2886,7 +2902,7 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                                 children: "‹"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 553,
+                                lineNumber: 568,
                                 columnNumber: 13
                             }, this),
                             getVisiblePages().map((p, idx)=>p === 'ellipsis' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2897,7 +2913,7 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                                     children: "…"
                                 }, `ellipsis-${idx}`, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 574,
+                                    lineNumber: 589,
                                     columnNumber: 17
                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     type: "button",
@@ -2916,7 +2932,7 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                                     children: p
                                 }, p, false, {
                                     fileName: "[project]/app/components/ProductGrid.tsx",
-                                    lineNumber: 578,
+                                    lineNumber: 593,
                                     columnNumber: 17
                                 }, this)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2937,19 +2953,19 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                                 children: "›"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/ProductGrid.tsx",
-                                lineNumber: 599,
+                                lineNumber: 614,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ProductGrid.tsx",
-                        lineNumber: 543,
+                        lineNumber: 558,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/ProductGrid.tsx",
-                lineNumber: 510,
+                lineNumber: 525,
                 columnNumber: 7
             }, this),
             selectedProduct && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProductModalDetails, {
@@ -2959,13 +2975,13 @@ function ProductGrid({ onAddToCart, onOpenDistributorModal }) {
                 distributorPrices: viewingDistributorTab && isDistributorLoggedIn ? distributorPrices : undefined
             }, void 0, false, {
                 fileName: "[project]/app/components/ProductGrid.tsx",
-                lineNumber: 622,
+                lineNumber: 637,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/ProductGrid.tsx",
-        lineNumber: 509,
+        lineNumber: 524,
         columnNumber: 5
     }, this);
 }
@@ -3598,8 +3614,14 @@ function Home() {
     const [lastAdded, setLastAdded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isDistributorModalOpen, setIsDistributorModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const handleAddToCart = (item)=>{
-        addToCart(item);
-        setLastAdded(item.product_title);
+        const result = addToCart(item);
+        if (result.added <= 0) {
+            setLastAdded(`⚠️ ${item.product_title}: ya tienes el máximo disponible en tu carrito`);
+        } else if (result.added < result.requested) {
+            setLastAdded(`${item.product_title}: se agregaron ${result.added} de ${result.requested} (stock limitado)`);
+        } else {
+            setLastAdded(item.product_title);
+        }
         setTimeout(()=>setLastAdded(null), 3500);
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -3610,7 +3632,7 @@ function Home() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AlertBanner$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 28,
+                lineNumber: 36,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$HeaderNav$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3629,27 +3651,26 @@ function Home() {
                 onOpenDistributorModal: ()=>setIsDistributorModalOpen(true)
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 29,
+                lineNumber: 37,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NavigationControls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 lastAddedProduct: lastAdded
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 39,
+                lineNumber: 47,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Carousel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 40,
+                lineNumber: 48,
                 columnNumber: 7
             }, this),
-            "+     ",
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$NovedadesCarousel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 onAddToCart: handleAddToCart
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 41,
+                lineNumber: 49,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ProductGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3657,20 +3678,20 @@ function Home() {
                 onOpenDistributorModal: ()=>setIsDistributorModalOpen(true)
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 43,
+                lineNumber: 51,
                 columnNumber: 7
             }, this),
             isDistributorModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$3$2e$2_$40$babel$2b$core$40$7$2e$2_bdc055ee4ad2e6131e2219227af943df$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$WholesaleAuthModal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 onClose: ()=>setIsDistributorModalOpen(false)
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 48,
+                lineNumber: 56,
                 columnNumber: 33
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/page.tsx",
-        lineNumber: 27,
+        lineNumber: 35,
         columnNumber: 5
     }, this);
 }
@@ -3776,46 +3797,48 @@ const useCartStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_mo
         cart: [],
         lastUpdated: null,
         addToCart: (item)=>{
-            set((state)=>{
-                const compositeId = `${item.variant_id}-${item.flavor_id}`;
-                const existingIndex = state.cart.findIndex((c)=>c.id === compositeId);
-                const incomingQty = Number.isFinite(item.quantity) && item.quantity > 0 ? item.quantity : 1;
-                const itemMaxStock = Number.isFinite(item.max_stock) ? item.max_stock : 0;
+            const state = get();
+            const compositeId = `${item.variant_id}-${item.flavor_id}`;
+            const existing = state.cart.find((c)=>c.id === compositeId);
+            const incomingQty = Number.isFinite(item.quantity) && item.quantity > 0 ? item.quantity : 1;
+            const itemMaxStock = Number.isFinite(item.max_stock) ? item.max_stock : 0;
+            const currentQty = existing && Number.isFinite(existing.quantity) ? existing.quantity : 0;
+            const room = Math.max(0, itemMaxStock - currentQty);
+            const actuallyAdded = Math.min(incomingQty, room);
+            console.log('[addToCart] item recibido:', item);
+            console.log('[addToCart] compositeId:', compositeId, 'incomingQty:', incomingQty, 'itemMaxStock:', itemMaxStock, 'actuallyAdded:', actuallyAdded);
+            if (actuallyAdded <= 0) {
+                console.warn('[addToCart] BLOQUEADO: ya en el tope de stock o stock agotado', {
+                    currentQty,
+                    itemMaxStock,
+                    incomingQty
+                });
+                return {
+                    added: 0,
+                    requested: incomingQty
+                };
+            }
+            set((currentState)=>{
+                const existingIndex = currentState.cart.findIndex((c)=>c.id === compositeId);
                 let newCart;
-                console.log('[addToCart] item recibido:', item);
-                console.log('[addToCart] compositeId:', compositeId, 'incomingQty:', incomingQty, 'itemMaxStock:', itemMaxStock);
                 if (existingIndex > -1) {
-                    const current = state.cart[existingIndex];
-                    const currentQty = Number.isFinite(current.quantity) ? current.quantity : 0;
-                    const newQty = Math.min(currentQty + incomingQty, itemMaxStock);
-                    if (newQty <= currentQty) {
-                        console.warn('[addToCart] BLOQUEADO: ya en el tope de stock', {
-                            currentQty,
-                            itemMaxStock
-                        });
-                        return state;
-                    }
+                    const current = currentState.cart[existingIndex];
                     newCart = [
-                        ...state.cart
+                        ...currentState.cart
                     ];
                     newCart[existingIndex] = {
                         ...current,
                         unit_price: item.unit_price,
                         max_stock: itemMaxStock,
-                        quantity: newQty
+                        quantity: current.quantity + actuallyAdded
                     };
                 } else {
-                    if (itemMaxStock <= 0) {
-                        console.warn('[addToCart] BLOQUEADO: itemMaxStock <= 0', item);
-                        return state;
-                    }
-                    const cappedQty = Math.min(incomingQty, itemMaxStock);
                     newCart = [
-                        ...state.cart,
+                        ...currentState.cart,
                         {
                             ...item,
                             id: compositeId,
-                            quantity: cappedQty,
+                            quantity: actuallyAdded,
                             max_stock: itemMaxStock
                         }
                     ];
@@ -3826,6 +3849,10 @@ const useCartStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_mo
                     lastUpdated: Date.now()
                 };
             });
+            return {
+                added: actuallyAdded,
+                requested: incomingQty
+            };
         },
         updateQuantity: (id, delta)=>{
             set((state)=>({
@@ -3862,8 +3889,6 @@ const useCartStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_mo
     storage: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$zustand$40$5$2e$0$2e$15_$40$types$2b$react_cd645592ff6ce0ffd2f86ae215c2ba25$2f$node_modules$2f$zustand$2f$esm$2f$middleware$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createJSONStorage"])(()=>localStorage),
     onRehydrateStorage: ()=>(state)=>{
             if (!state) return;
-            // Descarta cualquier ítem corrupto o de una versión anterior del carrito
-            // (forma vieja, quantity/max_stock inválidos, etc.) antes de que llegue a renderizarse.
             state.cart = (state.cart || []).filter((item)=>item && typeof item.id === 'string' && typeof item.variant_id === 'number' && typeof item.flavor_id === 'number' && Number.isFinite(item.quantity) && item.quantity > 0 && Number.isFinite(item.max_stock) && Number.isFinite(item.unit_price));
             if (state.lastUpdated) {
                 const now = Date.now();
@@ -4002,4 +4027,4 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 }),
 ]);
 
-//# sourceMappingURL=_0uas6cx._.js.map
+//# sourceMappingURL=_1ando8p._.js.map

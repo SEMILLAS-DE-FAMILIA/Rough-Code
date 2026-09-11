@@ -120,7 +120,7 @@ export default function PedidosPage() {
       setError(
         orderError?.message?.includes('Sin stock suficiente')
           ? 'Uno de los productos ya no tiene stock suficiente. Vuelve al catálogo y ajusta tu carrito.'
-          : 'No se pudo registrar el pedido. Intenta de nuevo.'
+          : `No se pudo registrar el pedido: ${orderError?.message || 'error desconocido'}`
       );
       return;
     }

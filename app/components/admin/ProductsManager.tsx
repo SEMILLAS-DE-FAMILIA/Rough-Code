@@ -278,10 +278,6 @@ export default function ProductsManager() {
       setFormError('Agrega al menos un sabor con nombre.');
       return;
     }
-    if (form.is_distributor && form.variants.some((v) => !v.distributor_price.trim())) {
-      setFormError('Como marcaste "disponible para distribuidor", cada peso necesita su precio distribuidor.');
-      return;
-    }
 
     setSaving(true);
     setFormError(null);

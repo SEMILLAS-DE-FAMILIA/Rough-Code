@@ -96,7 +96,9 @@ export default function ImageUploadField({
 
       onChange([...safeValue, ...uploadedUrls]);
     } catch (err) {
-      setError('No se pudo procesar o subir una o más imágenes.');
+      console.error('Error de subida de imagen:', err);
+      const message = err instanceof Error ? err.message : JSON.stringify(err);
+      setError(`No se pudo subir la imagen: ${message}`);
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = '';

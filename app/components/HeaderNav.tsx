@@ -123,7 +123,7 @@ export default function HeaderNav({ cartItems, onRemoveFromCart, onOpenDistribut
           ) : (
             cartItems.map((item, index) => (
               <div key={index} className={styles.cartItem}>
-                <img src={item.img} alt={item.title} className={styles.cartItemImg} />
+               {item.img && <img src={item.img} alt={item.title} className={styles.cartItemImg} />}
                 <div style={{ flex: 1 }}>
                   <h4 style={{ fontSize: '0.9rem', fontWeight: '600' }}>{item.title}</h4>
                   <p style={{ color: '#ef4444', fontSize: '0.85rem', fontWeight: '700' }}>{item.price}</p>

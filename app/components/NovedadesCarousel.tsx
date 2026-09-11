@@ -5,16 +5,24 @@ import Image from 'next/image';
 import { supabase } from '../../src/lib/supabaseClient';
 import { Product, ProductModalDetails } from './ProductGrid';
 import { NewCartItem } from '../../src/lib/useCartStore';
+import { useDistributorStore } from '../../src/lib/useDistributorStore';
 import styles from './NovedadesCarousel.module.css';
 
 const formatCLP = (value: number) =>
   new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
-export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (item: NewCartItem) => void }) {
+interface NovedadesCarouselProps {
+  onAddToCart: (item: NewCartItem) => void;
+}
+
+export default function NovedadesCarousel({ onAddToCart }: NovedadesCarouselProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved');
+  const distributorPrices = useDistributorStore((s) => s.prices);
 
   useEffect(() => {
     let isMounted = true;
@@ -31,6 +39,7 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (item:
           images,
           badge,
           is_new,
+          is_distributor,
           categories ( name ),
           product_variants (
             id,
@@ -105,10 +114,13 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (item:
               0
             );
 
+            const showDistributorPrice =
+              p.is_distributor && isDistributorLoggedIn && firstVariant && distributorPrices[firstVariant.id] != null;
+
             return (
               <div key={p.id} className={styles.card}>
                 <div className={styles.imageWrap}>
-                  {hasDiscount && <span className={styles.discountBadge}>-{firstVariant.discount_percent}%</span>}
+                  {hasDiscount && !showDistributorPrice && <span className={styles.discountBadge}>-{firstVariant.discount_percent}%</span>}
                   {p.img_url && (
                     <Image src={p.img_url} alt={p.title} fill className={styles.image} sizes="240px" />
                   )}
@@ -121,12 +133,21 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (item:
                   <div className={styles.footer}>
                     <div className={styles.priceGroup}>
                       {firstVariant && (
-                        <>
-                          {hasDiscount && <span className={styles.originalPrice}>{formatCLP(firstVariant.price)}</span>}
-                          <span className={styles.price}>
-                            Desde {formatCLP(hasDiscount ? firstVariant.price * (1 - firstVariant.discount_percent / 100) : firstVariant.price)}
-                          </span>
-                        </>
+                        showDistributorPrice ? (
+                          <>
+                            <span className={styles.originalPrice}>{formatCLP(firstVariant.price)}</span>
+                            <span className={styles.price} style={{ color: '#2563eb' }}>
+                              {formatCLP(distributorPrices[firstVariant.id])}
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {hasDiscount && <span className={styles.originalPrice}>{formatCLP(firstVariant.price)}</span>}
+                            <span className={styles.price}>
+                              Desde {formatCLP(hasDiscount ? firstVariant.price * (1 - firstVariant.discount_percent / 100) : firstVariant.price)}
+                            </span>
+                          </>
+                        )
                       )}
                     </div>
                     <button
@@ -152,6 +173,7 @@ export default function NovedadesCarousel({ onAddToCart }: { onAddToCart: (item:
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
           onAddToCart={onAddToCart}
+          distributorPrices={selectedProduct.is_distributor && isDistributorLoggedIn ? distributorPrices : undefined}
         />
       )}
     </section>

@@ -23,14 +23,24 @@ export default function AdminLogin({
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-    setLoading(false);
 
     if (error) {
+      setLoading(false);
       // Mostramos el mensaje real de Supabase temporalmente para diagnosticar
       // (usuario no confirmado, credenciales inválidas, error de red, etc.)
       setError(`${error.message} (código: ${error.status ?? 's/n'})`);
       return;
     }
+   const { data: isAdminData, error: roleError } = await supabase.rpc('is_admin');
+
+   if (roleError || !isAdminData) {
+     await supabase.auth.signOut();
+     setLoading(false);
+     setError('Esta cuenta no tiene acceso al panel de administración.');
+     return;
+   }
+
+   setLoading(false);
 
     onLoggedIn();
   };

@@ -28,10 +28,7 @@ export default function DistributorsManager() {
   const [distributors, setDistributors] = useState<Distributor[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<number | null>(null);
-  const [resetTargetId, setResetTargetId] = useState<number | null>(null);
-  const [newPassword, setNewPassword] = useState('');
-  const [resetError, setResetError] = useState<string | null>(null);
-  const [resetSaving, setResetSaving] = useState(false);
+  const [resetFeedback, setResetFeedback] = useState<{ id: number; message: string } | null>(null);
 
   const fetchAll = async () => {
     setLoading(true);
@@ -52,10 +49,7 @@ export default function DistributorsManager() {
     setProcessingId(id);
     const { error } = await supabase.rpc('approve_distributor_application', { p_application_id: id });
     setProcessingId(null);
-    if (error) {
-      alert(`No se pudo aprobar: ${error.message}`);
-      return;
-    }
+    if (error) return alert(`No se pudo aprobar: ${error.message}`);
     fetchAll();
   };
 
@@ -64,10 +58,7 @@ export default function DistributorsManager() {
     setProcessingId(id);
     const { error } = await supabase.rpc('reject_distributor_application', { p_application_id: id });
     setProcessingId(null);
-    if (error) {
-      alert(`No se pudo rechazar: ${error.message}`);
-      return;
-    }
+    if (error) return alert(`No se pudo rechazar: ${error.message}`);
     fetchAll();
   };
 
@@ -76,29 +67,13 @@ export default function DistributorsManager() {
     fetchAll();
   };
 
-  const openResetModal = (id: number) => {
-    setResetTargetId(id);
-    setNewPassword('');
-    setResetError(null);
-  };
-
-  const handleResetPassword = async () => {
-    if (!resetTargetId) return;
-    if (newPassword.trim().length < 6) {
-      setResetError('La contraseña debe tener al menos 6 caracteres.');
-      return;
-    }
-    setResetSaving(true);
-    const { error } = await supabase.rpc('admin_reset_distributor_password', {
-      p_distributor_id: resetTargetId,
-      p_new_password: newPassword.trim(),
+  const handleSendResetLink = async (d: Distributor) => {
+    setResetFeedback(null);
+    const { error } = await supabase.auth.resetPasswordForEmail(d.email);
+    setResetFeedback({
+      id: d.id,
+      message: error ? `Error: ${error.message}` : 'Enlace enviado al correo del distribuidor.',
     });
-    setResetSaving(false);
-    if (error) {
-      setResetError(`No se pudo restablecer: ${error.message}`);
-      return;
-    }
-    setResetTargetId(null);
   };
 
   if (loading) return <p className={styles.emptyState}>Cargando...</p>;
@@ -109,7 +84,6 @@ export default function DistributorsManager() {
         <h2>Distribuidores</h2>
       </div>
 
-      {/* Solicitudes pendientes */}
       <div className={styles.dashboardPanel}>
         <h3>Solicitudes pendientes ({applications.length})</h3>
         {applications.length === 0 ? (
@@ -120,28 +94,14 @@ export default function DistributorsManager() {
               <div key={app.id} className={styles.dataRow} style={{ gridTemplateColumns: '1fr auto', alignItems: 'start' }}>
                 <div>
                   <div className={styles.rowTitle}>{app.company_name}</div>
-                  <div className={styles.rowMeta}>
-                    RUT: {app.rut} · Tel: {app.phone} · {app.email}
-                  </div>
-                  <div className={styles.rowMeta}>
-                    Solicitado: {new Date(app.created_at).toLocaleDateString('es-CL')}
-                  </div>
+                  <div className={styles.rowMeta}>RUT: {app.rut} · Tel: {app.phone} · {app.email}</div>
+                  <div className={styles.rowMeta}>Solicitado: {new Date(app.created_at).toLocaleDateString('es-CL')}</div>
                 </div>
                 <div className={styles.rowActions}>
-                  <button
-                    className={styles.primaryBtn}
-                    style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.8rem' }}
-                    disabled={processingId === app.id}
-                    onClick={() => handleApprove(app.id)}
-                  >
+                  <button className={styles.primaryBtn} style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.8rem' }} disabled={processingId === app.id} onClick={() => handleApprove(app.id)}>
                     Aceptar
                   </button>
-                  <button
-                    className={`${styles.iconActionBtn} ${styles.deleteActionBtn}`}
-                    disabled={processingId === app.id}
-                    onClick={() => handleReject(app.id)}
-                    title="Rechazar"
-                  >
+                  <button className={`${styles.iconActionBtn} ${styles.deleteActionBtn}`} disabled={processingId === app.id} onClick={() => handleReject(app.id)} title="Rechazar">
                     ✕
                   </button>
                 </div>
@@ -151,7 +111,6 @@ export default function DistributorsManager() {
         )}
       </div>
 
-      {/* Distribuidores activos */}
       <div className={styles.dashboardPanel}>
         <h3>Distribuidores aprobados ({distributors.length})</h3>
         {distributors.length === 0 ? (
@@ -159,52 +118,29 @@ export default function DistributorsManager() {
         ) : (
           <div className={styles.dataTable} style={{ marginTop: '0.5rem' }}>
             {distributors.map((d) => (
-              <div key={d.id} className={styles.dataRow} style={{ gridTemplateColumns: '1fr auto auto', alignItems: 'center' }}>
-                <div>
-                  <div className={styles.rowTitle}>{d.company_name}</div>
-                  <div className={styles.rowMeta}>
-                    RUT: {d.rut} · Tel: {d.phone} · {d.email}
+              <div key={d.id}>
+                <div className={styles.dataRow} style={{ gridTemplateColumns: '1fr auto auto', alignItems: 'center' }}>
+                  <div>
+                    <div className={styles.rowTitle}>{d.company_name}</div>
+                    <div className={styles.rowMeta}>RUT: {d.rut} · Tel: {d.phone} · {d.email}</div>
                   </div>
+                  <button className={`${styles.badgePill} ${d.active ? styles.badgeActive : styles.badgeInactive}`} onClick={() => toggleDistributorActive(d)} style={{ border: 'none', cursor: 'pointer' }}>
+                    {d.active ? 'Activo' : 'Bloqueado'}
+                  </button>
+                  <button className={styles.iconActionBtn} onClick={() => handleSendResetLink(d)} title="Enviar link para restablecer contraseña">
+                    🔑
+                  </button>
                 </div>
-                <button
-                  className={`${styles.badgePill} ${d.active ? styles.badgeActive : styles.badgeInactive}`}
-                  onClick={() => toggleDistributorActive(d)}
-                  style={{ border: 'none', cursor: 'pointer' }}
-                >
-                  {d.active ? 'Activo' : 'Bloqueado'}
-                </button>
-                <button className={styles.iconActionBtn} onClick={() => openResetModal(d.id)} title="Restablecer contraseña">
-                  🔑
-                </button>
+                {resetFeedback?.id === d.id && (
+                  <p style={{ fontSize: '0.78rem', color: resetFeedback.message.startsWith('Error') ? '#dc2626' : '#16a34a', padding: '0.3rem 1.25rem' }}>
+                    {resetFeedback.message}
+                  </p>
+                )}
               </div>
             ))}
           </div>
         )}
       </div>
-
-      {resetTargetId && (
-        <div className={styles.modalOverlay} onClick={() => setResetTargetId(null)}>
-          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '380px' }}>
-            <h3>Restablecer contraseña</h3>
-            <div className={styles.field}>
-              <label>Nueva contraseña</label>
-              <input
-                type="text"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres"
-              />
-            </div>
-            {resetError && <p className={styles.errorText}>{resetError}</p>}
-            <div className={styles.modalActions}>
-              <button type="button" className={styles.secondaryBtn} onClick={() => setResetTargetId(null)}>Cancelar</button>
-              <button type="button" className={styles.primaryBtn} disabled={resetSaving} onClick={handleResetPassword}>
-                {resetSaving ? 'Guardando...' : 'Guardar nueva contraseña'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

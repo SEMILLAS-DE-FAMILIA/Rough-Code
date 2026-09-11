@@ -1,5 +1,6 @@
 'use client';
 
+import { useDistributorStore } from '../../src/lib/useDistributorStore';
 import React, { useState } from 'react';
 import styles from './AppLayout.module.css';
 
@@ -13,15 +14,18 @@ interface CartItem {
 interface HeaderNavProps {
   cartItems: CartItem[];
   onRemoveFromCart: (index: number) => void;
+  onOpenDistributorModal: () => void;
 }
 
-export default function HeaderNav({ cartItems, onRemoveFromCart }: HeaderNavProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+export default function HeaderNav({ cartItems, onRemoveFromCart, onOpenDistributorModal }: HeaderNavProps) {
+    const isDistributor = useDistributorStore((s) => s.status === 'approved');
+    const distributorName = useDistributorStore((s) => s.profile?.company_name);
+    const logout = useDistributorStore((s) => s.logout);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
     <>
-      {/* Navbar Flotante Superior (Limpio y Minimalista) */}
       <header className={styles.floatingNavbar}>
         <div className={styles.navActions}>
           <button 
@@ -29,7 +33,6 @@ export default function HeaderNav({ cartItems, onRemoveFromCart }: HeaderNavProp
             onClick={() => setIsSidebarOpen(true)}
             aria-label="Abrir Menú"
           >
-            {/* Ícono Hamburger */}
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -39,8 +42,23 @@ export default function HeaderNav({ cartItems, onRemoveFromCart }: HeaderNavProp
           </span>
         </div>
 
-        <div className={styles.navActions}>
-          {/* Botón Carrito Flotante */}
+        <div className={styles.navActions} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          {/* Botón rápido de acceso a distribuidores en la barra superior */}
+          <button 
+            onClick={isDistributor ? logout : onOpenDistributorModal}            style={{
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              padding: '6px 12px',
+              borderRadius: '20px',
+              background: isDistributor ? '#15803d' : '#1e293b',
+              color: '#fff',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            {isDistributor ? `✓ ${distributorName}` : 'Soy Distribuidor'}
+          </button>
+
           <button 
             className={styles.iconBtn} 
             onClick={() => setIsCartOpen(true)}
@@ -56,13 +74,11 @@ export default function HeaderNav({ cartItems, onRemoveFromCart }: HeaderNavProp
         </div>
       </header>
 
-      {/* Overlay Oscuro para Menús */}
       <div 
         className={`${styles.sidebarOverlay} ${(isSidebarOpen || isCartOpen) ? styles.isOpen : ''}`}
         onClick={() => { setIsSidebarOpen(false); setIsCartOpen(false); }}
       />
 
-      {/* Sidebar Panel Admin / Usuario */}
       <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.isOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <h3>Panel Control</h3>
@@ -75,18 +91,24 @@ export default function HeaderNav({ cartItems, onRemoveFromCart }: HeaderNavProp
           <button className={styles.sidebarLink}>
             <span>📦</span> Mis Pedidos
           </button>
+          
           <hr style={{ border: '0.5px solid rgba(255,255,255,0.1)', margin: '0.5rem 0' }} />
+          
+          <button 
+            className={styles.sidebarLink} 
+            onClick={() => { setIsSidebarOpen(false); onOpenDistributorModal(); }}
+            style={{ color: '#38bdf8' }}
+          >
+            <span>🤝</span> {isDistributor ? 'Configuración Mayorista' : 'Acceso Distribuidores'}
+          </button>
+
           <button className={styles.sidebarLink}>
             <span>🛠️</span> Panel Admin
             <span className={styles.adminBadge}>ADMIN</span>
           </button>
-          <button className={styles.sidebarLink}>
-            <span>🌱</span> Gestión Productos
-          </button>
         </nav>
       </aside>
 
-      {/* Panel Flotante Carrito */}
       <aside className={`${styles.cartDrawer} ${isCartOpen ? styles.isOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <h3>Carrito ({cartItems.length})</h3>

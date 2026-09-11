@@ -8,16 +8,37 @@ import AdminPanel from '../components/admin/AdminPanel';
 export default function AdminPage() {
   const [checkingSession, setCheckingSession] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loggedOutReason, setLoggedOutReason] = useState<'inactivity' | null>(null);
+  const [loggedOutReason, setLoggedOutReason] = useState<'inactivity' | 'unauthorized' | null>(null);
+
+  const verifySession = async () => {
+    const { data } = await supabase.auth.getSession();
+
+    if (!data.session) {
+      setIsLoggedIn(false);
+      setCheckingSession(false);
+      return;
+    }
+
+    const { data: isAdminData, error: roleError } = await supabase.rpc('is_admin');
+
+    if (roleError || !isAdminData) {
+      // Sesión válida pero de una cuenta que NO es admin (ej. un distribuidor): se cierra
+      await supabase.auth.signOut();
+      setIsLoggedIn(false);
+      setLoggedOutReason('unauthorized');
+      setCheckingSession(false);
+      return;
+    }
+
+    setIsLoggedIn(true);
+    setCheckingSession(false);
+  };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setIsLoggedIn(!!data.session);
-      setCheckingSession(false);
-    });
+    verifySession();
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session);
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
+      verifySession();
     });
 
     return () => {
@@ -43,6 +64,8 @@ export default function AdminPage() {
         infoMessage={
           loggedOutReason === 'inactivity'
             ? 'Tu sesión se cerró por inactividad. Ingresa de nuevo para continuar.'
+            : loggedOutReason === 'unauthorized'
+            ? 'Esta cuenta no tiene acceso al panel de administración.'
             : undefined
         }
       />

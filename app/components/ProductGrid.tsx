@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { supabase } from '../../src/lib/supabaseClient';
+import { useDistributorStore } from '../../src/lib/useDistributorStore';
 import styles from './ProductGrid.module.css';
 
 export interface ProductFlavor {
@@ -33,6 +34,7 @@ export interface Product {
   images?: string[] | null;
   badge?: string | null;
   is_new?: boolean;
+  is_distributor: boolean;
   variants: ProductVariant[];
   flavors: ProductFlavor[];
 }
@@ -45,7 +47,21 @@ function stockFor(variant: ProductVariant | undefined, flavorId: number | undefi
   return variant.stocks.find((s) => s.flavor_id === flavorId)?.stock ?? 0;
 }
 
-function ProductCard({ product, onOpenModal }: { product: Product; onOpenModal: (p: Product) => void }) {
+function ProductCard({
+  product,
+  onOpenModal,
+  viewingDistributorTab,
+  isDistributorLoggedIn,
+  distributorPrices,
+  onOpenDistributorModal,
+}: {
+  product: Product;
+  onOpenModal: (p: Product) => void;
+  viewingDistributorTab: boolean;
+  isDistributorLoggedIn: boolean;
+  distributorPrices: Record<number, number>;
+  onOpenDistributorModal: () => void;
+}) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const images = product.images && product.images.length > 0 ? product.images : product.img_url ? [product.img_url] : [];
@@ -58,16 +74,25 @@ function ProductCard({ product, onOpenModal }: { product: Product; onOpenModal: 
     return () => clearInterval(interval);
   }, [images.length]);
 
-  const totalStock = product.variants.reduce(
-    (sum, v) => sum + v.stocks.reduce((s, entry) => s + entry.stock, 0),
-    0
-  );
+  const totalStock = product.variants.reduce((sum, v) => sum + v.stocks.reduce((s, e) => s + e.stock, 0), 0);
   const isOutOfStock = totalStock <= 0;
   const firstVariant = product.variants[0];
   const hasDiscount = firstVariant && firstVariant.discount_percent > 0;
 
+  const isLocked = viewingDistributorTab && !isDistributorLoggedIn;
+
+  const variantsWithDistPrice = product.variants
+    .map((v) => ({ v, dp: distributorPrices[v.id] }))
+    .filter((x): x is { v: ProductVariant; dp: number } => x.dp != null);
+  const cheapestDistributor =
+    variantsWithDistPrice.length > 0
+      ? variantsWithDistPrice.reduce((min, x) => (x.dp < min.dp ? x : min))
+      : undefined;
+
+  const showDistributorPrice = viewingDistributorTab && isDistributorLoggedIn && cheapestDistributor != null;
+
   return (
-    <div className={`${styles.productCard} ${isOutOfStock ? styles.outOfStockCard : ''}`}>
+    <div className={`${styles.productCard} ${isOutOfStock ? styles.outOfStockCard : ''} ${isLocked ? styles.outOfStockCard : ''}`}>
       <div className={styles.imageContainer}>
         <div className={styles.topLeftBadges}>
           {isOutOfStock ? (
@@ -75,8 +100,13 @@ function ProductCard({ product, onOpenModal }: { product: Product; onOpenModal: 
           ) : (
             product.badge && <span className={styles.tagBadge}>{product.badge}</span>
           )}
+          {product.is_distributor && (
+            <span style={{ background: '#1e293b', color: '#fff', fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>
+              MAYORISTA
+            </span>
+          )}
         </div>
-        {hasDiscount && <span className={styles.discountBadge}>-{firstVariant.discount_percent}%</span>}
+        {hasDiscount && !isLocked && !showDistributorPrice && <span className={styles.discountBadge}>-{firstVariant.discount_percent}%</span>}
 
         <div className={styles.fadeImageWrap}>
           {images.map((img, idx) => (
@@ -101,23 +131,51 @@ function ProductCard({ product, onOpenModal }: { product: Product; onOpenModal: 
 
         <div className={styles.cardFooter}>
           <div className={styles.priceGroup}>
-            {firstVariant && (
+            {isLocked ? (
+              <span style={{ fontSize: '0.8rem', color: '#d97706', fontWeight: 600 }}>Inicia sesión para ver precio</span>
+            ) : showDistributorPrice ? (
+              <>
+                <span className={styles.originalPrice}>{formatCLP(cheapestDistributor!.v.price)}</span>
+                <span className={styles.price} style={{ color: '#2563eb' }}>
+                  Desde {formatCLP(cheapestDistributor!.dp)}
+                </span>
+              </>
+            ) : firstVariant ? (
               <>
                 {hasDiscount && <span className={styles.originalPrice}>{formatCLP(firstVariant.price)}</span>}
                 <span className={styles.price}>
                   Desde {formatCLP(hasDiscount ? firstVariant.price * (1 - firstVariant.discount_percent / 100) : firstVariant.price)}
                 </span>
               </>
-            )}
+            ) : null}
           </div>
-          <button className={styles.addBtn} onClick={() => onOpenModal(product)}>Ver Opciones</button>
+
+          {isLocked ? (
+            <button className={styles.addBtn} style={{ background: '#334155' }} onClick={onOpenDistributorModal}>
+              Acceso
+            </button>
+          ) : (
+            <button className={styles.addBtn} onClick={() => onOpenModal(product)} disabled={isOutOfStock}>
+              Ver Opciones
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export function ProductModalDetails({ product, onClose, onAddToCart }: { product: Product; onClose: () => void; onAddToCart: (item: any) => void }) {
+export function ProductModalDetails({
+  product,
+  onClose,
+  onAddToCart,
+  distributorPrices,
+}: {
+  product: Product;
+  onClose: () => void;
+  onAddToCart: (item: any) => void;
+  distributorPrices?: Record<number, number>;
+}) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedVariantId, setSelectedVariantId] = useState<number>(product.variants[0]?.id || 0);
   const [flavorQuantities, setFlavorQuantities] = useState<Record<number, number>>({});
@@ -136,18 +194,21 @@ export function ProductModalDetails({ product, onClose, onAddToCart }: { product
 
   const handleQuantityChange = (flavorId: number, qty: number, maxStock: number) => {
     const validQty = Math.max(0, Math.min(qty, maxStock));
-    setFlavorQuantities((prev) => ({
-      ...prev,
-      [flavorId]: validQty,
-    }));
+    setFlavorQuantities((prev) => ({ ...prev, [flavorId]: validQty }));
+  };
+
+  const currentDistributorPrice = currentVariant && distributorPrices ? distributorPrices[currentVariant.id] : undefined;
+
+  const unitPrice = () => {
+    if (!currentVariant) return 0;
+    if (currentDistributorPrice != null) return currentDistributorPrice;
+    const disc = currentVariant.discount_percent || 0;
+    return disc > 0 ? currentVariant.price * (1 - disc / 100) : currentVariant.price;
   };
 
   const handleAddAll = () => {
     if (!currentVariant) return;
-
-    const basePrice = currentVariant.price;
-    const disc = currentVariant.discount_percent || 0;
-    const finalPrice = disc > 0 ? basePrice * (1 - disc / 100) : basePrice;
+    const finalPrice = unitPrice();
 
     Object.entries(flavorQuantities).forEach(([flavorIdStr, qty]) => {
       if (qty > 0) {
@@ -185,13 +246,7 @@ export function ProductModalDetails({ product, onClose, onAddToCart }: { product
           <div className={styles.modalImageWrap} style={{ position: 'relative' }}>
             <div className={styles.fadeImageWrap}>
               {images.map((img, idx) => (
-                <Image
-                  key={img + idx}
-                  src={img}
-                  alt={product.title}
-                  fill
-                  className={`${styles.modalImage} ${styles.fadeImage} ${activeImageIndex === idx ? styles.fadeImageActive : ''}`}
-                />
+                <Image key={img + idx} src={img} alt={product.title} fill className={`${styles.modalImage} ${styles.fadeImage} ${activeImageIndex === idx ? styles.fadeImageActive : ''}`} />
               ))}
             </div>
           </div>
@@ -207,6 +262,7 @@ export function ProductModalDetails({ product, onClose, onAddToCart }: { product
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               {product.variants.map((v) => {
                 const isSelected = selectedVariantId === v.id;
+                const vDistPrice = distributorPrices?.[v.id];
                 return (
                   <button
                     key={v.id}
@@ -224,11 +280,13 @@ export function ProductModalDetails({ product, onClose, onAddToCart }: { product
                       fontWeight: isSelected ? 600 : 400,
                       cursor: 'pointer',
                       fontSize: '0.85rem',
-                      transition: 'all 0.2s',
                     }}
                   >
-                    {v.weight} - {formatCLP(v.discount_percent > 0 ? v.price * (1 - v.discount_percent / 100) : v.price)}
-                    {v.discount_percent > 0 && ` (-${v.discount_percent}%)`}
+                    {v.weight} -{' '}
+                    {vDistPrice != null
+                      ? formatCLP(vDistPrice)
+                      : formatCLP(v.discount_percent > 0 ? v.price * (1 - v.discount_percent / 100) : v.price)}
+                    {vDistPrice == null && v.discount_percent > 0 && ` (-${v.discount_percent}%)`}
                   </button>
                 );
               })}
@@ -298,9 +356,11 @@ export function ProductModalDetails({ product, onClose, onAddToCart }: { product
 
           <div className={styles.cardFooter} style={{ margin: '1.2rem 0 0 0', padding: 0, border: 'none', background: 'transparent', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div className={styles.priceGroup}>
-              {currentVariant && currentVariant.discount_percent > 0 && <span className={styles.originalPrice}>{formatCLP(currentVariant.price)}</span>}
-              <span className={styles.price}>
-                {formatCLP(currentVariant && currentVariant.discount_percent > 0 ? currentVariant.price * (1 - currentVariant.discount_percent / 100) : currentVariant?.price || 0)} c/u
+              {currentDistributorPrice != null && currentVariant && (
+                <span className={styles.originalPrice}>{formatCLP(currentVariant.price)}</span>
+              )}
+              <span className={styles.price} style={currentDistributorPrice != null ? { color: '#2563eb' } : undefined}>
+                {formatCLP(unitPrice())} c/u
               </span>
             </div>
             <button
@@ -318,13 +378,20 @@ export function ProductModalDetails({ product, onClose, onAddToCart }: { product
   );
 }
 
-export default function ProductGrid({ onAddToCart }: { onAddToCart: (item: any) => void }) {
+interface ProductGridProps {
+  onAddToCart: (item: any) => void;
+  onOpenDistributorModal: () => void;
+}
+
+export default function ProductGrid({ onAddToCart, onOpenDistributorModal }: ProductGridProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>(['Todos']);
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved');  const distributorPrices = useDistributorStore((s) => s.prices);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -340,6 +407,7 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (item: any) 
           images,
           badge,
           is_new,
+          is_distributor,
           categories ( name ),
           product_variants (
             id,
@@ -376,13 +444,11 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (item: any) 
         setProducts(fetched);
 
         const categoryNames = Array.from(
-          new Set(
-            fetched
-              .map((p) => p.category_name)
-              .filter((name): name is string => Boolean(name))
-          )
+          new Set(fetched.map((p) => p.category_name).filter((name): name is string => Boolean(name)))
         );
-        setCategories(['Todos', ...categoryNames]);
+        const hasDistributorProducts = fetched.some((p) => p.is_distributor);
+
+        setCategories(['Todos', ...categoryNames, ...(hasDistributorProducts ? ['Distribuidor'] : [])]);
       }
 
       setLoading(false);
@@ -391,7 +457,13 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (item: any) 
     fetchProducts();
   }, []);
 
-  const filteredProducts = activeCategory === 'Todos' ? products : products.filter((p) => p.category_name === activeCategory);
+  const viewingDistributorTab = activeCategory === 'Distribuidor';
+
+  const filteredProducts = viewingDistributorTab
+    ? products.filter((p) => p.is_distributor)
+    : activeCategory === 'Todos'
+    ? products
+    : products.filter((p) => p.category_name === activeCategory);
 
   return (
     <section id="catalogo" className={styles.catalogSection}>
@@ -403,7 +475,7 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (item: any) 
           <div className={styles.categoriesWrapper}>
             {categories.map((cat) => (
               <button key={cat} className={`${styles.categoryBtn} ${activeCategory === cat ? styles.active : ''}`} onClick={() => setActiveCategory(cat)}>
-                {cat}
+                {cat === 'Distribuidor' ? '🤝 Zona Distribuidores' : cat}
               </button>
             ))}
           </div>
@@ -415,13 +487,26 @@ export default function ProductGrid({ onAddToCart }: { onAddToCart: (item: any) 
 
         <div className={styles.productGrid}>
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} onOpenModal={(p) => setSelectedProduct(p)} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              onOpenModal={(p) => setSelectedProduct(p)}
+              viewingDistributorTab={viewingDistributorTab}
+              isDistributorLoggedIn={isDistributorLoggedIn}
+              distributorPrices={distributorPrices}
+              onOpenDistributorModal={onOpenDistributorModal}
+            />
           ))}
         </div>
       </div>
 
       {selectedProduct && (
-        <ProductModalDetails product={selectedProduct} onClose={() => setSelectedProduct(null)} onAddToCart={onAddToCart} />
+        <ProductModalDetails
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={onAddToCart}
+          distributorPrices={viewingDistributorTab && isDistributorLoggedIn ? distributorPrices : undefined}
+        />
       )}
     </section>
   );

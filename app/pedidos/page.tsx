@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCartStore, CartItem } from '../../src/lib/useCartStore';
 import { supabase } from '../../src/lib/supabaseClient';
-import { isValidRut, formatRut } from '../../src/lib/rut';
+import { isValidRut, autoFormatRut } from '../../src/lib/rut';
 import styles from './pedidos.module.css';
 
 const formatCLP = (value: number) =>
@@ -22,29 +22,60 @@ function buildWhatsAppMessage(
   name: string,
   rut: string,
   deliveryType: 'delivery' | 'retiro',
+  paymentMethod: 'transferencia' | 'efectivo',
   address: string,
   notes: string
 ): string {
   const lines: string[] = [];
-  lines.push('🛒 *Nuevo Pedido - Semillas de Familia*');
+
+  // Emojis codificados en Unicode seguro para evitar caracteres extraños ()
+  const leaf = '\u{1F33F}';
+  const herb = '\u{1F33B}';
+  const user = '\u{1F464}';
+  const truck = '\u{1F69A}';
+  const store = '\u{1F3EA}';
+  const bank = '\u{1F3E6}';
+  const cash = '\u{1F4B5}';
+  const box = '\u{1F4E6}';
+  const money = '\u{1F4B0}';
+  const memo = '\u{1F4DD}';
+
+  lines.push(`${leaf} *¡Hola! Gracias por tu compra en Semillas de Familia.* ${herb}`);
+  lines.push('Hemos registrado tu pedido con el siguiente detalle:');
+  lines.push('──────────────────────────────');
   lines.push('');
-  lines.push(`*Cliente:* ${name}`);
-  lines.push(`*RUT:* ${rut}`);
-  lines.push(`*Entrega:* ${deliveryType === 'delivery' ? 'Despacho a domicilio' : 'Retiro en tienda'}`);
+  lines.push(`${user} *DATOS DEL CLIENTE*`);
+  lines.push(`• *Nombre:* ${name}`);
+  lines.push(`• *RUT:* ${rut}`);
+  lines.push(`• *Entrega:* ${deliveryType === 'delivery' ? `${truck} Despacho a domicilio` : `${store} Retiro en tienda`}`);
+  lines.push(`• *Forma de Pago:* ${paymentMethod === 'transferencia' ? `${bank} Transferencia bancaria` : `${cash} Efectivo`}`);
+
   if (deliveryType === 'delivery' && address) {
-    lines.push(`*Dirección:* ${address}`);
+    lines.push(`• *Dirección:* ${address}`);
   }
+
   lines.push('');
-  lines.push('*Productos:*');
+  lines.push(`${box} *DETALLE DE PRODUCTOS*`);
   items.forEach((item) => {
-    lines.push(`- ${item.quantity}x ${item.product_title} — ${formatCLP(item.unit_price * item.quantity)}`);
+    const details = [item.selected_weight, item.selected_flavor].filter(Boolean).join(' - ');
+    const metaText = details ? ` (${details})` : '';
+
+    lines.push(`• *${item.quantity}x* ${item.product_title}${metaText} ── *${formatCLP(item.unit_price * item.quantity)}*`);
   });
+
   lines.push('');
-  lines.push(`*Total: ${formatCLP(total)}*`);
+  lines.push('──────────────────────────────');
+  lines.push(`${money} *TOTAL A PAGAR: ${formatCLP(total)}*`);
+  lines.push('──────────────────────────────');
+
   if (notes.trim()) {
     lines.push('');
-    lines.push(`*Notas:* ${notes.trim()}`);
+    lines.push(`${memo} *Notas:* _${notes.trim()}_`);
   }
+
+  lines.push('');
+  lines.push('Por favor, confirma este mensaje para comenzar a preparar tu pedido. ¡Muchas gracias!');
+
   return lines.join('\n');
 }
 
@@ -60,6 +91,7 @@ export default function PedidosPage() {
   const [name, setName] = useState('');
   const [rut, setRut] = useState('');
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'retiro'>('retiro');
+  const [paymentMethod, setPaymentMethod] = useState<'transferencia' | 'efectivo'>('transferencia');
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -75,7 +107,7 @@ export default function PedidosPage() {
       return;
     }
     if (!isValidRut(rut)) {
-      setError('El RUT ingresado no es válido.');
+      setError('Ingresa un RUT válido.');
       return;
     }
     if (deliveryType === 'delivery' && !address.trim()) {
@@ -90,7 +122,6 @@ export default function PedidosPage() {
     }
 
     setSubmitting(true);
-    const formattedRut = formatRut(rut);
 
     const itemsPayload = cart.map((item) => ({
       product_id: item.product_id,
@@ -105,10 +136,10 @@ export default function PedidosPage() {
 
     const { data: newOrderId, error: orderError } = await supabase.rpc('create_order', {
       p_customer_name: name.trim(),
-      p_rut: formattedRut,
+      p_rut: rut,
       p_delivery_type: deliveryType,
       p_delivery_address: deliveryType === 'delivery' ? address.trim() : null,
-      p_notes: notes.trim() || null,
+      p_notes: `[Pago: ${paymentMethod}] ${notes.trim()}`.trim(),
       p_total: total,
       p_items: itemsPayload,
     });
@@ -116,7 +147,6 @@ export default function PedidosPage() {
     setSubmitting(false);
 
     if (orderError || !newOrderId) {
-      // El RPC lanza excepción explícita si algún sabor/peso ya no tiene stock suficiente
       setError(
         orderError?.message?.includes('Sin stock suficiente')
           ? 'Uno de los productos ya no tiene stock suficiente. Vuelve al catálogo y ajusta tu carrito.'
@@ -125,7 +155,7 @@ export default function PedidosPage() {
       return;
     }
 
-    const message = buildWhatsAppMessage(cart, total, name.trim(), formattedRut, deliveryType, address, notes);
+    const message = buildWhatsAppMessage(cart, total, name.trim(), rut, deliveryType, paymentMethod, address, notes);
     const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
 
@@ -203,7 +233,13 @@ export default function PedidosPage() {
 
               <div className={styles.field}>
                 <label>RUT</label>
-                <input value={rut} onChange={(e) => setRut(e.target.value)} placeholder="12345678-9" required />
+                <input 
+                  value={rut} 
+                  onChange={(e) => setRut(autoFormatRut(e.target.value))} 
+                  placeholder="12.345.678-9" 
+                  maxLength={12}
+                  required 
+                />
               </div>
 
               <div className={styles.field}>
@@ -232,6 +268,26 @@ export default function PedidosPage() {
                   <input value={address} onChange={(e) => setAddress(e.target.value)} required />
                 </div>
               )}
+
+              <div className={styles.field}>
+                <label>Forma de Pago</label>
+                <div className={styles.toggleRow}>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('transferencia')}
+                    className={`${styles.toggleBtn} ${paymentMethod === 'transferencia' ? styles.toggleBtnActive : ''}`}
+                  >
+                    Transferencia
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('efectivo')}
+                    className={`${styles.toggleBtn} ${paymentMethod === 'efectivo' ? styles.toggleBtnActive : ''}`}
+                  >
+                    Efectivo
+                  </button>
+                </div>
+              </div>
 
               <div className={styles.field}>
                 <label>Notas del pedido (opcional)</label>

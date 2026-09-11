@@ -465,7 +465,19 @@
   overflow-y: auto;
 }
 
-.modalCard h3 {
+/* Modal extendido para ProductsManager */
+.modalCardLarge {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 850px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalCard h3,
+.modalCardLarge h3 {
   font-size: 1.15rem;
   font-weight: 800;
   color: #1c1917;
@@ -583,6 +595,71 @@
   color: #15803d;
   font-weight: 700;
   margin-bottom: 1.1rem;
+}
+
+/* ---------- VARIANTES Y PRECIOS DINÁMICOS ---------- */
+.variantCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.variantGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.variantCol {
+  flex: 1 1 120px;
+  min-width: 100px;
+}
+
+.variantCol label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* --- AGREGA ESTA REGLA AQUÍ --- */
+.variantCol input[type="number"] {
+  width: 100%;
+  min-width: 90px;        /* Evita que el input se reduzca demasiado */
+  padding-right: 1.8rem;  /* Deja margen interno para las flechas del sistema */
+  box-sizing: border-box;
+}
+
+.finalPriceTag {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #15803d;
+  font-weight: 600;
+  background: #f0fdf4;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  display: inline-block;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  margin-top: 0.5rem;
+}
+
+.stockTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.stockTable th,
+.stockTable td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 /* ---------- IMAGE UPLOAD ---------- */
@@ -718,12 +795,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.25rem;
 }
 
 .kpiCard {
@@ -871,4 +942,74 @@
 .legendValue {
   font-size: 0.72rem;
   color: #78716c;
+}
+
+/* ---------- STOCK ALERT CARD ---------- */
+.stockAlertCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  grid-column: 1 / -1; /* Ocupa todo el ancho inferior del grid */
+}
+
+.alertTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #dc2626 !important;
+}
+
+.stockList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.stockRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.85rem;
+  background: #fafaf9;
+  border-radius: 0.65rem;
+  border: 1px solid #f1f5f9;
+}
+
+.stockInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.stockItemName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.stockItemMeta {
+  font-size: 0.75rem;
+  color: #78716c;
+}
+
+.badgeDanger {
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+}
+
+.badgeWarning {
+  background: #fef9c3;
+  color: #854d0e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
 }

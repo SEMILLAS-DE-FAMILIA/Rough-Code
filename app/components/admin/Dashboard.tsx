@@ -13,7 +13,7 @@ import {
   Pie, 
   Cell 
 } from 'recharts';
-import { ShoppingBag, DollarSign, TrendingUp, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { ShoppingBag, DollarSign, TrendingUp, AlertTriangle, ArrowUpRight, Clock, Users } from 'lucide-react';
 import styles from './Admin.module.css';
 
 interface OrderItemRow {
@@ -53,6 +53,8 @@ export default function Dashboard() {
   const [outOfStockCount, setOutOfStockCount] = useState(0);
   const [monthRevenue, setMonthRevenue] = useState(0);
   const [monthOrdersCount, setMonthOrdersCount] = useState(0);
+  const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
+  const [pendingDistributorsCount, setPendingDistributorsCount] = useState(0);
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [dailySales, setDailySales] = useState<DayStat[]>([]);
   const [lowStockItems, setLowStockItems] = useState<LowStockItem[]>([]);
@@ -61,15 +63,25 @@ export default function Dashboard() {
     async function loadDashboard() {
       setLoading(true);
 
-      const [{ count: activeCount }, { count: totalCount }, { count: noStockCount }] = await Promise.all([
+      const [
+        { count: activeCount }, 
+        { count: totalCount }, 
+        { count: noStockCount },
+        { count: pendingOrders },
+        { count: pendingDistributors }
+      ] = await Promise.all([
         supabase.from('products').select('*', { count: 'exact', head: true }).eq('active', true),
         supabase.from('products').select('*', { count: 'exact', head: true }),
         supabase.from('variant_flavor_stock').select('*', { count: 'exact', head: true }).lte('stock', 0),
+        supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pendiente'),
+        supabase.from('distributors').select('*', { count: 'exact', head: true }).eq('status', 'pendiente'),
       ]);
 
       setActiveProductsCount(activeCount ?? 0);
       setTotalProductsCount(totalCount ?? 0);
       setOutOfStockCount(noStockCount ?? 0);
+      setPendingOrdersCount(pendingOrders ?? 0);
+      setPendingDistributorsCount(pendingDistributors ?? 0);
 
       const { data: items } = await supabase
         .from('order_items')
@@ -163,16 +175,24 @@ export default function Dashboard() {
         <h2>Dashboard</h2>
       </div>
 
+      {/* TARJETAS KPI */}
       <div className={styles.statsGrid}>
         <div className={styles.kpiCard}>
           <div className={styles.kpiHeader}>
-            <span className={styles.kpiTitle}>Productos Activos</span>
-            <div className={styles.kpiIconBox}><ShoppingBag size={18} /></div>
+            <span className={styles.kpiTitle}>Pedidos por Confirmar</span>
+            <div className={styles.kpiIconBox}><Clock size={18} /></div>
           </div>
-          <div className={styles.kpiValue}>{activeProductsCount}</div>
-          <div className={styles.kpiBadgeSuccess}>
-            <ArrowUpRight size={14} /> de {totalProductsCount} totales
+          <div className={styles.kpiValue}>{pendingOrdersCount}</div>
+          <span className={styles.kpiSubtext}>Pendientes de validación</span>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiHeader}>
+            <span className={styles.kpiTitle}>Distribuidores Pendientes</span>
+            <div className={styles.kpiIconBox}><Users size={18} /></div>
           </div>
+          <div className={styles.kpiValue}>{pendingDistributorsCount}</div>
+          <span className={styles.kpiSubtext}>Solicitudes por revisar</span>
         </div>
 
         <div className={styles.kpiCard}>
@@ -188,49 +208,17 @@ export default function Dashboard() {
 
         <div className={styles.kpiCard}>
           <div className={styles.kpiHeader}>
-            <span className={styles.kpiTitle}>Pedidos del Mes</span>
-            <div className={styles.kpiIconBox}><TrendingUp size={18} /></div>
+            <span className={styles.kpiTitle}>Productos Activos</span>
+            <div className={styles.kpiIconBox}><ShoppingBag size={18} /></div>
           </div>
-          <div className={styles.kpiValue}>{monthOrdersCount}</div>
+          <div className={styles.kpiValue}>{activeProductsCount}</div>
           <div className={styles.kpiBadgeSuccess}>
-            <ArrowUpRight size={14} /> Pedidos registrados
+            <ArrowUpRight size={14} /> de {totalProductsCount} totales
           </div>
-        </div>
-
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiHeader}>
-            <span className={styles.kpiTitle}>Sin Stock / Alertas</span>
-            <div className={styles.kpiIconBox}><AlertCircle size={18} /></div>
-          </div>
-          <div className={styles.kpiValue}>{outOfStockCount}</div>
-          <span className={styles.kpiSubtext}>Variantes con stock 0</span>
         </div>
       </div>
 
-      {lowStockItems.length > 0 && (
-        <div className={styles.dashboardPanel} style={{ borderLeft: '3px solid #dc2626' }}>
-          <h3 style={{ color: '#dc2626' }}>⚠️ Stock bajo o agotado ({lowStockItems.length})</h3>
-          {lowStockItems.map((item, i) => (
-            <div key={i} className={styles.rankRow}>
-              <div className={styles.rankLeft}>
-                <span
-                  className={styles.rankNumber}
-                  style={{ background: item.stock === 0 ? '#fee2e2' : '#fef9c3', color: item.stock === 0 ? '#dc2626' : '#854d0e' }}
-                >
-                  {item.stock}
-                </span>
-                <span>
-                  {item.title} ({item.weight} - {item.flavor_name})
-                </span>
-              </div>
-              <span className={styles.rankValue} style={{ color: item.stock === 0 ? '#dc2626' : '#854d0e' }}>
-                {item.stock === 0 ? 'Agotado' : 'Stock bajo'}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-
+      {/* GRÁFICOS Y ALERTAS EN GRID LIMPIO */}
       <div className={styles.chartsGrid}>
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
@@ -306,6 +294,30 @@ export default function Dashboard() {
             </div>
           )}
         </div>
+
+        {/* CONTENEDOR DE ALERTAS DE STOCK REORGANIZADO */}
+        {lowStockItems.length > 0 && (
+          <div className={styles.stockAlertCard}>
+            <div className={styles.chartHeader}>
+              <h3 className={styles.alertTitle}>
+                <AlertTriangle size={18} /> Alertas de Stock Bajo o Agotado ({lowStockItems.length})
+              </h3>
+            </div>
+            <div className={styles.stockList}>
+              {lowStockItems.map((item, i) => (
+                <div key={i} className={styles.stockRow}>
+                  <div className={styles.stockInfo}>
+                    <span className={styles.stockItemName}>{item.title}</span>
+                    <span className={styles.stockItemMeta}>{item.weight} — {item.flavor_name}</span>
+                  </div>
+                  <span className={item.stock === 0 ? styles.badgeDanger : styles.badgeWarning}>
+                    {item.stock === 0 ? 'Agotado' : `${item.stock} un.`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

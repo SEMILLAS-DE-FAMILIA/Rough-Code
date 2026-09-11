@@ -12,7 +12,7 @@ interface AdminVariant {
   weight: string;
   price: string;
   discount_percent: string;
-  distributor_price: string; // vacío si este peso no tiene precio distribuidor propio
+  distributor_price: string;
 }
 
 interface AdminFlavor {
@@ -69,6 +69,7 @@ export default function ProductsManager() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
@@ -191,7 +192,7 @@ export default function ProductsManager() {
 
   const closeModal = () => setShowModal(false);
 
-  // ---------- Pesos ----------
+  // ---------- Variantes de Peso ----------
   const updateVariant = (idx: number, patch: Partial<AdminVariant>) => {
     const updated = [...form.variants];
     updated[idx] = { ...updated[idx], ...patch };
@@ -222,6 +223,14 @@ export default function ProductsManager() {
       newStockMatrix[`${newVIdx}-${fIdxStr}`] = val;
     });
     setForm({ ...form, variants: newVariants, stockMatrix: newStockMatrix });
+  };
+
+  const calculateFinalPrice = (priceStr: string, discountStr: string) => {
+    const price = parseFloat(priceStr) || 0;
+    const discount = parseFloat(discountStr) || 0;
+    if (price <= 0) return 0;
+    if (discount <= 0) return price;
+    return Math.round(price - price * (discount / 100));
   };
 
   // ---------- Sabores ----------
@@ -257,7 +266,7 @@ export default function ProductsManager() {
     setForm({ ...form, flavors: newFlavors, stockMatrix: newStockMatrix });
   };
 
-  // ---------- Stock por combinación ----------
+  // ---------- Matriz de Stock ----------
   const updateStock = (vIdx: number, fIdx: number, value: string) => {
     setForm({ ...form, stockMatrix: { ...form.stockMatrix, [`${vIdx}-${fIdx}`]: value } });
   };
@@ -306,7 +315,7 @@ export default function ProductsManager() {
         setFormError(`Error al actualizar: ${updateError.message}`);
         return;
       }
-      // Al borrar variantes se limpia en cascada su stock y su precio distribuidor
+
       await supabase.from('product_variants').delete().eq('product_id', targetProductId);
       await supabase.from('product_flavors').delete().eq('product_id', targetProductId);
     } else {
@@ -324,7 +333,6 @@ export default function ProductsManager() {
       targetProductId = insertedData.id;
     }
 
-    // Insertar pesos, y si aplica, su precio distribuidor
     const variantIds: number[] = [];
     for (const v of form.variants) {
       const { data: insertedVariant, error: variantError } = await supabase
@@ -345,11 +353,17 @@ export default function ProductsManager() {
       }
       variantIds.push(insertedVariant.id);
 
-      if (form.is_distributor && v.distributor_price.trim()) {
+      if (form.is_distributor) {
+        const rawDistPrice = v.distributor_price.trim();
+        const finalDistributorPrice = rawDistPrice !== ''
+          ? parseFloat(rawDistPrice)
+          : parseFloat(v.price) || 0;
+
         const { error: distPriceError } = await supabase.from('variant_distributor_price').insert({
           variant_id: insertedVariant.id,
-          price: parseFloat(v.distributor_price) || 0,
+          price: finalDistributorPrice,
         });
+
         if (distPriceError) {
           setSaving(false);
           setFormError(`Error al guardar precio distribuidor de "${v.weight}": ${distPriceError.message}`);
@@ -358,7 +372,6 @@ export default function ProductsManager() {
       }
     }
 
-    // Insertar sabores
     const flavorIds: number[] = [];
     for (const f of form.flavors) {
       const { data: insertedFlavor, error: flavorError } = await supabase
@@ -378,7 +391,6 @@ export default function ProductsManager() {
       flavorIds.push(insertedFlavor.id);
     }
 
-    // Insertar la matriz de stock (peso × sabor)
     const stockPayload = form.variants.flatMap((_, vIdx) =>
       form.flavors.map((_, fIdx) => ({
         variant_id: variantIds[vIdx],
@@ -423,22 +435,43 @@ export default function ProductsManager() {
   const totalStockFor = (p: AdminProduct) =>
     p.stockMap ? Object.values(p.stockMap).reduce((sum, s) => sum + s, 0) : 0;
 
+  // Filtrado dinámico por título o categoría
+  const filteredProducts = products.filter((p) => {
+    const query = searchTerm.toLowerCase().trim();
+    if (!query) return true;
+    const titleMatch = p.title.toLowerCase().includes(query);
+    const categoryMatch = p.category_name?.toLowerCase().includes(query);
+    return titleMatch || categoryMatch;
+  });
+
   return (
     <div>
       <div className={styles.sectionHeader}>
-        <h2>Productos ({products.length})</h2>
+        <h2>Productos ({filteredProducts.length})</h2>
         <button className={styles.addBtn} onClick={openCreateModal}>
           + Nuevo producto
         </button>
       </div>
 
+      {/* BARRA DE BÚSQUEDA */}
+      <div className={styles.field} style={{ marginBottom: '1.25rem' }}>
+        <input
+          type="text"
+          placeholder="Buscar producto por nombre o categoría..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       {loading ? (
         <p className={styles.emptyState}>Cargando...</p>
-      ) : products.length === 0 ? (
-        <p className={styles.emptyState}>Aún no hay productos.</p>
+      ) : filteredProducts.length === 0 ? (
+        <p className={styles.emptyState}>
+          {searchTerm ? 'No se encontraron productos que coincidan con la búsqueda.' : 'Aún no hay productos.'}
+        </p>
       ) : (
         <div className={styles.dataTable}>
-          {products.map((p) => (
+          {filteredProducts.map((p) => (
             <div key={p.id} className={styles.dataRow} style={{ gridTemplateColumns: '44px 1fr auto auto' }}>
               {p.img_url ? (
                 <div className={styles.rowThumb} style={{ position: 'relative', overflow: 'hidden' }}>
@@ -472,7 +505,7 @@ export default function ProductsManager() {
 
       {showModal && (
         <div className={styles.modalOverlay} onClick={closeModal}>
-          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '820px', maxHeight: '90vh', overflowY: 'auto' }}>
+          <div className={styles.modalCardLarge} onClick={(e) => e.stopPropagation()}>
             <h3>{editingId ? 'Editar producto' : 'Nuevo producto'}</h3>
 
             <form onSubmit={handleSave}>
@@ -497,7 +530,7 @@ export default function ProductsManager() {
                 </div>
               </div>
 
-              <label className={styles.switchRow} style={{ marginTop: '0.5rem' }}>
+              <label className={styles.switchRow}>
                 <input
                   type="checkbox"
                   className={styles.switchInput}
@@ -505,64 +538,95 @@ export default function ProductsManager() {
                   onChange={(e) => setForm({ ...form, is_distributor: e.target.checked })}
                 />
                 <span className={styles.switchTrack}><span className={styles.switchThumb} /></span>
-                <span className={styles.switchLabel}>Disponible para distribuidores (requiere precio distribuidor por peso)</span>
+                <span className={styles.switchLabel}>Disponible para distribuidores</span>
               </label>
 
-              {/* PESOS */}
+              {/* SECCIÓN VARIANTES DE PESO Y PRECIOS */}
               <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
                 <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
-                  Pesos
+                  Pesos y Precios
                 </label>
 
-                {form.variants.map((v, vIdx) => (
-                  <div
-                    key={vIdx}
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: form.is_distributor ? '1fr 1fr 1fr 1fr auto' : '1fr 1fr 1fr auto',
-                      gap: '8px',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    <input
-                      type="text"
-                      value={v.weight}
-                      onChange={(e) => updateVariant(vIdx, { weight: e.target.value })}
-                      placeholder="Ej. 500g"
-                      required
-                    />
-                    <input
-                      type="number"
-                      value={v.price}
-                      onChange={(e) => updateVariant(vIdx, { price: e.target.value })}
-                      placeholder="Precio público ($)"
-                      required
-                    />
-                    <input
-                      type="number"
-                      value={v.discount_percent}
-                      onChange={(e) => updateVariant(vIdx, { discount_percent: e.target.value })}
-                      placeholder="% Descuento"
-                    />
-                    {form.is_distributor && (
-                      <input
-                        type="number"
-                        value={v.distributor_price}
-                        onChange={(e) => updateVariant(vIdx, { distributor_price: e.target.value })}
-                        placeholder="Precio distribuidor ($)"
-                        style={{ borderColor: '#f59e0b' }}
-                        required
-                      />
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => removeVariant(vIdx)}
-                      style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer' }}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
+                {form.variants.map((v, vIdx) => {
+                  const finalPrice = calculateFinalPrice(v.price, v.discount_percent);
+                  const hasDiscount = parseFloat(v.discount_percent || '0') > 0 && parseFloat(v.price || '0') > 0;
+
+                  return (
+                    <div key={vIdx} className={styles.variantCard}>
+                      <div className={styles.variantGrid}>
+                        <div className={styles.variantCol}>
+                          <label>Peso / Formato</label>
+                          <input
+                            type="text"
+                            value={v.weight}
+                            onChange={(e) => updateVariant(vIdx, { weight: e.target.value })}
+                            placeholder="Ej. 500g"
+                            required
+                          />
+                        </div>
+
+                        <div className={styles.variantCol}>
+                          <label>Precio Lista ($)</label>
+                          <input
+                            type="number"
+                            value={v.price}
+                            onChange={(e) => updateVariant(vIdx, { price: e.target.value })}
+                            placeholder="Ej. 5000"
+                            required
+                          />
+                        </div>
+
+                        <div className={styles.variantCol}>
+                          <label>% Descuento</label>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={v.discount_percent}
+                            onChange={(e) => updateVariant(vIdx, { discount_percent: e.target.value })}
+                            placeholder="0"
+                          />
+                        </div>
+
+                        {form.is_distributor && (
+                          <div className={styles.variantCol}>
+                            <label style={{ color: '#d97706' }}>Precio Distribuidor ($)</label>
+                            <input
+                              type="number"
+                              value={v.distributor_price}
+                              onChange={(e) => updateVariant(vIdx, { distributor_price: e.target.value })}
+                              placeholder={`Opcional (${v.price || 'Normal'})`}
+                              style={{ borderColor: '#f59e0b' }}
+                            />
+                          </div>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => removeVariant(vIdx)}
+                          style={{
+                            background: '#fee2e2',
+                            color: '#dc2626',
+                            border: 'none',
+                            padding: '8px 12px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            height: '38px',
+                          }}
+                          title="Eliminar peso"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      {hasDiscount && (
+                        <div className={styles.finalPriceTag}>
+                          🏷️ Precio final venta: ${finalPrice.toLocaleString('es-CL')} ({v.discount_percent}% dcto.)
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
 
                 <button
                   type="button"
@@ -573,7 +637,7 @@ export default function ProductsManager() {
                 </button>
               </div>
 
-              {/* SABORES */}
+              {/* SECCIÓN SABORES */}
               <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
                 <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
                   Sabores
@@ -607,20 +671,20 @@ export default function ProductsManager() {
                 </button>
               </div>
 
-              {/* MATRIZ DE STOCK */}
+              {/* SECCIÓN MATRIZ DE STOCK */}
               {form.variants.length > 0 && form.flavors.length > 0 && (
                 <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
                   <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
                     Stock por combinación (peso × sabor)
                   </label>
 
-                  <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                  <div className={styles.tableWrapper}>
+                    <table className={styles.stockTable}>
                       <thead>
                         <tr>
-                          <th style={{ textAlign: 'left', padding: '6px', borderBottom: '1px solid #e2e8f0' }}>Sabor \ Peso</th>
+                          <th style={{ textAlign: 'left' }}>Sabor \ Peso</th>
                           {form.variants.map((v, vIdx) => (
-                            <th key={vIdx} style={{ textAlign: 'center', padding: '6px', borderBottom: '1px solid #e2e8f0', minWidth: '90px' }}>
+                            <th key={vIdx} style={{ textAlign: 'center', minWidth: '90px' }}>
                               {v.weight || `Peso ${vIdx + 1}`}
                             </th>
                           ))}
@@ -629,9 +693,9 @@ export default function ProductsManager() {
                       <tbody>
                         {form.flavors.map((f, fIdx) => (
                           <tr key={fIdx}>
-                            <td style={{ padding: '6px', fontWeight: 600 }}>{f.flavor_name || `Sabor ${fIdx + 1}`}</td>
+                            <td style={{ fontWeight: 600 }}>{f.flavor_name || `Sabor ${fIdx + 1}`}</td>
                             {form.variants.map((_, vIdx) => (
-                              <td key={vIdx} style={{ padding: '4px', textAlign: 'center' }}>
+                              <td key={vIdx} style={{ textAlign: 'center' }}>
                                 <input
                                   type="number"
                                   min="0"

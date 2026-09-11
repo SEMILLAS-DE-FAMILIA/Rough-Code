@@ -130,18 +130,12 @@
   transform: translateY(-1px) scale(0.99);
 }
 
-/* Comportamiento para tarjetas sin stock */
+/* Comportamiento para tarjetas sin stock (Permite navegación e interactividad) */
 .outOfStockCard {
-  opacity: 0.65;
-  filter: grayscale(0.85);
-  background: #f8fafc;
-  cursor: not-allowed;
-}
-
-.outOfStockCard:hover {
-  border-color: transparent;
-  box-shadow: 0 1px 2px rgba(87, 68, 46, 0.04);
-  transform: none;
+  opacity: 1; /* Eliminado el 0.65 para evitar el efecto opaco */
+  filter: none; /* Eliminado el grayscale para conservar los colores reales */
+  background: #ffffff;
+  cursor: pointer; /* Permite entrar para revisar la información y reservar */
 }
 
 .imageContainer {
@@ -430,6 +424,7 @@
   }
 }
 
+/* Botón Normal de Agregar al Carrito */
 .addBtn {
   background: var(--color-primary-green, #16a34a);
   color: #ffffff;
@@ -463,8 +458,33 @@
   transform: none;
 }
 
+/* Botón de Reservar (Amarillo) */
+.reserveBtn {
+  background: #eab308;
+  color: #0f172a;
+  border: none;
+  padding: 0.75rem 1.35rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px -4px rgba(234, 179, 8, 0.45);
+  transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.reserveBtn:hover {
+  background: #ca8a04;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -4px rgba(234, 179, 8, 0.5);
+}
+
+.reserveBtn:active {
+  transform: translateY(0) scale(0.96);
+}
+
 @media (max-width: 640px) {
-  .addBtn {
+  .addBtn, .reserveBtn {
     width: 100%;
     padding: 0.7rem 1rem;
     text-align: center;
@@ -475,8 +495,8 @@
   position: absolute;
   top: 0.85rem;
   left: 0.85rem;
-  background: #475569;
-  color: #ffffff;
+  background: #eab308;
+  color: #0f172a;
   font-size: 0.7rem;
   font-weight: 700;
   padding: 0.25rem 0.65rem;

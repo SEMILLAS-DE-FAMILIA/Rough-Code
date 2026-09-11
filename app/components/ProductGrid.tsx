@@ -96,20 +96,23 @@ function ProductCard({
   const handleCardClick = () => {
     if (isLocked) {
       onOpenDistributorModal();
-    } else if (!isOutOfStock) {
+    } else {
+      // Se eliminó la restricción !isOutOfStock para permitir ver la info siempre
       onOpenModal(product);
     }
   };
 
   return (
     <div
-      className={`${styles.productCard} ${isOutOfStock ? styles.outOfStockCard : ''} ${isLocked ? styles.outOfStockCard : ''}`}
+      className={`${styles.productCard} ${isLocked ? styles.outOfStockCard : ''}`}
       onClick={handleCardClick}
     >
       <div className={styles.imageContainer}>
         <div className={styles.topLeftBadges}>
           {isOutOfStock ? (
-            <span className={styles.outOfStockBadge}>Sin stock</span>
+            <span className={styles.outOfStockBadge} style={{ background: '#eab308', color: '#0f172a' }}>
+              Para Reservar
+            </span>
           ) : (
             product.badge && <span className={styles.tagBadge}>{product.badge}</span>
           )}
@@ -138,8 +141,8 @@ function ProductCard({
       <div className={styles.cardContent}>
         <span className={styles.productCategory}>{product.category_name || 'Sin categoría'}</span>
         <h3 className={styles.productTitle}>{product.title}</h3>
-        <p className={styles.stockText} style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.2rem 0' }}>
-          {totalStock > 0 ? `${product.variants.length} opciones de peso` : 'Agotado'}
+        <p className={styles.stockText} style={{ fontSize: '0.8rem', color: isOutOfStock ? '#d97706' : '#64748b', margin: '0.2rem 0', fontWeight: isOutOfStock ? 600 : 400 }}>
+          {totalStock > 0 ? `${product.variants.length} opciones de peso` : 'Disponible bajo reserva'}
         </p>
 
         <div className={styles.cardFooter}>
@@ -177,13 +180,13 @@ function ProductCard({
           ) : (
             <button
               className={styles.addBtn}
+              style={isOutOfStock ? { background: '#eab308', color: '#0f172a' } : undefined}
               onClick={(e) => {
                 e.stopPropagation();
                 onOpenModal(product);
               }}
-              disabled={isOutOfStock}
             >
-              Ver Opciones
+              {isOutOfStock ? 'Reservar' : 'Ver Opciones'}
             </button>
           )}
         </div>
@@ -243,6 +246,28 @@ export function ProductModalDetails({
     if (currentDistributorPrice != null) return currentDistributorPrice;
     const disc = currentVariant.discount_percent || 0;
     return disc > 0 ? currentVariant.price * (1 - disc / 100) : currentVariant.price;
+  };
+
+  const handleReserveFlavor = (flavorObj: ProductFlavor) => {
+    if (!currentVariant) return;
+    const finalPrice = unitPrice();
+
+    onAddToCart({
+      id: `${currentVariant.id}-${flavorObj.id}-reservation`,
+      product_id: product.id,
+      product_title: `[RESERVA] ${product.title} (${currentVariant.weight} - ${flavorObj.flavor_name})`,
+      variant_id: currentVariant.id,
+      flavor_id: flavorObj.id,
+      selected_weight: currentVariant.weight,
+      selected_flavor: flavorObj.flavor_name,
+      unit_price: finalPrice,
+      quantity: 1,
+      img_url: product.img_url,
+      max_stock: 99, // Stock abierto para la reserva
+      is_reservation: true,
+    });
+
+    onClose();
   };
 
   const handleAddAll = () => {
@@ -345,6 +370,7 @@ export function ProductModalDetails({
                 const inCart = currentVariant ? alreadyInCart(currentVariant.id, f.id) : 0;
                 const remainingRoom = Math.max(0, maxStock - inCart);
                 const currentQty = flavorQuantities[f.id] || 0;
+                const isFlavorOutOfStock = remainingRoom <= 0;
 
                 return (
                   <div
@@ -356,46 +382,63 @@ export function ProductModalDetails({
                       padding: '10px 12px',
                       borderRadius: '8px',
                       border: currentQty > 0 ? '2px solid #22c55e' : '1px solid #e2e8f0',
-                      background: currentQty > 0 ? '#f0fdf4' : '#fafaf9',
+                      background: currentQty > 0 ? '#f0fdf4' : isFlavorOutOfStock ? '#fefce8' : '#fafaf9',
                     }}
                   >
                     <div>
                       <span style={{ fontWeight: 600, fontSize: '0.9rem', color: '#1e293b', display: 'block' }}>{f.flavor_name}</span>
-                      <span style={{ fontSize: '0.75rem', color: remainingRoom > 0 ? '#64748b' : '#dc2626' }}>
+                      <span style={{ fontSize: '0.75rem', color: remainingRoom > 0 ? '#64748b' : '#d97706' }}>
                         {remainingRoom > 0
                           ? `Disponible: ${remainingRoom}${inCart > 0 ? ` (ya tienes ${inCart} en el carrito)` : ''}`
-                          : inCart > 0
-                          ? 'Ya tienes el máximo disponible en tu carrito'
-                          : 'Agotado'}
+                          : 'Sin stock físico (Reservable)'}
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {isFlavorOutOfStock ? (
                       <button
                         type="button"
-                        disabled={remainingRoom <= 0 || currentQty <= 0}
-                        onClick={() => handleQuantityChange(f.id, currentQty - 1, remainingRoom)}
-                        style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer' }}
+                        onClick={() => handleReserveFlavor(f)}
+                        style={{
+                          background: '#eab308',
+                          color: '#0f172a',
+                          border: 'none',
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          fontWeight: 700,
+                          fontSize: '0.8rem',
+                          cursor: 'pointer',
+                        }}
                       >
-                        -
+                        Reservar
                       </button>
-                      <input
-                        type="number"
-                        min="0"
-                        max={remainingRoom}
-                        value={currentQty}
-                        onChange={(e) => handleQuantityChange(f.id, parseInt(e.target.value) || 0, remainingRoom)}
-                        style={{ width: '45px', textAlign: 'center', padding: '4px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
-                      />
-                      <button
-                        type="button"
-                        disabled={remainingRoom <= 0 || currentQty >= remainingRoom}
-                        onClick={() => handleQuantityChange(f.id, currentQty + 1, remainingRoom)}
-                        style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer' }}
-                      >
-                        +
-                      </button>
-                    </div>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <button
+                          type="button"
+                          disabled={remainingRoom <= 0 || currentQty <= 0}
+                          onClick={() => handleQuantityChange(f.id, currentQty - 1, remainingRoom)}
+                          style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer' }}
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          min="0"
+                          max={remainingRoom}
+                          value={currentQty}
+                          onChange={(e) => handleQuantityChange(f.id, parseInt(e.target.value) || 0, remainingRoom)}
+                          style={{ width: '45px', textAlign: 'center', padding: '4px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                        />
+                        <button
+                          type="button"
+                          disabled={remainingRoom <= 0 || currentQty >= remainingRoom}
+                          onClick={() => handleQuantityChange(f.id, currentQty + 1, remainingRoom)}
+                          style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer' }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    )}
                   </div>
                 );
               })}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import CarouselHero from './components/Carousel';
-import NovedadesCarousel from './components/NovedadesCarousel';
+import NovedadesCarousel from './components/products/NovedadesCarousel';
 import ProductGrid from './components/ProductGrid';
 import HeaderNav from './components/HeaderNav';
 import WholesaleAuthModal from './components/WholesaleAuthModal';

@@ -1,21 +1,20 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import { supabase } from '../../src/lib/supabaseClient';
-import { Product, ProductModalDetails } from './ProductGrid';
-import { NewCartItem } from '../../src/lib/useCartStore';
-import { useDistributorStore } from '../../src/lib/useDistributorStore';
+import { supabase } from '../../../src/lib/supabaseClient';
+import { NewCartItem } from '../../../src/lib/useCartStore';
+import { useDistributorStore } from '../../../src/lib/useDistributorStore';
+import { Product } from '../../../src/types/product';
+import ProductCard from './ProductCard';
+import ProductModalDetails from './ProductModalDetails';
 import styles from './NovedadesCarousel.module.css';
-
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
 interface NovedadesCarouselProps {
   onAddToCart: (item: NewCartItem) => void;
+  onOpenDistributorModal?: () => void;
 }
 
-export default function NovedadesCarousel({ onAddToCart }: NovedadesCarouselProps) {
+export default function NovedadesCarousel({ onAddToCart, onOpenDistributorModal }: NovedadesCarouselProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -91,6 +90,7 @@ export default function NovedadesCarousel({ onAddToCart }: NovedadesCarouselProp
       <div className={styles.container}>
         <div className={styles.header}>
           <div>
+            <span className={styles.preTitle}>Descubre lo último</span>
             <h2 className={styles.title}>Novedades</h2>
           </div>
           {products.length > 1 && (
@@ -106,65 +106,17 @@ export default function NovedadesCarousel({ onAddToCart }: NovedadesCarouselProp
         </div>
 
         <div className={styles.scrollRow} ref={scrollRef}>
-          {products.map((p) => {
-            const firstVariant = p.variants[0];
-            const hasDiscount = firstVariant && firstVariant.discount_percent > 0;
-            const totalStock = p.variants.reduce(
-              (sum, v) => sum + v.stocks.reduce((s, entry) => s + entry.stock, 0),
-              0
-            );
-
-            const showDistributorPrice =
-              p.is_distributor && isDistributorLoggedIn && firstVariant && distributorPrices[firstVariant.id] != null;
-
-            return (
-              <div key={p.id} className={styles.card}>
-                <div className={styles.imageWrap}>
-                  {hasDiscount && !showDistributorPrice && <span className={styles.discountBadge}>-{firstVariant.discount_percent}%</span>}
-                  {p.img_url && (
-                    <Image src={p.img_url} alt={p.title} fill className={styles.image} sizes="240px" />
-                  )}
-                </div>
-
-                <div className={styles.cardContent}>
-                  <span className={styles.category}>{p.category_name}</span>
-                  <h3 className={styles.productTitle}>{p.title}</h3>
-
-                  <div className={styles.footer}>
-                    <div className={styles.priceGroup}>
-                      {firstVariant && (
-                        showDistributorPrice ? (
-                          <>
-                            <span className={styles.originalPrice}>{formatCLP(firstVariant.price)}</span>
-                            <span className={styles.price} style={{ color: '#2563eb' }}>
-                              {formatCLP(distributorPrices[firstVariant.id])}
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            {hasDiscount && <span className={styles.originalPrice}>{formatCLP(firstVariant.price)}</span>}
-                            <span className={styles.price}>
-                              Desde {formatCLP(hasDiscount ? firstVariant.price * (1 - firstVariant.discount_percent / 100) : firstVariant.price)}
-                            </span>
-                          </>
-                        )
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      className={styles.addBtn}
-                      onClick={() => setSelectedProduct(p)}
-                      aria-label="Ver opciones"
-                      disabled={totalStock <= 0}
-                      style={{ opacity: totalStock <= 0 ? 0.5 : 1, cursor: totalStock <= 0 ? 'not-allowed' : 'pointer' }}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {products.map((p) => (
+            <div key={p.id} style={{ flex: '0 0 280px', scrollSnapAlign: 'start' }}>
+              <ProductCard
+                product={p}
+                onOpenModal={setSelectedProduct}
+                isDistributorLoggedIn={isDistributorLoggedIn}
+                distributorPrices={distributorPrices}
+                onOpenDistributorModal={onOpenDistributorModal}
+              />
+            </div>
+          ))}
         </div>
       </div>
 

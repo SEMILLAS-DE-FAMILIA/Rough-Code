@@ -7,7 +7,7 @@ import styles from './Footer.module.css';
 export default function Footer() {
   const facebookUrl = "https://www.facebook.com/share/1DfnZBXAPD/";
   const instagramUrl = "https://www.instagram.com/semillasdefamilia.talca?igsi=ZWZ2NTV5MWczYjB0";
-  const whatsappNumber = "56912345678"; // Reemplaza con tu número real con código de país
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "56942677678";
   const whatsappMessage = encodeURIComponent("¡Hola! Quisiera hacer una consulta sobre los productos de Semillas de Familia.");
 
   return (

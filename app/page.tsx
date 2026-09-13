@@ -138,12 +138,17 @@ export default function Home() {
       />
       <NavigationControls lastAddedProduct={lastAdded} />
       
-      {!searchQuery && (
-        <>
-          <CarouselHero />
-          <NovedadesCarousel onAddToCart={handleAddToCart} />
-        </>
-      )}
+      <div
+        style={{
+          maxHeight: searchQuery ? '0px' : '2400px',
+          opacity: searchQuery ? 0 : 1,
+          overflow: 'hidden',
+          transition: 'max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease',
+        }}
+      >
+        <CarouselHero />
+        <NovedadesCarousel onAddToCart={handleAddToCart} />
+      </div>
       
       <ProductGrid 
         searchQuery={searchQuery}

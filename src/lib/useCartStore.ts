@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export interface CartItem {
-  id: string; // clave compuesta: `${variant_id}-${flavor_id}`
+  id: string;
   product_id: number;
   product_title: string;
   variant_id: number;
@@ -13,6 +13,7 @@ export interface CartItem {
   quantity: number;
   img_url: string | null;
   max_stock: number;
+  is_reservation?: boolean;
 }
 
 export type NewCartItem = Omit<CartItem, 'id'>;
@@ -37,7 +38,9 @@ export const useCartStore = create<CartStore>()(
 
       addToCart: (item) => {
         const state = get();
-        const compositeId = `${item.variant_id}-${item.flavor_id}`;
+        const compositeId = item.is_reservation
+          ? `${item.variant_id}-${item.flavor_id}-reservation`
+          : `${item.variant_id}-${item.flavor_id}`;
         const existing = state.cart.find((c) => c.id === compositeId);
         const incomingQty = Number.isFinite(item.quantity) && item.quantity > 0 ? item.quantity : 1;
         const itemMaxStock = Number.isFinite(item.max_stock) ? item.max_stock : 0;

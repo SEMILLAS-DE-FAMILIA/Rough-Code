@@ -28,7 +28,6 @@ function buildWhatsAppMessage(
 ): string {
   const lines: string[] = [];
 
-  // Emojis codificados en Unicode seguro para evitar caracteres extraños ()
   const leaf = '\u{1F33F}';
   const herb = '\u{1F33B}';
   const user = '\u{1F464}';
@@ -39,6 +38,7 @@ function buildWhatsAppMessage(
   const box = '\u{1F4E6}';
   const money = '\u{1F4B0}';
   const memo = '\u{1F4DD}';
+  const star = '\u{2B50}';
 
   lines.push(`${leaf} *¡Hola! Gracias por tu compra en Semillas de Familia.* ${herb}`);
   lines.push('Hemos registrado tu pedido con el siguiente detalle:');
@@ -59,8 +59,9 @@ function buildWhatsAppMessage(
   items.forEach((item) => {
     const details = [item.selected_weight, item.selected_flavor].filter(Boolean).join(' - ');
     const metaText = details ? ` (${details})` : '';
+    const reservationBadge = item.is_reservation ? ` ${star} *[RESERVA]*` : '';
 
-    lines.push(`• *${item.quantity}x* ${item.product_title}${metaText} ── *${formatCLP(item.unit_price * item.quantity)}*`);
+    lines.push(`• *${item.quantity}x* ${item.product_title}${metaText}${reservationBadge} ── *${formatCLP(item.unit_price * item.quantity)}*`);
   });
 
   lines.push('');
@@ -132,6 +133,7 @@ export default function PedidosPage() {
       flavor_id: item.flavor_id,
       weight_label: item.selected_weight,
       flavor_name: item.selected_flavor,
+      is_reservation: item.is_reservation === true,
     }));
 
     const { data: newOrderId, error: orderError } = await supabase.rpc('create_order', {
@@ -212,7 +214,10 @@ export default function PedidosPage() {
               <div key={item.id} className={styles.summaryRow}>
                 {item.img_url && <img src={item.img_url} alt={item.product_title} className={styles.summaryThumb} />}
                 <div style={{ flex: 1 }}>
-                  <p className={styles.summaryTitle}>{item.product_title}</p>
+                  <p className={styles.summaryTitle}>
+                    {item.product_title}
+                    {item.is_reservation && <span style={{ fontSize: '0.75rem', marginLeft: '6px', color: '#e65100', background: '#ffe0b2', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Reserva</span>}
+                  </p>
                   <p className={styles.summaryMeta}>{item.quantity} × {formatCLP(item.unit_price)}</p>
                 </div>
                 <span className={styles.summaryLineTotal}>{formatCLP(item.unit_price * item.quantity)}</span>

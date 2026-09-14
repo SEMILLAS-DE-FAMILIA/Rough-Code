@@ -22,41 +22,27 @@
   display: block;
 }
 
-/* Iconos flotantes posicionados sobre la cresta de la ola */
-.socialIcons {
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 1.25rem;
-  z-index: 32;
-}
-
-.socialBtn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background-color: var(--color-primary-green, #2F6732);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
-}
-
-.socialBtn:hover {
-  transform: translateY(-4px) scale(1.05);
-  background-color: var(--color-dark-green, #1e4521);
-}
-
 .footerContent {
   padding: 0.5rem 1rem 3rem 1rem;
-  text-align: center;
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
+}
+
+.footerMainGrid {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.footerColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 200px;
 }
 
 .sectionTitle {
@@ -65,13 +51,14 @@
   color: var(--color-accent-gold, #D4A359);
   margin-bottom: 1.25rem;
   font-weight: 700;
+  text-align: center;
 }
 
 .footerNav {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  margin-bottom: 2rem;
+  align-items: center;
 }
 
 .footerLink {
@@ -88,10 +75,50 @@
   color: var(--color-accent-gold, #D4A359);
 }
 
+.contactButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 180px;
+}
+
+.contactBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.contactBtn:hover {
+  transform: translateY(-2px);
+  opacity: 0.92;
+}
+
+.whatsappBtn {
+  background-color: #25d366;
+}
+
+.instagramBtn {
+  background-color: #e1306c;
+}
+
+.facebookBtn {
+  background-color: #1877f2;
+}
+
 .adminContainer {
   margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
 }
 
 .adminLink {
@@ -109,4 +136,5 @@
   margin-top: 1rem;
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
+  text-align: center;
 }

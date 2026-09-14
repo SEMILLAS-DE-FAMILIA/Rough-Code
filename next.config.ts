@@ -1,10 +1,16 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const isDev = process.env.NODE_ENV === 'development';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://yczueyygfqjqfcvastse.supabase.co';
+const supabaseHost = new URL(supabaseUrl).hostname;
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'yczueyygfqjqfcvastse.supabase.co',
+        hostname: supabaseHost,
         pathname: '/storage/v1/object/public/**',
       },
     ],
@@ -12,6 +18,20 @@ const nextConfig = {
   },
 
   async headers() {
+    const scriptSrc = isDev
+      ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com"
+      : "script-src 'self' https://www.googletagmanager.com";
+
+    const cspHeader = [
+      "default-src 'self'",
+      scriptSrc,
+      "style-src 'self' 'unsafe-inline'",
+      `img-src 'self' data: blob: https://${supabaseHost} https://www.google-analytics.com`,
+      `connect-src 'self' https://${supabaseHost} wss://${supabaseHost} https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com`,
+      "font-src 'self' data:",
+      "frame-ancestors 'none'",
+    ].join('; ');
+
     return [
       {
         source: '/:path*',
@@ -27,15 +47,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: blob: https://yczueyygfqjqfcvastse.supabase.co",
-              "connect-src 'self' https://yczueyygfqjqfcvastse.supabase.co wss://yczueyygfqjqfcvastse.supabase.co",
-              "font-src 'self' data: https://fonts.gstatic.com",
-              "frame-ancestors 'none'",
-            ].join('; '),
+            value: cspHeader,
           },
         ],
       },
@@ -43,4 +55,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

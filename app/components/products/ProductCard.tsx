@@ -2,11 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { formatCLP } from '../../../src/lib/format'; // ajusta la ruta relativa según el archivo
 import { Product, ProductVariant } from '../../../src/types/product';
 import styles from './ProductCard.module.css';
-
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
 interface ProductCardProps {
   product: Product;
@@ -62,6 +60,8 @@ export default function ProductCard({
     }
   };
 
+  const activeImage = images[activeImageIndex] || product.img_url;
+
   return (
     <div
       className={`${styles.productCard} ${isLocked ? styles.outOfStockCard : ''}`}
@@ -83,16 +83,23 @@ export default function ProductCard({
         {hasDiscount && !isLocked && !showDistributorPrice && <span className={styles.discountBadge}>-{firstVariant.discount_percent}%</span>}
 
         <div className={styles.fadeImageWrap}>
-          {images.map((img, idx) => (
+          {activeImage && (
             <Image
-              key={img + idx}
-              src={img}
+              key={activeImage}
+              src={activeImage}
               alt={product.title}
               fill
-              className={`${styles.productImage} ${styles.fadeImage} ${activeImageIndex === idx ? styles.fadeImageActive : ''}`}
+              priority={activeImageIndex === 0}
+              className={`${styles.productImage} ${styles.fadeImage} ${styles.fadeImageActive}`}
               sizes="(max-width: 768px) 100vw, 300px"
             />
-          ))}
+          )}
+          {images.length > 1 && (
+            <link
+              rel="prefetch"
+              href={images[(activeImageIndex + 1) % images.length]}
+            />
+          )}
         </div>
       </div>
 

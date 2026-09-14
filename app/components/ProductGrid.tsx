@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../src/lib/supabaseClient';
 import { useDistributorStore } from '../../src/lib/useDistributorStore';
 import { Product } from '../../src/types/product';
+import { useProducts } from '../../src/lib/useProducts';
+import { NewCartItem } from '../../src/lib/useCartStore';
 import ProductCard from './products/ProductCard';
 import ProductModalDetails from './products/ProductModalDetails';
 import styles from './ProductGrid.module.css';
 
 interface ProductGridProps {
   searchQuery?: string;
-  onAddToCart: (item: any) => void;
+  onAddToCart: (item: NewCartItem) => void;
   onOpenDistributorModal: () => void;
 }
 
@@ -19,91 +20,29 @@ export default function ProductGrid({
   onAddToCart,
   onOpenDistributorModal,
 }: ProductGridProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>(['Todos']);
-  const [activeCategory, setActiveCategory] = useState('Todos');
+  const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isModalClosing, setIsModalClosing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const [prevSearch, setPrevSearch] = useState(searchQuery);
-  const [prevCategory, setPrevCategory] = useState(activeCategory);
-
-  if (searchQuery !== prevSearch || activeCategory !== prevCategory) {
-    setPrevSearch(searchQuery);
-    setPrevCategory(activeCategory);
-    setCurrentPage(1);
-  }
 
   const ITEMS_PER_PAGE = 12;
 
   const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved');
   const distributorPrices = useDistributorStore((s) => s.prices);
 
+  const { products, categories, loading, error, totalCount } = useProducts({
+    activeCategory,
+    searchQuery,
+    currentPage,
+    itemsPerPage: ITEMS_PER_PAGE,
+  });
+
+  // Reinicia la página actual al cambiar la búsqueda o la categoría
   useEffect(() => {
-    async function fetchProducts() {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          id,
-          title,
-          category_id,
-          description,
-          img_url,
-          images,
-          badge,
-          is_new,
-          is_distributor,
-          categories ( name ),
-          product_variants (
-            id,
-            weight,
-            price,
-            discount_percent,
-            variant_flavor_stock ( flavor_id, stock )
-          ),
-          product_flavors ( id, flavor_name )
-        `)
-        .eq('active', true)
-        .order('created_at', { ascending: false });
+    setCurrentPage(1);
+  }, [searchQuery, activeCategory]);
 
-      if (error) {
-        console.error('Error fetching products:', error.message || error);
-        setError('No se pudieron cargar los productos.');
-        setLoading(false);
-        return;
-      }
-
-      if (data) {
-        const fetched: Product[] = data.map((item: any) => ({
-          ...item,
-          category_name: item.categories?.name || 'Sin categoría',
-          variants: (item.product_variants || []).map((v: any) => ({
-            id: v.id,
-            weight: v.weight,
-            price: v.price,
-            discount_percent: v.discount_percent,
-            stocks: (v.variant_flavor_stock || []).map((s: any) => ({ flavor_id: s.flavor_id, stock: s.stock })),
-          })),
-          flavors: item.product_flavors || [],
-        }));
-        setProducts(fetched);
-
-        const categoryNames = Array.from(
-          new Set(fetched.map((p) => p.category_name).filter((name): name is string => Boolean(name)))
-        );
-        const hasDistributorProducts = fetched.some((p) => p.is_distributor);
-
-        setCategories(['Todos', ...categoryNames, ...(hasDistributorProducts ? ['Distribuidor'] : [])]);
-      }
-
-      setLoading(false);
-    }
-
-    fetchProducts();
-  }, []);
+  const totalPages = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
@@ -113,30 +52,15 @@ export default function ProductGrid({
     }
   };
 
+  const handleCloseModal = () => {
+    setIsModalClosing(true);
+    setTimeout(() => {
+      setSelectedProduct(null);
+      setIsModalClosing(false);
+    }, 250);
+  };
+
   const viewingDistributorTab = activeCategory === 'Distribuidor';
-
-  const filteredProducts = products.filter((p) => {
-    const matchesCategory = viewingDistributorTab
-      ? p.is_distributor
-      : activeCategory === 'Todos'
-      ? true
-      : p.category_name === activeCategory;
-
-    const query = searchQuery.trim().toLowerCase();
-    const matchesSearch = !query
-      ? true
-      : p.title.toLowerCase().includes(query) ||
-        (p.description && p.description.toLowerCase().includes(query)) ||
-        (p.category_name && p.category_name.toLowerCase().includes(query));
-
-    return matchesCategory && matchesSearch;
-  });
-
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
 
   const getVisiblePages = (): (number | 'ellipsis')[] => {
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -163,8 +87,12 @@ export default function ProductGrid({
 
           <div className={styles.categoriesWrapper}>
             {categories.map((cat) => (
-              <button key={cat} className={`${styles.categoryBtn} ${activeCategory === cat ? styles.active : ''}`} onClick={() => setActiveCategory(cat)}>
-                {cat === 'Distribuidor' ? '🤝 Zona Distribuidores' : cat}
+              <button
+                key={cat.name}
+                className={`${styles.categoryBtn} ${activeCategory === cat.name ? styles.active : ''}`}
+                onClick={() => setActiveCategory(cat.name)}
+              >
+                {cat.name === 'Distribuidor' ? '🤝 Zona Distribuidores' : cat.name}
               </button>
             ))}
           </div>
@@ -172,18 +100,21 @@ export default function ProductGrid({
 
         {loading && <p className={styles.stateMessage}>Cargando...</p>}
         {error && <p className={styles.stateMessage}>{error}</p>}
-        {!loading && !error && filteredProducts.length === 0 && (
+        {!loading && !error && products.length === 0 && (
           <p className={styles.stateMessage}>
             {searchQuery ? `No encontramos productos para "${searchQuery}"` : 'No hay productos disponibles.'}
           </p>
         )}
 
         <div className={styles.productGrid}>
-          {paginatedProducts.map((product) => (
+          {products.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
-              onOpenModal={(p) => setSelectedProduct(p)}
+              onOpenModal={(p) => {
+                setIsModalClosing(false);
+                setSelectedProduct(p);
+              }}
               viewingDistributorTab={viewingDistributorTab}
               isDistributorLoggedIn={isDistributorLoggedIn}
               distributorPrices={distributorPrices}
@@ -274,7 +205,7 @@ export default function ProductGrid({
       {selectedProduct && (
         <ProductModalDetails
           product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
+          onClose={handleCloseModal}
           onAddToCart={onAddToCart}
           distributorPrices={viewingDistributorTab && isDistributorLoggedIn ? distributorPrices : undefined}
         />

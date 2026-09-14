@@ -29,6 +29,7 @@ export default function CarouselManager() {
   const [slides, setSlides] = useState<Slide[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
@@ -50,6 +51,7 @@ export default function CarouselManager() {
   }, []);
 
   const openCreateModal = () => {
+    setIsClosing(false);
     setEditingId(null);
     setForm(emptyForm);
     setFormError(null);
@@ -57,9 +59,9 @@ export default function CarouselManager() {
   };
 
   const openEditModal = (s: Slide) => {
+    setIsClosing(false);
     setEditingId(s.id);
     
-    // Si img_url viene como JSON/array desde la DB, extrae el primer string limpio
     let cleanedImgUrl = s.img_url ?? '';
     if (typeof cleanedImgUrl === 'string' && cleanedImgUrl.startsWith('[')) {
       try {
@@ -84,7 +86,13 @@ export default function CarouselManager() {
     setShowModal(true);
   };
 
-  const closeModal = () => setShowModal(false);
+  const closeModal = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setShowModal(false);
+      setIsClosing(false);
+    }, 200); // 200ms igual a la duración de la animación CSS
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,7 +120,7 @@ export default function CarouselManager() {
     const payload = {
       title: form.title.trim(),
       subtitle: form.subtitle.trim() || null,
-      img_url: form.img_url, // Guarda una única string URL
+      img_url: form.img_url,
       btn_text: form.btn_text.trim() || 'Ver Catálogo',
       sort_order: sortOrderNum,
       active: form.active,
@@ -129,7 +137,7 @@ export default function CarouselManager() {
       return;
     }
 
-    setShowModal(false);
+    closeModal();
     fetchSlides();
   };
 
@@ -210,8 +218,14 @@ export default function CarouselManager() {
       )}
 
       {showModal && (
-        <div className={styles.modalOverlay} onClick={closeModal}>
-          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={`${styles.modalOverlay} ${isClosing ? styles.modalOverlayExit : ''}`}
+          onClick={closeModal}
+        >
+          <div
+            className={`${styles.modalCard} ${isClosing ? styles.modalCardExit : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3>{editingId ? 'Editar slide' : 'Nuevo slide'}</h3>
 
             <form onSubmit={handleSave}>
@@ -261,7 +275,6 @@ export default function CarouselManager() {
                 </div>
               </div>
 
-              {/* Adaptamos el valor a Array para ImageUploadField y extraemos el último string al guardar */}
               <ImageUploadField
                 bucket="carousel-images"
                 value={form.img_url ? [form.img_url] : []}

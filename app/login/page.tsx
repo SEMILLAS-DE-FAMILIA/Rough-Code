@@ -1,16 +1,24 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import AdminLogin from '../components/admin/AdminLogin'; // o '@/components/admin/AdminLogin'
+import { useRouter, useSearchParams } from 'next/navigation';
+import AdminLogin from '../components/admin/AdminLogin';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const reason = searchParams.get('reason');
 
   const handleLoggedIn = () => {
-    // router.refresh() actualiza el contexto del servidor (las cookies para el middleware)
     router.refresh();
-    router.push('/admin');
+    router.push('/admin/dashboard');
   };
 
-  return <AdminLogin onLoggedIn={handleLoggedIn} />;
+  const infoMessage =
+    reason === 'inactivity'
+      ? 'Tu sesión se cerró por inactividad. Ingresa de nuevo para continuar.'
+      : reason === 'unauthorized'
+      ? 'Esta cuenta no tiene acceso al panel de administración.'
+      : undefined;
+
+  return <AdminLogin onLoggedIn={handleLoggedIn} infoMessage={infoMessage} />;
 }

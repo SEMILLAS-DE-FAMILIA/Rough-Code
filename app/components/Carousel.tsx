@@ -128,19 +128,25 @@ export default function CarouselHero() {
 
   return (
     <section className={styles.heroContainer}>
-      {currentSlide && (
-        <div className={styles.backgroundImageWrapper} key={currentSlide.id}>
-          <Image
-            src={currentSlide.src}
-            alt="Fondo de pantalla"
-            fill
-            className={styles.backgroundImage}
-            priority
-            quality={60}
-          />
-          <div className={styles.backgroundOverlay} />
-        </div>
-      )}
+      <div className={styles.backgroundImageWrapper}>
+        {slides.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`${styles.fadeImageWrap} ${index === currentIndex ? styles.fadeImageActive : ''}`}
+            style={{ position: 'absolute', inset: 0 }}
+          >
+            <Image
+              src={slide.src}
+              alt="Fondo de pantalla"
+              fill
+              className={`${styles.backgroundImage} ${styles.fadeImage} ${index === currentIndex ? styles.fadeImageActive : ''}`}
+              priority={index === 0}
+              quality={60}
+            />
+          </div>
+        ))}
+        <div className={styles.backgroundOverlay} />
+      </div>
 
       <div className={styles.heroContentGrid}>
         <div className={styles.textColumn}>

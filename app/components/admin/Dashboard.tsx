@@ -15,6 +15,8 @@ import {
 } from 'recharts';
 import { ShoppingBag, DollarSign, TrendingUp, AlertTriangle, ArrowUpRight, Clock, Users } from 'lucide-react';
 import styles from './Admin.module.css';
+import { formatCLP } from '../../../src/lib/format'; // ajusta la ruta relativa según el archivo
+
 
 interface OrderItemRow {
   quantity: number;
@@ -41,8 +43,6 @@ interface LowStockItem {
   stock: number;
 }
 
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
 const DONUT_COLORS = ['#16a34a', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6'];
 
@@ -63,6 +63,9 @@ export default function Dashboard() {
     async function loadDashboard() {
       setLoading(true);
 
+      const now = new Date();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
       const [
         { count: activeCount }, 
         { count: totalCount }, 
@@ -73,8 +76,8 @@ export default function Dashboard() {
         supabase.from('products').select('*', { count: 'exact', head: true }).eq('active', true),
         supabase.from('products').select('*', { count: 'exact', head: true }),
         supabase.from('variant_flavor_stock').select('*', { count: 'exact', head: true }).lte('stock', 0),
-        supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pendiente'),
-        supabase.from('distributors').select('*', { count: 'exact', head: true }).eq('status', 'pendiente'),
+        supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('distributor_applications').select('*', { count: 'exact', head: true }),
       ]);
 
       setActiveProductsCount(activeCount ?? 0);
@@ -83,12 +86,13 @@ export default function Dashboard() {
       setPendingOrdersCount(pendingOrders ?? 0);
       setPendingDistributorsCount(pendingDistributors ?? 0);
 
+      // Se filtra desde el inicio de mes para evitar traer todo el historial histórico acumulado
       const { data: items } = await supabase
         .from('order_items')
-        .select('quantity, unit_price, product_title, orders(created_at)');
+        .select('quantity, unit_price, product_title, orders!inner(created_at)')
+        .gte('orders.created_at', startOfMonth);
 
       const rows = (items ?? []) as unknown as OrderItemRow[];
-      const now = new Date();
       const currentMonthKey = `${now.getFullYear()}-${now.getMonth()}`;
 
       const productTotals: Record<string, TopProduct> = {};
@@ -125,7 +129,7 @@ export default function Dashboard() {
       const { data: monthOrders } = await supabase
         .from('orders')
         .select('id, created_at')
-        .gte('created_at', new Date(now.getFullYear(), now.getMonth(), 1).toISOString());
+        .gte('created_at', startOfMonth);
 
       setMonthOrdersCount(monthOrders?.length ?? 0);
       setMonthRevenue(curMonthRevenue);

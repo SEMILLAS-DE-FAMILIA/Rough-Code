@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
+import { formatCLP } from '../../../src/lib/format'; // ajusta la ruta relativa según el archivo
 import { Product, ProductFlavor, ProductVariant } from '../../../src/types/product';
-import { useCartStore } from '../../../src/lib/useCartStore';
+import { useCartStore, NewCartItem } from '../../../src/lib/useCartStore';
 import styles from './ProductModalDetails.module.css';
 
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
+const RESERVATION_DISPLAY_MAX = 99; // límite de UI para ítems bajo reserva (sin stock físico que los limite)
 
 function stockFor(variant: ProductVariant | undefined, flavorId: number | undefined) {
   if (!variant || flavorId == null) return 0;
@@ -18,7 +18,7 @@ function stockFor(variant: ProductVariant | undefined, flavorId: number | undefi
 interface ProductModalDetailsProps {
   product: Product;
   onClose: () => void;
-  onAddToCart: (item: any) => void;
+  onAddToCart: (item: NewCartItem) => void; // antes: any
   distributorPrices?: Record<number, number>;
 }
 
@@ -29,6 +29,7 @@ export default function ProductModalDetails({
   distributorPrices,
 }: ProductModalDetailsProps) {
   const [mounted, setMounted] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedVariantId, setSelectedVariantId] = useState<number>(product.variants[0]?.id || 0);
   const [flavorQuantities, setFlavorQuantities] = useState<Record<number, number>>({});
@@ -38,6 +39,21 @@ export default function ProductModalDetails({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Bloquear el scroll del body al abrir el modal y restaurarlo al desmontar
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 250); // Ajusta este tiempo según la duración de tu animación CSS de salida
+  };
 
   const alreadyInCart = (variantId: number, flavorId: number) => {
     const compositeId = `${variantId}-${flavorId}`;
@@ -75,9 +91,8 @@ export default function ProductModalDetails({
     const finalPrice = unitPrice();
 
     onAddToCart({
-      id: `${currentVariant.id}-${flavorObj.id}-reservation`,
       product_id: product.id,
-      product_title: `[RESERVA] ${product.title} (${currentVariant.weight} - ${flavorObj.flavor_name})`,
+      product_title: product.title,
       variant_id: currentVariant.id,
       flavor_id: flavorObj.id,
       selected_weight: currentVariant.weight,
@@ -85,11 +100,11 @@ export default function ProductModalDetails({
       unit_price: finalPrice,
       quantity: 1,
       img_url: product.img_url,
-      max_stock: 99,
+      max_stock: RESERVATION_DISPLAY_MAX,
       is_reservation: true,
     });
 
-    onClose();
+    handleClose();
   };
 
   const handleAddAll = () => {
@@ -103,9 +118,8 @@ export default function ProductModalDetails({
         if (flavorObj) {
           const maxStock = stockFor(currentVariant, flavorObj.id);
           onAddToCart({
-            id: `${currentVariant.id}-${flavorObj.id}`,
             product_id: product.id,
-            product_title: `${product.title} (${currentVariant.weight} - ${flavorObj.flavor_name})`,
+            product_title: product.title,
             variant_id: currentVariant.id,
             flavor_id: flavorObj.id,
             selected_weight: currentVariant.weight,
@@ -119,7 +133,7 @@ export default function ProductModalDetails({
       }
     });
 
-    onClose();
+    handleClose();
   };
 
   const totalSelectedCount = Object.values(flavorQuantities).reduce((sum, q) => sum + q, 0);
@@ -127,9 +141,15 @@ export default function ProductModalDetails({
   if (!mounted) return null;
 
   return createPortal(
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
-        <button type="button" className={styles.modalCloseBtn} onClick={onClose}>✕</button>
+    <div 
+      className={`${styles.modalOverlay} ${isClosing ? styles.modalOverlayExit : ''}`} 
+      onClick={handleClose}
+    >
+      <div 
+        className={`${styles.modalCard} ${isClosing ? styles.modalCardExit : ''}`} 
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" className={styles.modalCloseBtn} onClick={handleClose}>✕</button>
 
         {images.length > 0 && (
           <div className={styles.modalImageWrap}>

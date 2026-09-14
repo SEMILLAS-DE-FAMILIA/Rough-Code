@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { supabase } from '../../../src/lib/supabaseClient';
+import React, { useRef, useState } from 'react';
 import { NewCartItem } from '../../../src/lib/useCartStore';
 import { useDistributorStore } from '../../../src/lib/useDistributorStore';
 import { Product } from '../../../src/types/product';
+import { useProducts } from '../../../src/lib/useProducts';
 import ProductCard from './ProductCard';
 import ProductModalDetails from './ProductModalDetails';
 import styles from './NovedadesCarousel.module.css';
@@ -15,69 +15,13 @@ interface NovedadesCarouselProps {
 }
 
 export default function NovedadesCarousel({ onAddToCart, onOpenDistributorModal }: NovedadesCarouselProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const isDistributorLoggedIn = useDistributorStore((s) => s.status === 'approved');
   const distributorPrices = useDistributorStore((s) => s.prices);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchNovedades() {
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          id,
-          title,
-          category_id,
-          description,
-          img_url,
-          images,
-          badge,
-          is_new,
-          is_distributor,
-          categories ( name ),
-          product_variants (
-            id,
-            weight,
-            price,
-            discount_percent,
-            variant_flavor_stock ( flavor_id, stock )
-          ),
-          product_flavors ( id, flavor_name )
-        `)
-        .eq('active', true)
-        .eq('is_new', true)
-        .order('created_at', { ascending: false });
-
-      if (!isMounted) return;
-
-      if (!error && data) {
-        const fetched: Product[] = data.map((item: any) => ({
-          ...item,
-          category_name: item.categories?.name || 'Sin categoría',
-          variants: (item.product_variants || []).map((v: any) => ({
-            id: v.id,
-            weight: v.weight,
-            price: v.price,
-            discount_percent: v.discount_percent,
-            stocks: (v.variant_flavor_stock || []).map((s: any) => ({ flavor_id: s.flavor_id, stock: s.stock })),
-          })),
-          flavors: item.product_flavors || [],
-        }));
-        setProducts(fetched);
-      }
-      setLoading(false);
-    }
-
-    fetchNovedades();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const { products, loading } = useProducts({ isNewOnly: true });
 
   const scroll = (direction: 1 | -1) => {
     scrollRef.current?.scrollBy({ left: direction * 320, behavior: 'smooth' });

@@ -48,11 +48,7 @@ export const useCartStore = create<CartStore>()(
         const room = Math.max(0, itemMaxStock - currentQty);
         const actuallyAdded = Math.min(incomingQty, room);
 
-        console.log('[addToCart] item recibido:', item);
-        console.log('[addToCart] compositeId:', compositeId, 'incomingQty:', incomingQty, 'itemMaxStock:', itemMaxStock, 'actuallyAdded:', actuallyAdded);
-
         if (actuallyAdded <= 0) {
-          console.warn('[addToCart] BLOQUEADO: ya en el tope de stock o stock agotado', { currentQty, itemMaxStock, incomingQty });
           return { added: 0, requested: incomingQty };
         }
 
@@ -73,7 +69,6 @@ export const useCartStore = create<CartStore>()(
             newCart = [...currentState.cart, { ...item, id: compositeId, quantity: actuallyAdded, max_stock: itemMaxStock }];
           }
 
-          console.log('[addToCart] carrito resultante:', newCart);
           return { cart: newCart, lastUpdated: Date.now() };
         });
 

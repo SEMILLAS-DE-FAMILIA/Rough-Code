@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../src/lib/supabaseClient';
 import styles from './Admin.module.css';
+import { formatCLP } from '../../../src/lib/format'; // ajusta la ruta relativa según el archivo
 
 interface OrderItemRow {
   id: number;
@@ -26,13 +27,10 @@ interface OrderRow {
   order_items: OrderItemRow[];
 }
 
-type StatusFilter = 'pendiente' | 'confirmado' | 'rechazado';
-
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
+type StatusFilter = 'pending' | 'confirmado' | 'rechazado';
 
 const STATUS_LABELS: Record<string, string> = {
-  pendiente: 'Pendiente',
+  pending: 'Pendiente',
   confirmado: 'Confirmado',
   rechazado: 'Rechazado',
 };
@@ -40,7 +38,7 @@ const STATUS_LABELS: Record<string, string> = {
 export default function OrdersManager() {
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('pendiente');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('pending');
   const [processingId, setProcessingId] = useState<number | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -115,7 +113,7 @@ export default function OrdersManager() {
       </div>
 
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
-        {(['pendiente', 'confirmado', 'rechazado'] as StatusFilter[]).map((s) => (
+        {(['pending', 'confirmado', 'rechazado'] as StatusFilter[]).map((s) => (
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
@@ -170,7 +168,7 @@ export default function OrdersManager() {
                   <div style={{ fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap' }}>
                     {formatCLP(order.total)}
                   </div>
-                  {statusFilter === 'pendiente' ? (
+                  {statusFilter === 'pending' ? (
                     <div className={styles.rowActions} onClick={(e) => e.stopPropagation()}>
                       <button
                         className={styles.primaryBtn}

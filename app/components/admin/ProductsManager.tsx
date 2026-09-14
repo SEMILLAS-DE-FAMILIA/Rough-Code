@@ -71,6 +71,7 @@ export default function ProductsManager() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
@@ -143,6 +144,7 @@ export default function ProductsManager() {
   }, []);
 
   const openCreateModal = () => {
+    setIsClosing(false);
     setEditingId(null);
     setForm({
       ...emptyForm,
@@ -155,6 +157,7 @@ export default function ProductsManager() {
   };
 
   const openEditModal = (p: AdminProduct) => {
+    setIsClosing(false);
     setEditingId(p.id);
 
     const initialImages = p.images && p.images.length > 0 ? p.images : p.img_url ? [p.img_url] : [];
@@ -190,7 +193,13 @@ export default function ProductsManager() {
     setShowModal(true);
   };
 
-  const closeModal = () => setShowModal(false);
+  const closeModal = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setShowModal(false);
+      setIsClosing(false);
+    }, 200);
+  };
 
   // ---------- Variantes de Peso ----------
   const updateVariant = (idx: number, patch: Partial<AdminVariant>) => {
@@ -220,7 +229,7 @@ export default function ProductsManager() {
       const vIdx = parseInt(vIdxStr, 10);
       if (vIdx === idx) return;
       const newVIdx = vIdx > idx ? vIdx - 1 : vIdx;
-      newStockMatrix[`${newVIdx}-${fIdxStr}`] = val;
+      newStockMatrix[`${newVIdx}-${fIdxStr}`] = val ?? '0';
     });
     setForm({ ...form, variants: newVariants, stockMatrix: newStockMatrix });
   };
@@ -261,7 +270,7 @@ export default function ProductsManager() {
       const fIdx = parseInt(fIdxStr, 10);
       if (fIdx === idx) return;
       const newFIdx = fIdx > idx ? fIdx - 1 : fIdx;
-      newStockMatrix[`${vIdxStr}-${newFIdx}`] = val;
+      newStockMatrix[`${vIdxStr}-${newFIdx}`] = val ?? '0';
     });
     setForm({ ...form, flavors: newFlavors, stockMatrix: newStockMatrix });
   };
@@ -306,108 +315,32 @@ export default function ProductsManager() {
       is_distributor: form.is_distributor,
     };
 
-    let targetProductId = editingId;
+    // Sanitización estricta: asegurar que ningún stock se envíe como string vacío o nulo
+    const sanitizedStockMatrix: Record<string, string> = {};
+    form.variants.forEach((_, vIdx) => {
+      form.flavors.forEach((_, fIdx) => {
+        const key = `${vIdx}-${fIdx}`;
+        const val = form.stockMatrix[key];
+        sanitizedStockMatrix[key] = (val === undefined || val === null || val === '') ? '0' : String(val);
+      });
+    });
 
-    if (editingId) {
-      const { error: updateError } = await supabase.from('products').update(productPayload).eq('id', editingId);
-      if (updateError) {
-        setSaving(false);
-        setFormError(`Error al actualizar: ${updateError.message}`);
-        return;
-      }
+    const { error: rpcError } = await supabase.rpc('save_product_transactional', {
+      p_product_id: editingId,
+      p_product_data: productPayload,
+      p_variants: form.variants,
+      p_flavors: form.flavors,
+      p_stock_matrix: sanitizedStockMatrix,
+    });
 
-      await supabase.from('product_variants').delete().eq('product_id', targetProductId);
-      await supabase.from('product_flavors').delete().eq('product_id', targetProductId);
-    } else {
-      const { data: insertedData, error: insertError } = await supabase
-        .from('products')
-        .insert(productPayload)
-        .select('id')
-        .single();
+    setSaving(false);
 
-      if (insertError || !insertedData) {
-        setSaving(false);
-        setFormError(`Error al crear: ${insertError?.message}`);
-        return;
-      }
-      targetProductId = insertedData.id;
-    }
-
-    const variantIds: number[] = [];
-    for (const v of form.variants) {
-      const { data: insertedVariant, error: variantError } = await supabase
-        .from('product_variants')
-        .insert({
-          product_id: targetProductId,
-          weight: v.weight.trim(),
-          price: parseFloat(v.price) || 0,
-          discount_percent: parseFloat(v.discount_percent || '0'),
-        })
-        .select('id')
-        .single();
-
-      if (variantError || !insertedVariant) {
-        setSaving(false);
-        setFormError(`Error al guardar el peso "${v.weight}": ${variantError?.message}`);
-        return;
-      }
-      variantIds.push(insertedVariant.id);
-
-      if (form.is_distributor) {
-        const rawDistPrice = v.distributor_price.trim();
-        const finalDistributorPrice = rawDistPrice !== ''
-          ? parseFloat(rawDistPrice)
-          : parseFloat(v.price) || 0;
-
-        const { error: distPriceError } = await supabase.from('variant_distributor_price').insert({
-          variant_id: insertedVariant.id,
-          price: finalDistributorPrice,
-        });
-
-        if (distPriceError) {
-          setSaving(false);
-          setFormError(`Error al guardar precio distribuidor de "${v.weight}": ${distPriceError.message}`);
-          return;
-        }
-      }
-    }
-
-    const flavorIds: number[] = [];
-    for (const f of form.flavors) {
-      const { data: insertedFlavor, error: flavorError } = await supabase
-        .from('product_flavors')
-        .insert({
-          product_id: targetProductId,
-          flavor_name: f.flavor_name.trim(),
-        })
-        .select('id')
-        .single();
-
-      if (flavorError || !insertedFlavor) {
-        setSaving(false);
-        setFormError(`Error al guardar el sabor "${f.flavor_name}": ${flavorError?.message}`);
-        return;
-      }
-      flavorIds.push(insertedFlavor.id);
-    }
-
-    const stockPayload = form.variants.flatMap((_, vIdx) =>
-      form.flavors.map((_, fIdx) => ({
-        variant_id: variantIds[vIdx],
-        flavor_id: flavorIds[fIdx],
-        stock: parseInt(form.stockMatrix[`${vIdx}-${fIdx}`] || '0', 10),
-      }))
-    );
-
-    const { error: stockError } = await supabase.from('variant_flavor_stock').insert(stockPayload);
-    if (stockError) {
-      setSaving(false);
-      setFormError(`Error al guardar el stock: ${stockError.message}`);
+    if (rpcError) {
+      setFormError(`Error al guardar el producto: ${rpcError.message}`);
       return;
     }
 
-    setSaving(false);
-    setShowModal(false);
+    closeModal();
     fetchProducts();
   };
 
@@ -504,8 +437,14 @@ export default function ProductsManager() {
       )}
 
       {showModal && (
-        <div className={styles.modalOverlay} onClick={closeModal}>
-          <div className={styles.modalCardLarge} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={`${styles.modalOverlay} ${isClosing ? styles.modalOverlayExit : ''}`}
+          onClick={closeModal}
+        >
+          <div
+            className={`${styles.modalCardLarge} ${isClosing ? styles.modalCardExit : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3>{editingId ? 'Editar producto' : 'Nuevo producto'}</h3>
 
             <form onSubmit={handleSave}>

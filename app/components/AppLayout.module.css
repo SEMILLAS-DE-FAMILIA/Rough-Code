@@ -28,6 +28,22 @@
   gap: 0.75rem;
 }
 
+/* Ocultar logo en celulares para dar espacio a la barra de búsqueda */
+@media (max-width: 768px) {
+  .hideOnMobile {
+    display: none !important;
+  }
+  
+  .topHeaderNav {
+    padding: 0.6rem 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .searchContainer {
+    margin: 0 !important;
+  }
+}
+
 .brandLogo {
   font-weight: 700;
   font-size: 1.25rem;
@@ -146,27 +162,90 @@
   to { transform: scale(1); opacity: 1; }
 }
 
-/* Botón Distribuidor */
+/* =========================================
+   BOTÓN DISTRIBUIDOR (ESTILO AZUL MODERNO)
+   ========================================= */
+
 .navActions {
   display: flex;
   align-items: center;
 }
 
 .distributorBtn {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 7px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 16px;
   border-radius: 9999px;
-  background-color: var(--color-primary-brown);
-  color: var(--color-bg-light);
-  border: none;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+  border: 1px solid rgba(199, 210, 254, 0.35);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 10px rgba(79, 70, 229, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.distributorBtn svg {
+  color: #c7d2fe;
+  transition: transform 0.2s ease;
 }
 
 .distributorBtn:hover {
-  background-color: var(--color-dark-brown);
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  border-color: rgba(199, 210, 254, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+}
+
+.distributorBtn:hover svg {
+  transform: scale(1.1);
+}
+
+.distributorBtn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Estado cuando ya está logueado como distribuidor */
+.distributorBtnActive {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(4px);
+  box-shadow: none;
+}
+
+.distributorBtnActive:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fff;
+}
+
+.distributorDot {
+  width: 7px;
+  height: 7px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #4ade80;
+}
+
+.distributorNameText {
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .distributorBtn {
+    padding: 7px 12px;
+    font-size: 0.74rem;
+  }
+  
+  .distributorNameText {
+    max-width: 90px;
+  }
 }
 
 /* =========================================
@@ -263,7 +342,7 @@
   width: 100%;
   max-width: 400px;
   height: 100vh;
-  height: 100dvh; /* Soporte de altura para navegadores móviles */
+  height: 100dvh;
   background-color: var(--color-bg-light, #F7F5F0);
   box-shadow: -4px 0 25px rgba(0, 0, 0, 0.08);
   z-index: 100;
@@ -272,8 +351,6 @@
   transform: translateX(100%);
   border-left: 1px solid rgba(0, 0, 0, 0.06);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-  
-  /* Scroll general en caso de que la pantalla vertical sea muy baja */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -320,7 +397,6 @@
    4. ELEMENTOS INTERNOS DEL CARRITO
    ========================================= */
 
-/* Lista deslizable de ítems */
 .cartList {
   flex: 1;
   overflow-y: auto;
@@ -346,7 +422,6 @@
   font-size: 2.5rem;
 }
 
-/* Tarjeta de Producto */
 .cartItem {
   display: flex;
   align-items: center;
@@ -358,7 +433,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
   transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.25s ease, margin 0.25s ease, padding 0.25s ease;
   min-height: 80px;
-  flex-shrink: 0; /* Impide que la tarjeta se achique cuando hay muchos elementos */
+  flex-shrink: 0;
 }
 
 .cartItemRemoving {
@@ -377,7 +452,7 @@
   object-fit: cover;
   border-radius: 0.6rem;
   background: #f1f5f9;
-  flex-shrink: 0; /* Previene la deformación de la imagen */
+  flex-shrink: 0;
 }
 
 .cartItemTitle {
@@ -459,13 +534,12 @@
   transform: scale(0.9);
 }
 
-/* Pie del carrito fijo al fondo */
 .cartFooter {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   padding: 1.25rem;
   margin-top: auto;
   background: var(--color-bg-light, #fdfcf1);
-  flex-shrink: 0; /* Previene compresión del botón y el total */
+  flex-shrink: 0;
 }
 
 .summaryRow {
@@ -548,7 +622,6 @@
   box-shadow: 0 4px 10px -2px rgba(28, 25, 23, 0.3);
 }
 
-/* Toast flotante posicionado sobre el botón del carrito */
 .toastNotification {
   position: fixed;
   bottom: 5.5rem;
@@ -564,6 +637,15 @@
   z-index: 100;
   color: #1c1917;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toastNotificationLeaving {
+  animation: slideDown 0.22s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(16px); opacity: 0; }
 }
 
 @keyframes slideUp {

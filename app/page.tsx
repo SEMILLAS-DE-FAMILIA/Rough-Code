@@ -102,8 +102,6 @@ function DistributorToast({ onOpenModal }: { onOpenModal: () => void }) {
 
 export default function Home() {
   const addToCart = useCartStore((state) => state.addToCart);
-  const cartItems = useCartStore((state) => state.cart);
-  const removeFromCart = useCartStore((state) => state.removeItem);
   
   const [lastAdded, setLastAdded] = useState<string | null>(null);
   const [isDistributorModalOpen, setIsDistributorModalOpen] = useState<boolean>(false);
@@ -126,13 +124,6 @@ export default function Home() {
     <main style={{ backgroundColor: '#fdfcf1', minHeight: '100vh' }}>
       <AlertBanner />
       <HeaderNav 
-        cartItems={cartItems.map(i => ({ id: i.product_id, title: i.product_title, price: String(i.unit_price), img: i.img_url || '' }))}
-        onRemoveFromCart={(index) => {
-          const itemToRemove = cartItems[index];
-          if (itemToRemove) {
-            removeFromCart(itemToRemove.product_id as any);
-          }
-        }}
         onOpenDistributorModal={() => setIsDistributorModalOpen(true)}
         onSearch={(query) => setSearchQuery(query)}
       />
@@ -147,7 +138,10 @@ export default function Home() {
         }}
       >
         <CarouselHero />
-        <NovedadesCarousel onAddToCart={handleAddToCart} />
+        <NovedadesCarousel 
+          onAddToCart={handleAddToCart} 
+          onOpenDistributorModal={() => setIsDistributorModalOpen(true)}
+/>
       </div>
       
       <ProductGrid 

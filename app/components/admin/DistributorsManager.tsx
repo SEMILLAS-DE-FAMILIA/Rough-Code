@@ -67,9 +67,11 @@ export default function DistributorsManager() {
     fetchAll();
   };
 
-  const handleSendResetLink = async (d: Distributor) => {
+const handleSendResetLink = async (d: Distributor) => {
     setResetFeedback(null);
-    const { error } = await supabase.auth.resetPasswordForEmail(d.email);
+    const { error } = await supabase.auth.resetPasswordForEmail(d.email, {
+      redirectTo: `${window.location.origin}/actualizar-contrasena`,
+    });
     setResetFeedback({
       id: d.id,
       message: error ? `Error: ${error.message}` : 'Enlace enviado al correo del distribuidor.',

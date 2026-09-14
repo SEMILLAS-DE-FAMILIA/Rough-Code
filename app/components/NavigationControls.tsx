@@ -1,25 +1,19 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { formatCLP } from '../../src/lib/format'; // ajusta la ruta relativa según el archivo
 import styles from './AppLayout.module.css';
 import { useCartStore } from '../../src/lib/useCartStore';
+import { useIsHydrated } from '../../src/lib/useIsHydrated';
 
 interface NavigationControlsProps {
   lastAddedProduct: string | null;
 }
 
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
-
 const REMOVE_ANIMATION_MS = 220;
-
-function useIsHydrated() {
-  const [isHydrated, setIsHydrated] = useState(false);
-  useEffect(() => setIsHydrated(true), []);
-  return isHydrated;
-}
+const TOAST_EXIT_MS = 220;
 
 export default function NavigationControls({ lastAddedProduct }: NavigationControlsProps) {
   const isHydrated = useIsHydrated();
@@ -34,6 +28,23 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
+
+  const [displayedProduct, setDisplayedProduct] = useState<string | null>(null);
+  const [isToastLeaving, setIsToastLeaving] = useState(false);
+
+  useEffect(() => {
+    if (lastAddedProduct) {
+      setDisplayedProduct(lastAddedProduct);
+      setIsToastLeaving(false);
+    } else if (displayedProduct) {
+      setIsToastLeaving(true);
+      const timer = setTimeout(() => {
+        setDisplayedProduct(null);
+        setIsToastLeaving(false);
+      }, TOAST_EXIT_MS);
+      return () => clearTimeout(timer);
+    }
+  }, [lastAddedProduct, displayedProduct]);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
   const total = subtotal;
@@ -127,7 +138,7 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
                 className={`${styles.cartItem} ${removingId === item.id ? styles.cartItemRemoving : ''}`}
               >
                 {item.img_url && (
-                  <img src={item.img_url} alt={item.product_title} className={styles.cartItemImg} />
+                  <Image src={item.img_url} alt={item.product_title} width={64} height={64} className={styles.cartItemImg} />
                 )}
                 <div style={{ flex: 1 }}>
                   <h4 className={styles.cartItemTitle}>{item.product_title}</h4>
@@ -191,12 +202,12 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
       </aside>
 
       {/* Toast Flotante */}
-      {lastAddedProduct && !isCartOpen && (
-        <div className={styles.toastNotification}>
+      {displayedProduct && !isCartOpen && (
+        <div className={`${styles.toastNotification} ${isToastLeaving ? styles.toastNotificationLeaving : ''}`}>
           <span style={{ fontSize: '1.2rem' }}>🌿</span>
           <div>
             <p style={{ fontWeight: 600 }}>Agregado a tu selección</p>
-            <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{lastAddedProduct}</p>
+            <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{displayedProduct}</p>
           </div>
         </div>
       )}

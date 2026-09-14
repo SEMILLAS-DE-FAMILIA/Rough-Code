@@ -84,12 +84,11 @@ export const useDistributorStore = create<DistributorStore>((set, get) => ({
     if (error) return { error: error.message };
     if (!data.user) return { error: 'No se pudo crear la cuenta.' };
 
-    const { error: appError } = await supabase.from('distributor_applications').insert({
-      rut,
-      company_name,
-      phone,
-      email,
-      user_id: data.user.id,
+    const { error: appError } = await supabase.rpc('register_distributor', {
+      p_rut: rut,
+      p_company_name: company_name,
+      p_phone: phone,
+      p_email: email,
     });
     if (appError) return { error: appError.message };
 

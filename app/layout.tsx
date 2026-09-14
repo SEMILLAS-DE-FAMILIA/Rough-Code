@@ -6,6 +6,8 @@ import "./styles/tokens.css";
 // Importación de componentes globales
 import TrustBanner from "./components/TrustBanner";
 import Footer from "./components/Footer";
+import AnalyticsProvider from "./components/AnalyticsProvider";
+import CookieConsentBanner from "./components/CookieConsentBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +31,8 @@ const pacifico = Pacifico({
   variable: "--font-pacifico",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tusitio.vercel.app';
+
 export const metadata: Metadata = {
   title: {
     default: "Semillas de Familia | Frutos Secos e Infusiones",
@@ -45,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Semillas de Familia | Frutos Secos e Infusiones",
     description: "Encuentra frutos secos seleccionados, snacks saludables e infusiones. Envíos y retiros disponibles.",
-    url: "https://tusitio.vercel.app",
+    url: siteUrl,
     siteName: "Semillas de Familia",
     images: [
       {
@@ -70,15 +74,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable}`}
     >
-      <body className={`min-h-full flex flex-col ${displayFont.variable}`}>
-        <div className="flex-1">
+      <body className={displayFont.variable}>
+        <AnalyticsProvider />
+
+        <div className="root-content-wrapper">
           {children}
         </div>
 
         <TrustBanner />
         <Footer />
+        <CookieConsentBanner />
       </body>
     </html>
   );

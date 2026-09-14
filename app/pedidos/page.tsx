@@ -1,20 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCartStore, CartItem } from '../../src/lib/useCartStore';
+import { useIsHydrated } from '../../src/lib/useIsHydrated';
+import { formatCLP } from '../../src/lib/format'; // ajusta la ruta relativa según el archivo
 import { supabase } from '../../src/lib/supabaseClient';
 import { isValidRut, autoFormatRut } from '../../src/lib/rut';
 import styles from './pedidos.module.css';
-
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
-
-function useIsHydrated() {
-  const [isHydrated, setIsHydrated] = useState(false);
-  useEffect(() => setIsHydrated(true), []);
-  return isHydrated;
-}
 
 function buildWhatsAppMessage(
   items: CartItem[],
@@ -28,50 +22,38 @@ function buildWhatsAppMessage(
 ): string {
   const lines: string[] = [];
 
-  const leaf = '\u{1F33F}';
-  const herb = '\u{1F33B}';
-  const user = '\u{1F464}';
-  const truck = '\u{1F69A}';
-  const store = '\u{1F3EA}';
-  const bank = '\u{1F3E6}';
-  const cash = '\u{1F4B5}';
-  const box = '\u{1F4E6}';
-  const money = '\u{1F4B0}';
-  const memo = '\u{1F4DD}';
-  const star = '\u{2B50}';
-
-  lines.push(`${leaf} *¡Hola! Gracias por tu compra en Semillas de Familia.* ${herb}`);
+  lines.push('*¡Hola! Gracias por tu compra en Semillas de Familia.*');
   lines.push('Hemos registrado tu pedido con el siguiente detalle:');
   lines.push('──────────────────────────────');
   lines.push('');
-  lines.push(`${user} *DATOS DEL CLIENTE*`);
+  lines.push('*DATOS DEL CLIENTE*');
   lines.push(`• *Nombre:* ${name}`);
   lines.push(`• *RUT:* ${rut}`);
-  lines.push(`• *Entrega:* ${deliveryType === 'delivery' ? `${truck} Despacho a domicilio` : `${store} Retiro en tienda`}`);
-  lines.push(`• *Forma de Pago:* ${paymentMethod === 'transferencia' ? `${bank} Transferencia bancaria` : `${cash} Efectivo`}`);
+  lines.push(`• *Entrega:* ${deliveryType === 'delivery' ? 'Despacho a domicilio' : 'Retiro en tienda'}`);
+  lines.push(`• *Forma de Pago:* ${paymentMethod === 'transferencia' ? 'Transferencia bancaria' : 'Efectivo'}`);
 
   if (deliveryType === 'delivery' && address) {
     lines.push(`• *Dirección:* ${address}`);
   }
 
   lines.push('');
-  lines.push(`${box} *DETALLE DE PRODUCTOS*`);
+  lines.push('*DETALLE DE PRODUCTOS*');
   items.forEach((item) => {
     const details = [item.selected_weight, item.selected_flavor].filter(Boolean).join(' - ');
     const metaText = details ? ` (${details})` : '';
-    const reservationBadge = item.is_reservation ? ` ${star} *[RESERVA]*` : '';
+    const reservationBadge = item.is_reservation ? ' *[RESERVA]*' : '';
 
     lines.push(`• *${item.quantity}x* ${item.product_title}${metaText}${reservationBadge} ── *${formatCLP(item.unit_price * item.quantity)}*`);
   });
 
   lines.push('');
   lines.push('──────────────────────────────');
-  lines.push(`${money} *TOTAL A PAGAR: ${formatCLP(total)}*`);
+  lines.push(`*TOTAL A PAGAR: ${formatCLP(total)}*`);
   lines.push('──────────────────────────────');
 
   if (notes.trim()) {
     lines.push('');
-    lines.push(`${memo} *Notas:* _${notes.trim()}_`);
+    lines.push(`*Notas:* _${notes.trim()}_`);
   }
 
   lines.push('');
@@ -173,7 +155,6 @@ export default function PedidosPage() {
     return (
       <div className={styles.stateWrapper}>
         <div className={styles.confirmCard}>
-          <span style={{ fontSize: '2.5rem' }}>✅</span>
           <h2>¡Pedido enviado!</h2>
           <p>Se abrió WhatsApp con tu pedido. Confírmalo ahí para que la tienda lo reciba.</p>
           <Link href="/" className={styles.primaryBtn}>
@@ -188,7 +169,6 @@ export default function PedidosPage() {
     return (
       <div className={styles.stateWrapper}>
         <div className={styles.confirmCard}>
-          <span style={{ fontSize: '2.5rem' }}>🌱</span>
           <h2>Tu carrito está vacío</h2>
           <p>Agrega productos desde el catálogo antes de continuar.</p>
           <Link href="/" className={styles.primaryBtn}>
@@ -212,7 +192,7 @@ export default function PedidosPage() {
             <h3>Tu pedido</h3>
             {cart.map((item) => (
               <div key={item.id} className={styles.summaryRow}>
-                {item.img_url && <img src={item.img_url} alt={item.product_title} className={styles.summaryThumb} />}
+                {item.img_url && <Image src={item.img_url} alt={item.product_title} width={48} height={48} className={styles.summaryThumb} />}
                 <div style={{ flex: 1 }}>
                   <p className={styles.summaryTitle}>
                     {item.product_title}

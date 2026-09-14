@@ -2,29 +2,17 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useDistributorStore } from '../../src/lib/useDistributorStore';
-import BrandLogo from '../BrandLogo'; // Ajusta la ruta a la ubicación de tu BrandLogo.tsx
+import BrandLogo from '../BrandLogo';
 import styles from './AppLayout.module.css';
 
-interface CartItemProp {
-  id: string | number;
-  title: string;
-  price: string;
-  img: string;
-}
-
 interface HeaderNavProps {
-  cartItems?: CartItemProp[];
-  onRemoveFromCart?: (index: number) => void;
   onOpenDistributorModal: () => void;
   onSearch?: (query: string) => void;
 }
 
-// Umbral antes de empezar a esconder el header (evita parpadeo justo al top)
 const HIDE_THRESHOLD_PX = 96;
 
 export default function HeaderNav({
-  cartItems = [],
-  onRemoveFromCart,
   onOpenDistributorModal,
   onSearch,
 }: HeaderNavProps) {
@@ -38,14 +26,15 @@ export default function HeaderNav({
   const lastScrollY = useRef(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tickingRef = useRef(false);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
-    setSearchQuery(query); // el input se actualiza al instante, se ve fluido
+    setSearchQuery(query);
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      onSearch?.(query); // esto es lo que dispara el colapso del layout, ahora con delay
+      onSearch?.(query);
     }, 350);
   };
 
@@ -56,25 +45,30 @@ export default function HeaderNav({
     searchInputRef.current?.focus();
   };
 
-  // Header aparece/desaparece según dirección del scroll.
-  // Mientras el buscador esté enfocado nunca se esconde (evita que se
-  // trague el input mientras la persona está escribiendo).
   useEffect(() => {
     lastScrollY.current = window.scrollY;
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const scrolledDown = currentScrollY > lastScrollY.current;
-      const pastThreshold = currentScrollY > HIDE_THRESHOLD_PX;
 
-      setIsHeaderHidden(() => {
-        if (isSearchFocused) return false;
-        if (!pastThreshold) return false;
-        if (scrolledDown) return true;
-        return false;
-      });
+      if (!tickingRef.current) {
+        window.requestAnimationFrame(() => {
+          const scrolledDown = currentScrollY > lastScrollY.current;
+          const pastThreshold = currentScrollY > HIDE_THRESHOLD_PX;
 
-      lastScrollY.current = currentScrollY;
+          setIsHeaderHidden(() => {
+            if (isSearchFocused) return false;
+            if (!pastThreshold) return false;
+            if (scrolledDown) return true;
+            return false;
+          });
+
+          lastScrollY.current = currentScrollY;
+          tickingRef.current = false;
+        });
+
+        tickingRef.current = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -83,9 +77,9 @@ export default function HeaderNav({
 
   return (
     <header className={`${styles.topHeaderNav} ${isHeaderHidden ? styles.topHeaderNavHidden : ''}`}>
-      {/* LADO IZQUIERDO: Marca / Logo estilizado */}
+      {/* LADO IZQUIERDO: Marca / Logo estilizado (Se oculta en móviles) */}
       <div
-        className={styles.brandSection}
+        className={`${styles.brandSection} ${styles.hideOnMobile}`}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         style={{ cursor: 'pointer' }}
       >
@@ -142,9 +136,21 @@ export default function HeaderNav({
       <div className={styles.navActions}>
         <button
           onClick={isDistributor ? logout : onOpenDistributorModal}
-          className={styles.distributorBtn}
+          className={`${styles.distributorBtn} ${isDistributor ? styles.distributorBtnActive : ''}`}
         >
-          {isDistributor ? `✓ ${distributorName}` : 'Soy Distribuidor'}
+          {isDistributor ? (
+            <>
+              <span className={styles.distributorDot} />
+              <span className={styles.distributorNameText}>{distributorName}</span>
+            </>
+          ) : (
+            <>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 7L12 3 4 7m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+              <span>Soy Distribuidor</span>
+            </>
+          )}
         </button>
       </div>
     </header>

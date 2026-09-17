@@ -1,65 +1,94 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { formatCLP } from '../../src/lib/format'; // ajusta la ruta relativa según el archivo
 import styles from './AppLayout.module.css';
-import { CartItem } from '../page';
+import { useCartStore } from '../../src/lib/useCartStore';
+import { useIsHydrated } from '../../src/lib/useIsHydrated';
 
 interface NavigationControlsProps {
-  cartItems: CartItem[];
-  itemCount: number;
-  onUpdateQuantity: (id: number, delta: number) => void;
-  onRemoveItem: (id: number) => void;
   lastAddedProduct: string | null;
 }
 
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
-
-// Duración de la animación de salida antes de sacar el item del estado real
 const REMOVE_ANIMATION_MS = 220;
+const TOAST_EXIT_MS = 220;
 
-export default function NavigationControls({
-  cartItems,
-  itemCount,
-  onUpdateQuantity,
-  onRemoveItem,
-  lastAddedProduct,
-}: NavigationControlsProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+export default function NavigationControls({ lastAddedProduct }: NavigationControlsProps) {
+  const isHydrated = useIsHydrated();
+  
+  const storeCart = useCartStore((state) => state.cart);
+  const storeItemCount = useCartStore((state) => state.itemCount());
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+
+  const cartItems = isHydrated ? storeCart : [];
+  const itemCount = isHydrated ? storeItemCount : 0;
+
   const [isCartOpen, setIsCartOpen] = useState(false);
-  // Solo controla la animación visual de salida; el carrito real (estado/lógica)
-  // no se toca hasta que la animación termina.
-  const [removingId, setRemovingId] = useState<number | null>(null);
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.final_price * item.quantity, 0);
-  // El envío se define en el siguiente paso (según retiro/despacho), no se cobra desde el carrito
+  const [displayedProduct, setDisplayedProduct] = useState<string | null>(null);
+  const [isToastLeaving, setIsToastLeaving] = useState(false);
+
+  useEffect(() => {
+    if (lastAddedProduct) {
+      setDisplayedProduct(lastAddedProduct);
+      setIsToastLeaving(false);
+    } else if (displayedProduct) {
+      setIsToastLeaving(true);
+      const timer = setTimeout(() => {
+        setDisplayedProduct(null);
+        setIsToastLeaving(false);
+      }, TOAST_EXIT_MS);
+      return () => clearTimeout(timer);
+    }
+  }, [lastAddedProduct, displayedProduct]);
+
+  const subtotal = cartItems.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
   const total = subtotal;
 
-  const handleRemoveClick = (id: number) => {
+  const handleRemoveClick = (id: string) => {
     setRemovingId(id);
     setTimeout(() => {
-      onRemoveItem(id);
+      removeItem(id);
       setRemovingId(null);
     }, REMOVE_ANIMATION_MS);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <>
-      {/* 1. Botón 3 Puntos (Izquierda) */}
+      {/* 1. Logo Flotante Abajo-Izquierda (Sube al inicio) */}
       <button
         className={styles.menuFloatingBtn}
-        onClick={() => setIsSidebarOpen(true)}
-        aria-label="Abrir Menú"
+        onClick={scrollToTop}
+        aria-label="Ir al inicio"
+        style={{
+          padding: '0',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '64px',
+          height: '64px',
+          cursor: 'pointer',
+        }}
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-          <circle cx="5" cy="12" r="2" />
-          <circle cx="12" cy="12" r="2" />
-          <circle cx="19" cy="12" r="2" />
-        </svg>
+        <Image
+          src="/images/logo/logo.png"
+          alt="Inicio"
+          width={62}
+          height={62}
+          style={{ objectFit: 'contain' }}
+        />
       </button>
 
-      {/* 2. Botón Carrito Flotante (Derecha) */}
+      {/* 2. Botón Carrito Flotante Abajo-Derecha */}
       <button
         className={styles.cartFloatingBtn}
         onClick={() => setIsCartOpen(true)}
@@ -80,41 +109,13 @@ export default function NavigationControls({
         )}
       </button>
 
-      {/* Overlay Sombra Suave */}
+      {/* Overlay Sombra para el Carrito */}
       <div
-        className={`${styles.sidebarOverlay} ${
-          isSidebarOpen || isCartOpen ? styles.isOpen : ''
-        }`}
-        onClick={() => {
-          setIsSidebarOpen(false);
-          setIsCartOpen(false);
-        }}
+        className={`${styles.sidebarOverlay} ${isCartOpen ? styles.isOpen : ''}`}
+        onClick={() => setIsCartOpen(false)}
       />
 
-      {/* Sidebar Menú Lateral */}
-      <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.isOpen : ''}`}>
-        <div className={styles.sidebarHeader}>
-          <h3>Menú</h3>
-          <button className={styles.closeBtn} onClick={() => setIsSidebarOpen(false)}>
-            ✕
-          </button>
-        </div>
-        <nav className={styles.sidebarNav}>
-          <button className={`${styles.sidebarLink} ${styles.active}`}>
-            <span>👤</span> Mi Cuenta
-          </button>
-          <button className={styles.sidebarLink}>
-            <span>📦</span> Mis Pedidos
-          </button>
-          <hr style={{ border: '0.5px solid #e2e8f0', margin: '0.75rem 0' }} />
-          <a href="/admin" className={styles.sidebarLink} style={{ textDecoration: 'none' }}>
-            <span>🛠️</span> Panel Admin
-            <span className={styles.adminBadge}>ADMIN</span>
-          </a>
-        </nav>
-      </aside>
-
-      {/* Panel Desplegable del Carrito (Warm Theme) */}
+      {/* Panel Desplegable del Carrito */}
       <aside className={`${styles.cartDrawer} ${isCartOpen ? styles.isOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <h3>Tu Carrito ({itemCount})</h3>
@@ -137,21 +138,18 @@ export default function NavigationControls({
                 className={`${styles.cartItem} ${removingId === item.id ? styles.cartItemRemoving : ''}`}
               >
                 {item.img_url && (
-                  <img src={item.img_url} alt={item.title} className={styles.cartItemImg} />
+                  <Image src={item.img_url} alt={item.product_title} width={64} height={64} className={styles.cartItemImg} />
                 )}
                 <div style={{ flex: 1 }}>
-                  <h4 className={styles.cartItemTitle}>{item.title}</h4>
-                  <p className={styles.cartItemPrice}>{formatCLP(item.final_price)}</p>
+                  <h4 className={styles.cartItemTitle}>{item.product_title}</h4>
+                  <p className={styles.cartItemPrice}>{formatCLP(item.unit_price)}</p>
 
-                  {/* Selector de Cantidad */}
                   <div className={styles.quantityControls}>
-                    <button onClick={() => onUpdateQuantity(item.id, -1)} aria-label="Restar uno">
+                    <button onClick={() => updateQuantity(item.id, -1)} aria-label="Restar uno">
                       -
                     </button>
-                    {/* key={item.quantity} fuerza el remount del número, así la animación
-                        "pop" se reproduce en cada cambio de cantidad, no solo al montar */}
                     <span key={item.quantity}>{item.quantity}</span>
-                    <button onClick={() => onUpdateQuantity(item.id, 1)} aria-label="Sumar uno">
+                    <button onClick={() => updateQuantity(item.id, 1)} aria-label="Sumar uno">
                       +
                     </button>
                   </div>
@@ -170,17 +168,17 @@ export default function NavigationControls({
           )}
         </div>
 
-        {/* Resumen de compra: un renglón por producto + total */}
+        {/* Resumen de compra */}
         {cartItems.length > 0 && (
           <div className={styles.cartFooter}>
             {cartItems.map((item) => (
               <div key={item.id} className={styles.summaryRow}>
                 <span className={styles.summaryRowLabel}>
-                  {item.title}
+                  {item.product_title}
                   {item.quantity > 1 && <span className={styles.summaryRowQty}> ×{item.quantity}</span>}
                 </span>
                 <span className={styles.summaryRowValue}>
-                  {formatCLP(item.final_price * item.quantity)}
+                  {formatCLP(item.unit_price * item.quantity)}
                 </span>
               </div>
             ))}
@@ -203,13 +201,13 @@ export default function NavigationControls({
         )}
       </aside>
 
-      {/* Toast Flotante CÁLIDO (producto agregado) */}
-      {lastAddedProduct && !isCartOpen && (
-        <div className={styles.toastNotification}>
+      {/* Toast Flotante */}
+      {displayedProduct && !isCartOpen && (
+        <div className={`${styles.toastNotification} ${isToastLeaving ? styles.toastNotificationLeaving : ''}`}>
           <span style={{ fontSize: '1.2rem' }}>🌿</span>
           <div>
             <p style={{ fontWeight: 600 }}>Agregado a tu selección</p>
-            <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{lastAddedProduct}</p>
+            <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{displayedProduct}</p>
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 .adminWrapper {
   min-height: 100vh;
-  background-color: #fdfcf1;
+  background-color: var(--color-bg-light, #fdfcf1);
   color: #1c1917;
 }
 
@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fdfcf1;
+  background-color: var(--color-bg-light, #fdfcf1);
   padding: 1.5rem;
 }
 
@@ -28,6 +28,7 @@
   font-size: 1.4rem;
   font-weight: 800;
   margin-bottom: 0.25rem;
+  color: #1c1917;
 }
 
 .loginSubtitle {
@@ -59,30 +60,31 @@
   border: 1px solid #e2e8f0;
   font-size: 0.9rem;
   background: #fafaf9;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
   outline: none;
-  border-color: #16a34a;
+  border-color: var(--color-primary-green, #16a34a);
   background: #ffffff;
 }
 
 .primaryBtn {
   width: 100%;
-  background: #1c1917;
+  background: var(--color-primary-brown, #1c1917);
   color: #ffffff;
   border: none;
   padding: 0.85rem;
   border-radius: 0.75rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
 .primaryBtn:hover {
-  background: #292524;
+  background: var(--color-dark-brown, #292524);
 }
 
 .primaryBtn:disabled {
@@ -92,7 +94,7 @@
 
 .errorText {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.55rem;
   background: #fef2f2;
   border: 1px solid #fecaca;
@@ -116,18 +118,16 @@
   color: #ffffff;
   font-size: 0.7rem;
   font-weight: 800;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: 0.05rem;
 }
 
 /* ---------- LAYOUT DEL PANEL ---------- */
-/* ---------- LAYOUT DEL PANEL (barra lateral) ---------- */
 .adminLayout {
   display: flex;
   min-height: 100vh;
-  background-color: #fdfcf1;
+  background-color: var(--color-bg-light, #fdfcf1);
 }
 
 .sidebar {
@@ -185,7 +185,7 @@
   font-weight: 600;
   text-align: left;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .sidebarNavItem:hover {
@@ -195,7 +195,7 @@
 
 .sidebarNavItemActive {
   background: #f0fdf4;
-  color: #15803d;
+  color: var(--color-primary-green, #15803d);
 }
 
 .navDot {
@@ -204,12 +204,12 @@
   border-radius: 50%;
   border: 1.5px solid #d6d3d1;
   flex-shrink: 0;
-  transition: all 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .sidebarNavItemActive .navDot {
-  background: #16a34a;
-  border-color: #16a34a;
+  background: var(--color-primary-green, #16a34a);
+  border-color: var(--color-primary-green, #16a34a);
 }
 
 .sidebarLogout {
@@ -222,6 +222,7 @@
   color: #78716c;
   cursor: pointer;
   margin-top: 1rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .sidebarLogout:hover {
@@ -248,6 +249,8 @@
     overflow-x: auto;
     padding: 1rem;
     gap: 1rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   .sidebarBrand {
@@ -281,6 +284,7 @@
 .panelHeader h1 {
   font-size: 1.2rem;
   font-weight: 800;
+  color: #1c1917;
 }
 
 .logoutBtn {
@@ -292,6 +296,7 @@
   font-weight: 600;
   cursor: pointer;
   color: #57534e;
+  transition: background-color 0.15s ease;
 }
 
 .logoutBtn:hover {
@@ -322,7 +327,7 @@
 }
 
 .addBtn {
-  background: #16a34a;
+  background: var(--color-primary-green, #16a34a);
   color: #ffffff;
   border: none;
   padding: 0.65rem 1.2rem;
@@ -330,10 +335,11 @@
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .addBtn:hover {
-  background: #15803d;
+  background: var(--color-accent-green, #15803d);
 }
 
 /* ---------- TABLA / LISTA ---------- */
@@ -351,7 +357,7 @@
   padding: 0.9rem 1.25rem;
   border-bottom: 1px solid #f1f5f9;
   gap: 1rem;
-  transition: background 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .dataRow:hover {
@@ -415,6 +421,10 @@
   border-radius: 0.5rem;
   cursor: pointer;
   font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
 }
 
 .iconActionBtn:hover {
@@ -438,11 +448,18 @@
   position: fixed;
   inset: 0;
   background: rgba(28, 25, 23, 0.45);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 200;
   padding: 1rem;
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modalCard {
@@ -453,9 +470,42 @@
   max-width: 520px;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  animation: modalEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
 }
 
-.modalCard h3 {
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Modal extendido para ProductsManager */
+.modalCardLarge {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 850px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  animation: modalEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+
+.modalOverlayExit { animation: overlayFadeOut 0.2s ease-in forwards; }
+.modalCardExit { animation: modalExit 0.2s cubic-bezier(0.4, 0, 1, 1) forwards; }
+
+@keyframes overlayFadeOut { to { opacity: 0; } }
+@keyframes modalExit {
+  to { opacity: 0; transform: scale(0.96) translateY(6px); }
+}
+
+.modalCard h3,
+.modalCardLarge h3 {
   font-size: 1.15rem;
   font-weight: 800;
   color: #1c1917;
@@ -509,7 +559,7 @@
   background: #e2e8f0;
   border-radius: 9999px;
   flex-shrink: 0;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .switchThumb {
@@ -525,7 +575,7 @@
 }
 
 .switchInput:checked + .switchTrack {
-  background: #16a34a;
+  background: var(--color-primary-green, #16a34a);
 }
 
 .switchInput:checked + .switchTrack .switchThumb {
@@ -553,6 +603,11 @@
   font-weight: 600;
   cursor: pointer;
   color: #57534e;
+  transition: background-color 0.15s ease;
+}
+
+.secondaryBtn:hover {
+  background: #f1f5f9;
 }
 
 .modalActions .primaryBtn {
@@ -570,6 +625,70 @@
   margin-bottom: 1.1rem;
 }
 
+/* ---------- VARIANTES Y PRECIOS DINÁMICOS ---------- */
+.variantCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.variantGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.variantCol {
+  flex: 1 1 120px;
+  min-width: 100px;
+}
+
+.variantCol label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.variantCol input[type="number"] {
+  width: 100%;
+  min-width: 90px;
+  padding-right: 1.8rem;
+  box-sizing: border-box;
+}
+
+.finalPriceTag {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #15803d;
+  font-weight: 600;
+  background: #f0fdf4;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  display: inline-block;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  margin-top: 0.5rem;
+}
+
+.stockTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.stockTable th,
+.stockTable td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
 /* ---------- IMAGE UPLOAD ---------- */
 .uploadBox {
   border: 2px dashed #e2e8f0;
@@ -585,11 +704,11 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .uploadBox:hover {
-  border-color: #16a34a;
+  border-color: var(--color-primary-green, #16a34a);
   background: #f0fdf4;
 }
 
@@ -618,7 +737,7 @@
   border-radius: 1rem;
   padding: 1.5rem;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  border-left: 3px solid #16a34a;
+  border-left: 3px solid var(--color-primary-green, #16a34a);
 }
 
 .statCard .statLabel {
@@ -639,7 +758,7 @@
 
 .statCard .statSub {
   font-size: 0.78rem;
-  color: #16a34a;
+  color: var(--color-primary-green, #16a34a);
   margin-top: 0.3rem;
   font-weight: 600;
 }
@@ -685,7 +804,7 @@
   height: 22px;
   border-radius: 50%;
   background: #f0fdf4;
-  color: #16a34a;
+  color: var(--color-primary-green, #16a34a);
   font-size: 0.75rem;
   font-weight: 800;
   display: flex;
@@ -696,4 +815,228 @@
 .rankValue {
   font-weight: 700;
   color: #0f172a;
+}
+
+/* ---------- NUEVO DASHBOARD VISUAL (SUBTRACKER STYLE) ---------- */
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.kpiCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.kpiHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.kpiTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #78716c;
+}
+
+.kpiIconBox {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f4f4f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1c1917;
+}
+
+.kpiValue {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1c1917;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.kpiBadgeSuccess {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  width: fit-content;
+}
+
+.kpiSubtext {
+  font-size: 0.75rem;
+  color: #a8a29e;
+  font-weight: 500;
+}
+
+/* Gráficos Grid */
+.chartsGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.chartHeader {
+  margin-bottom: 1.25rem;
+}
+
+.chartHeader h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1c1917;
+}
+
+.donutLayout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.legendContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 45%;
+}
+
+.legendItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.legendText {
+  display: flex;
+  flex-direction: column;
+}
+
+.legendTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1c1917;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.legendValue {
+  font-size: 0.72rem;
+  color: #78716c;
+}
+
+/* ---------- STOCK ALERT CARD ---------- */
+.stockAlertCard {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  grid-column: 1 / -1;
+}
+
+.alertTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #dc2626 !important;
+}
+
+.stockList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.stockRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.85rem;
+  background: #fafaf9;
+  border-radius: 0.65rem;
+  border: 1px solid #f1f5f9;
+}
+
+.stockInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.stockItemName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1c1917;
+}
+
+.stockItemMeta {
+  font-size: 0.75rem;
+  color: #78716c;
+}
+
+.badgeDanger {
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+}
+
+.badgeWarning {
+  background: #fef9c3;
+  color: #854d0e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
 }

@@ -1,16 +1,20 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+// next.config.ts — se queda solo con esto, sin duplicar CSP en ningún lado
+import type { NextConfig } from 'next';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseHost = new URL(supabaseUrl).hostname;
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'yczueyygfqjqfcvastse.supabase.co',
+        hostname: supabaseHost,
         pathname: '/storage/v1/object/public/**',
       },
     ],
-    // Next.js exige declarar explícitamente qué valores de "quality" se usarán
     qualities: [60, 75],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

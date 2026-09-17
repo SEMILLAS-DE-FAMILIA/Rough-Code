@@ -1,7 +1,7 @@
 /* [project]/app/components/NovedadesCarousel.module.css [app-client] (css) */
 .NovedadesCarousel-module__mx4VTG__section {
+  background-color: var(--color-bg-light, #fdfcf1);
   z-index: 2;
-  background-color: #fdfcf1;
   padding: 3rem 2rem 1rem;
   position: relative;
 }
@@ -21,7 +21,7 @@
 .NovedadesCarousel-module__mx4VTG__preTitle {
   text-transform: uppercase;
   letter-spacing: .15em;
-  color: var(--color-accent-green);
+  color: var(--color-primary-green, #16a34a);
   margin-bottom: .3rem;
   font-size: .75rem;
   font-weight: 700;
@@ -51,14 +51,14 @@
   width: 40px;
   height: 40px;
   font-size: .95rem;
-  transition: all .2s;
+  transition: background-color .2s, color .2s, border-color .2s;
   display: flex;
 }
 
 .NovedadesCarousel-module__mx4VTG__arrowBtn:hover {
+  background: var(--color-primary-green, #16a34a);
   color: #fff;
-  background: #16a34a;
-  border-color: #16a34a;
+  border-color: var(--color-primary-green, #16a34a);
 }
 
 .NovedadesCarousel-module__mx4VTG__scrollRow {
@@ -100,10 +100,10 @@
 
 .NovedadesCarousel-module__mx4VTG__newBadge {
   z-index: 1;
+  background: var(--color-primary-green, #16a34a);
   color: #fff;
   text-transform: uppercase;
   letter-spacing: .05em;
-  background: #16a34a;
   border-radius: .5rem;
   padding: .22rem .55rem;
   font-size: .65rem;
@@ -134,7 +134,7 @@
 }
 
 .NovedadesCarousel-module__mx4VTG__category {
-  color: #94a3b8;
+  color: #64748b;
   text-transform: uppercase;
   margin-bottom: .2rem;
   font-size: .7rem;
@@ -175,7 +175,7 @@
 }
 
 .NovedadesCarousel-module__mx4VTG__addBtn {
-  background-color: var(--color-primary-green);
+  background: var(--color-primary-green, #16a34a);
   color: #fff;
   cursor: pointer;
   border: none;
@@ -185,11 +185,37 @@
   height: 32px;
   font-size: 1.1rem;
   font-weight: 700;
-  transition: background .2s;
+  transition: background-color .2s;
 }
 
 .NovedadesCarousel-module__mx4VTG__addBtn:hover {
-  background-color: var(--color-accent-green);
+  background: var(--color-accent-green, #15803d);
+}
+
+.NovedadesCarousel-module__mx4VTG__addBtn:disabled {
+  color: #78716c;
+  cursor: not-allowed;
+  background: #d6d3d1;
+}
+
+.NovedadesCarousel-module__mx4VTG__outOfStockCard {
+  opacity: .65;
+  filter: grayscale(.85);
+}
+
+.NovedadesCarousel-module__mx4VTG__outOfStockBadge {
+  z-index: 2;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  background: #475569;
+  border-radius: .5rem;
+  padding: .22rem .55rem;
+  font-size: .65rem;
+  font-weight: 700;
+  position: absolute;
+  top: .75rem;
+  left: .75rem;
 }
 
 /*# sourceMappingURL=app_components_NovedadesCarousel_module_css_1igg3k2._.single.css.map*/

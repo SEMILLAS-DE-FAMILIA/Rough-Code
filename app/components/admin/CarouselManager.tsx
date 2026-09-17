@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../src/lib/supabaseClient';
+import { extractStoragePath } from '../../../src/lib/storageUtils';
 import ImageUploadField from './ImageUploadField';
 import styles from './Admin.module.css';
 
@@ -28,6 +29,7 @@ export default function CarouselManager() {
   const [slides, setSlides] = useState<Slide[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
@@ -49,6 +51,7 @@ export default function CarouselManager() {
   }, []);
 
   const openCreateModal = () => {
+    setIsClosing(false);
     setEditingId(null);
     setForm(emptyForm);
     setFormError(null);
@@ -56,11 +59,25 @@ export default function CarouselManager() {
   };
 
   const openEditModal = (s: Slide) => {
+    setIsClosing(false);
     setEditingId(s.id);
+    
+    let cleanedImgUrl = s.img_url ?? '';
+    if (typeof cleanedImgUrl === 'string' && cleanedImgUrl.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(cleanedImgUrl);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          cleanedImgUrl = parsed[0];
+        }
+      } catch (e) {
+        // En caso de que no sea un JSON válido, conserva el string
+      }
+    }
+
     setForm({
       title: s.title,
       subtitle: s.subtitle ?? '',
-      img_url: s.img_url ?? '',
+      img_url: cleanedImgUrl,
       btn_text: s.btn_text ?? 'Ver Catálogo',
       sort_order: String(s.sort_order),
       active: s.active,
@@ -69,7 +86,13 @@ export default function CarouselManager() {
     setShowModal(true);
   };
 
-  const closeModal = () => setShowModal(false);
+  const closeModal = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setShowModal(false);
+      setIsClosing(false);
+    }, 200); // 200ms igual a la duración de la animación CSS
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +108,6 @@ export default function CarouselManager() {
 
     const sortOrderNum = parseInt(form.sort_order || '0', 10) || 0;
 
-    // Bloqueamos que dos slides compartan la misma posición
     const conflict = slides.some((s) => s.sort_order === sortOrderNum && s.id !== editingId);
     if (conflict) {
       setFormError(`Ya existe un slide en la posición ${sortOrderNum}. Elige otra posición.`);
@@ -115,12 +137,19 @@ export default function CarouselManager() {
       return;
     }
 
-    setShowModal(false);
+    closeModal();
     fetchSlides();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('¿Eliminar este slide del carrusel?')) return;
+
+    const slide = slides.find((s) => s.id === id);
+    const path = extractStoragePath(slide?.img_url, 'carousel-images');
+    if (path) {
+      await supabase.storage.from('carousel-images').remove([path]);
+    }
+
     await supabase.from('carousel_slides').delete().eq('id', id);
     fetchSlides();
   };
@@ -152,7 +181,11 @@ export default function CarouselManager() {
               style={{ gridTemplateColumns: '44px 1fr auto auto' }}
             >
               {s.img_url ? (
-                <img src={s.img_url} alt={s.title} className={styles.rowThumb} />
+                <img
+                  src={Array.isArray(s.img_url) ? s.img_url[0] : s.img_url}
+                  alt={s.title}
+                  className={styles.rowThumb}
+                />
               ) : (
                 <div className={styles.rowThumb} />
               )}
@@ -185,8 +218,14 @@ export default function CarouselManager() {
       )}
 
       {showModal && (
-        <div className={styles.modalOverlay} onClick={closeModal}>
-          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={`${styles.modalOverlay} ${isClosing ? styles.modalOverlayExit : ''}`}
+          onClick={closeModal}
+        >
+          <div
+            className={`${styles.modalCard} ${isClosing ? styles.modalCardExit : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3>{editingId ? 'Editar slide' : 'Nuevo slide'}</h3>
 
             <form onSubmit={handleSave}>
@@ -238,8 +277,8 @@ export default function CarouselManager() {
 
               <ImageUploadField
                 bucket="carousel-images"
-                value={form.img_url || null}
-                onChange={(url) => setForm({ ...form, img_url: url })}
+                value={form.img_url ? [form.img_url] : []}
+                onChange={(urls) => setForm({ ...form, img_url: urls[urls.length - 1] || '' })}
                 label="Imagen del slide"
               />
 

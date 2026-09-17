@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/app/BrandLogo.module.css"],"sourcesContent":[".brandContainer {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  line-height: 1;\r\n  font-family: var(--font-pacifico), cursive;\r\n  user-select: none;\r\n}\r\n\r\n/* \"Semillas\" - Blanco / Crema para resaltar sobre fondo verde */\r\n.brandSemillas {\r\n  color: #ffffff;\r\n  font-size: 2rem;\r\n  font-weight: 400;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n/* \"de Familia\" - Tono dorado/miel claro extraído del logo */\r\n.brandFamilia {\r\n  color: #f5e0b8;\r\n  font-size: 1.6rem;\r\n  font-weight: 400;\r\n  margin-top: -4px;\r\n}\r\n\r\n.brandDivider {\r\n  width: 80%;\r\n  height: 2px;\r\n  background: linear-gradient(90deg, transparent, #f5e0b8, transparent);\r\n  margin-top: 4px;\r\n  border-radius: 999px;\r\n}"],"names":[],"mappings":"AAAA;;;;;;;;;;AAUA;;;;;;;AAQA;;;;;;;AAOA"}}]
+}

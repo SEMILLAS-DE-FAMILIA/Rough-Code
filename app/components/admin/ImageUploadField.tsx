@@ -1,3 +1,5 @@
+// ImageUploadField.tsx
+
 'use client';
 
 import React, { useRef, useState } from 'react';
@@ -6,71 +8,201 @@ import styles from './Admin.module.css';
 
 interface ImageUploadFieldProps {
   bucket: 'product-images' | 'carousel-images';
-  value: string | null;
-  onChange: (url: string) => void;
+  value: string[]; // Recibe la lista de URLs
+  onChange: (urls: string[]) => void; // Retorna la nueva lista de URLs
   label?: string;
+  altText?: string;
 }
 
-export default function ImageUploadField({ bucket, value, onChange, label }: ImageUploadFieldProps) {
+const compressImage = (file: File, maxWidth = 1200, quality = 0.82): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let { width, height } = img;
+
+      if (width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return reject('No se pudo procesar el contexto del canvas.');
+
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject('Error al comprimir la imagen.');
+        },
+        'image/webp',
+        quality
+      );
+    };
+    img.onerror = (err) => reject(err);
+  });
+};
+
+async function computeContentHash(blob: Blob): Promise<string> {
+  const buffer = await blob.arrayBuffer();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+export default function ImageUploadField({
+  bucket,
+  value = [],
+  onChange,
+  label,
+  altText,
+}: ImageUploadFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Garantizar que siempre trabajemos con un arreglo válido
+  const safeValue = value || [];
 
-    // Validación básica: tipo y tamaño (máx 5MB)
-    if (!file.type.startsWith('image/')) {
-      setError('El archivo debe ser una imagen.');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setError('La imagen no debe superar 5MB.');
-      return;
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    for (let i = 0; i < files.length; i++) {
+      if (!files[i].type.startsWith('image/')) {
+        setError('Todos los archivos deben ser imágenes.');
+        return;
+      }
     }
 
     setError(null);
     setUploading(true);
 
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+    try {
+      const uploadedUrls: string[] = [];
 
-    const { error: uploadError } = await supabase.storage.from(bucket).upload(fileName, file, {
-      cacheControl: '3600',
-      upsert: false,
-    });
+      for (const file of Array.from(files)) {
+        const compressedBlob = await compressImage(file, 1200, 0.82);
+        const hash = await computeContentHash(compressedBlob);
+        const fileName = `${hash}.webp`;
 
-    setUploading(false);
+        const { error: uploadError } = await supabase.storage
+          .from(bucket)
+          .upload(fileName, compressedBlob, {
+            cacheControl: '31536000',
+            contentType: 'image/webp',
+            upsert: false,
+          });
 
-    if (uploadError) {
-      setError('No se pudo subir la imagen. Intenta de nuevo.');
-      return;
+        // Si el error es "ya existe" (mismo contenido subido antes), no es un fallo real:
+        // simplemente reutilizamos el archivo que ya está en el bucket.
+        if (uploadError && !uploadError.message?.includes('already exists') && !uploadError.message?.includes('Duplicate')) {
+          throw uploadError;
+        }
+
+        const { data } = supabase.storage.from(bucket).getPublicUrl(fileName);
+        uploadedUrls.push(data.publicUrl);
+      }
+
+      onChange([...safeValue, ...uploadedUrls]);
+    } catch (err) {
+      console.error('Error de subida de imagen:', err);
+      const message = err instanceof Error ? err.message : JSON.stringify(err);
+      setError(`No se pudo subir la imagen: ${message}`);
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = '';
     }
+  };
 
-    const { data } = supabase.storage.from(bucket).getPublicUrl(fileName);
-    onChange(data.publicUrl);
+  const handleRemoveImage = (indexToRemove: number) => {
+    const filtered = safeValue.filter((_, idx) => idx !== indexToRemove);
+    onChange(filtered);
   };
 
   return (
     <div className={styles.field}>
       {label && <label>{label}</label>}
-      <div className={styles.uploadBox} onClick={() => inputRef.current?.click()}>
-        {value ? (
-          <img src={value} alt="Vista previa" className={styles.uploadPreview} />
-        ) : (
-          <span className={styles.uploadHint}>
-            {uploading ? 'Subiendo...' : 'Haz clic para subir una imagen'}
-          </span>
-        )}
-        {value && !uploading && (
-          <span className={styles.uploadHint}>Haz clic para cambiar la imagen</span>
-        )}
+
+      {/* Rejilla protegida contra valores nulos */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
+        {safeValue.map((url, idx) => (
+          <div
+            key={url + idx}
+            style={{
+              position: 'relative',
+              width: '70px',
+              height: '70px',
+              borderRadius: '6px',
+              overflow: 'hidden',
+              border: idx === 0 ? '2px solid #16a34a' : '1px solid #e2e8f0',
+            }}
+          >
+            <img
+              src={url}
+              alt={altText ? `${altText} ${idx + 1}` : 'Vista previa'}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <button
+              type="button"
+              onClick={() => handleRemoveImage(idx)}
+              style={{
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                background: 'rgba(239, 68, 68, 0.85)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: '18px',
+                height: '18px',
+                fontSize: '11px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              title="Eliminar imagen"
+            >
+              ✕
+            </button>
+            {idx === 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  bottom: '0',
+                  left: '0',
+                  right: '0',
+                  background: '#16a34a',
+                  color: 'white',
+                  fontSize: '8px',
+                  textAlign: 'center',
+                  padding: '1px 0',
+                }}
+              >
+                Principal
+              </span>
+            )}
+          </div>
+        ))}
       </div>
+
+      <div className={styles.uploadBox} onClick={() => inputRef.current?.click()}>
+        <span className={styles.uploadHint}>
+          {uploading ? 'Comprimiendo y subiendo...' : '+ Agregar imágenes'}
+        </span>
+      </div>
+
       <input
         ref={inputRef}
         type="file"
         accept="image/*"
+        multiple
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />

@@ -1,0 +1,32 @@
+.brandContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  font-family: var(--font-pacifico), cursive;
+  user-select: none;
+}
+
+/* "Semillas" - Blanco / Crema para resaltar sobre fondo verde */
+.brandSemillas {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+/* "de Familia" - Tono dorado/miel claro extraído del logo */
+.brandFamilia {
+  color: #f5e0b8;
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin-top: -4px;
+}
+
+.brandDivider {
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f5e0b8, transparent);
+  margin-top: 4px;
+  border-radius: 999px;
+}

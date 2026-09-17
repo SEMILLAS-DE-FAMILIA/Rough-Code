@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useCart, CartItem } from '../../src/lib/useCart';
+import Image from 'next/image';
+import { useCartStore, CartItem } from '../../src/lib/useCartStore';
+import { useIsHydrated } from '../../src/lib/useIsHydrated';
+import { formatCLP } from '../../src/lib/format'; // ajusta la ruta relativa según el archivo
 import { supabase } from '../../src/lib/supabaseClient';
-import { isValidRut, formatRut } from '../../src/lib/rut';
+import { isValidRut, autoFormatRut } from '../../src/lib/rut';
 import styles from './pedidos.module.css';
-
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
 function buildWhatsAppMessage(
   items: CartItem[],
@@ -16,38 +16,65 @@ function buildWhatsAppMessage(
   name: string,
   rut: string,
   deliveryType: 'delivery' | 'retiro',
+  paymentMethod: 'transferencia' | 'efectivo',
   address: string,
   notes: string
 ): string {
   const lines: string[] = [];
-  lines.push('🛒 *Nuevo Pedido - Semillas de Familia*');
+
+  lines.push('*¡Hola! Gracias por tu compra en Semillas de Familia.*');
+  lines.push('Hemos registrado tu pedido con el siguiente detalle:');
+  lines.push('──────────────────────────────');
   lines.push('');
-  lines.push(`*Cliente:* ${name}`);
-  lines.push(`*RUT:* ${rut}`);
-  lines.push(`*Entrega:* ${deliveryType === 'delivery' ? 'Despacho a domicilio' : 'Retiro en tienda'}`);
+  lines.push('*DATOS DEL CLIENTE*');
+  lines.push(`• *Nombre:* ${name}`);
+  lines.push(`• *RUT:* ${rut}`);
+  lines.push(`• *Entrega:* ${deliveryType === 'delivery' ? 'Despacho a domicilio' : 'Retiro en tienda'}`);
+  lines.push(`• *Forma de Pago:* ${paymentMethod === 'transferencia' ? 'Transferencia bancaria' : 'Efectivo'}`);
+
   if (deliveryType === 'delivery' && address) {
-    lines.push(`*Dirección:* ${address}`);
+    lines.push(`• *Dirección:* ${address}`);
   }
+
   lines.push('');
-  lines.push('*Productos:*');
+  lines.push('*DETALLE DE PRODUCTOS*');
   items.forEach((item) => {
-    lines.push(`- ${item.quantity}x ${item.title} — ${formatCLP(item.final_price * item.quantity)}`);
+    const details = [item.selected_weight, item.selected_flavor].filter(Boolean).join(' - ');
+    const metaText = details ? ` (${details})` : '';
+    const reservationBadge = item.is_reservation ? ' *[RESERVA]*' : '';
+
+    lines.push(`• *${item.quantity}x* ${item.product_title}${metaText}${reservationBadge} ── *${formatCLP(item.unit_price * item.quantity)}*`);
   });
+
   lines.push('');
-  lines.push(`*Total: ${formatCLP(total)}*`);
+  lines.push('──────────────────────────────');
+  lines.push(`*TOTAL A PAGAR: ${formatCLP(total)}*`);
+  lines.push('──────────────────────────────');
+
   if (notes.trim()) {
     lines.push('');
-    lines.push(`*Notas:* ${notes.trim()}`);
+    lines.push(`*Notas:* _${notes.trim()}_`);
   }
+
+  lines.push('');
+  lines.push('Por favor, confirma este mensaje para comenzar a preparar tu pedido. ¡Muchas gracias!');
+
   return lines.join('\n');
 }
 
 export default function PedidosPage() {
-  const { cart, total, isLoaded, clearCart } = useCart();
+  const isHydrated = useIsHydrated();
+
+  const storeCart = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  const cart = isHydrated ? storeCart : [];
+  const total = cart.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
 
   const [name, setName] = useState('');
   const [rut, setRut] = useState('');
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'retiro'>('retiro');
+  const [paymentMethod, setPaymentMethod] = useState<'transferencia' | 'efectivo'>('transferencia');
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -63,7 +90,7 @@ export default function PedidosPage() {
       return;
     }
     if (!isValidRut(rut)) {
-      setError('El RUT ingresado no es válido.');
+      setError('Ingresa un RUT válido.');
       return;
     }
     if (deliveryType === 'delivery' && !address.trim()) {
@@ -78,46 +105,41 @@ export default function PedidosPage() {
     }
 
     setSubmitting(true);
-    const formattedRut = formatRut(rut);
-
-    const { data: order, error: orderError } = await supabase
-      .from('orders')
-      .insert({
-        customer_name: name.trim(),
-        rut: formattedRut,
-        delivery_type: deliveryType,
-        delivery_address: deliveryType === 'delivery' ? address.trim() : null,
-        notes: notes.trim() || null,
-        total,
-        status: 'pendiente',
-      })
-      .select()
-      .single();
-
-    if (orderError || !order) {
-      setSubmitting(false);
-      setError('No se pudo registrar el pedido. Intenta de nuevo.');
-      return;
-    }
 
     const itemsPayload = cart.map((item) => ({
-      order_id: order.id,
-      product_id: item.id,
-      product_title: item.title,
+      product_id: item.product_id,
+      product_title: item.product_title,
       quantity: item.quantity,
-      unit_price: item.final_price,
+      unit_price: item.unit_price,
+      variant_id: item.variant_id,
+      flavor_id: item.flavor_id,
+      weight_label: item.selected_weight,
+      flavor_name: item.selected_flavor,
+      is_reservation: item.is_reservation === true,
     }));
 
-    const { error: itemsError } = await supabase.from('order_items').insert(itemsPayload);
+    const { data: newOrderId, error: orderError } = await supabase.rpc('create_order', {
+      p_customer_name: name.trim(),
+      p_rut: rut,
+      p_delivery_type: deliveryType,
+      p_delivery_address: deliveryType === 'delivery' ? address.trim() : null,
+      p_notes: `[Pago: ${paymentMethod}] ${notes.trim()}`.trim(),
+      p_total: total,
+      p_items: itemsPayload,
+    });
 
     setSubmitting(false);
 
-    if (itemsError) {
-      setError('El pedido se creó pero hubo un problema al guardar los productos. Contacta a la tienda.');
+    if (orderError || !newOrderId) {
+      setError(
+        orderError?.message?.includes('Sin stock suficiente')
+          ? 'Uno de los productos ya no tiene stock suficiente. Vuelve al catálogo y ajusta tu carrito.'
+          : `No se pudo registrar el pedido: ${orderError?.message || 'error desconocido'}`
+      );
       return;
     }
 
-    const message = buildWhatsAppMessage(cart, total, name.trim(), formattedRut, deliveryType, address, notes);
+    const message = buildWhatsAppMessage(cart, total, name.trim(), rut, deliveryType, paymentMethod, address, notes);
     const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
 
@@ -125,8 +147,7 @@ export default function PedidosPage() {
     setOrderSent(true);
   };
 
-  // Esperamos a que se cargue el carrito desde localStorage antes de decidir qué mostrar
-  if (!isLoaded) {
+  if (!isHydrated) {
     return <div className={styles.stateWrapper}>Cargando...</div>;
   }
 
@@ -134,7 +155,6 @@ export default function PedidosPage() {
     return (
       <div className={styles.stateWrapper}>
         <div className={styles.confirmCard}>
-          <span style={{ fontSize: '2.5rem' }}>✅</span>
           <h2>¡Pedido enviado!</h2>
           <p>Se abrió WhatsApp con tu pedido. Confírmalo ahí para que la tienda lo reciba.</p>
           <Link href="/" className={styles.primaryBtn}>
@@ -149,7 +169,6 @@ export default function PedidosPage() {
     return (
       <div className={styles.stateWrapper}>
         <div className={styles.confirmCard}>
-          <span style={{ fontSize: '2.5rem' }}>🌱</span>
           <h2>Tu carrito está vacío</h2>
           <p>Agrega productos desde el catálogo antes de continuar.</p>
           <Link href="/" className={styles.primaryBtn}>
@@ -169,17 +188,19 @@ export default function PedidosPage() {
         <h1 className={styles.pageTitle}>Finalizar Pedido</h1>
 
         <div className={styles.layoutGrid}>
-          {/* Resumen del carrito */}
           <div className={styles.summaryCard}>
             <h3>Tu pedido</h3>
             {cart.map((item) => (
               <div key={item.id} className={styles.summaryRow}>
-                {item.img_url && <img src={item.img_url} alt={item.title} className={styles.summaryThumb} />}
+                {item.img_url && <Image src={item.img_url} alt={item.product_title} width={48} height={48} className={styles.summaryThumb} />}
                 <div style={{ flex: 1 }}>
-                  <p className={styles.summaryTitle}>{item.title}</p>
-                  <p className={styles.summaryMeta}>{item.quantity} × {formatCLP(item.final_price)}</p>
+                  <p className={styles.summaryTitle}>
+                    {item.product_title}
+                    {item.is_reservation && <span style={{ fontSize: '0.75rem', marginLeft: '6px', color: '#e65100', background: '#ffe0b2', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Reserva</span>}
+                  </p>
+                  <p className={styles.summaryMeta}>{item.quantity} × {formatCLP(item.unit_price)}</p>
                 </div>
-                <span className={styles.summaryLineTotal}>{formatCLP(item.final_price * item.quantity)}</span>
+                <span className={styles.summaryLineTotal}>{formatCLP(item.unit_price * item.quantity)}</span>
               </div>
             ))}
             <div className={styles.summaryTotalRow}>
@@ -188,7 +209,6 @@ export default function PedidosPage() {
             </div>
           </div>
 
-          {/* Formulario */}
           <div className={styles.formCard}>
             <form onSubmit={handleSubmit}>
               <div className={styles.field}>
@@ -198,7 +218,13 @@ export default function PedidosPage() {
 
               <div className={styles.field}>
                 <label>RUT</label>
-                <input value={rut} onChange={(e) => setRut(e.target.value)} placeholder="12345678-9" required />
+                <input 
+                  value={rut} 
+                  onChange={(e) => setRut(autoFormatRut(e.target.value))} 
+                  placeholder="12.345.678-9" 
+                  maxLength={12}
+                  required 
+                />
               </div>
 
               <div className={styles.field}>
@@ -227,6 +253,26 @@ export default function PedidosPage() {
                   <input value={address} onChange={(e) => setAddress(e.target.value)} required />
                 </div>
               )}
+
+              <div className={styles.field}>
+                <label>Forma de Pago</label>
+                <div className={styles.toggleRow}>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('transferencia')}
+                    className={`${styles.toggleBtn} ${paymentMethod === 'transferencia' ? styles.toggleBtnActive : ''}`}
+                  >
+                    Transferencia
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('efectivo')}
+                    className={`${styles.toggleBtn} ${paymentMethod === 'efectivo' ? styles.toggleBtnActive : ''}`}
+                  >
+                    Efectivo
+                  </button>
+                </div>
+              </div>
 
               <div className={styles.field}>
                 <label>Notas del pedido (opcional)</label>

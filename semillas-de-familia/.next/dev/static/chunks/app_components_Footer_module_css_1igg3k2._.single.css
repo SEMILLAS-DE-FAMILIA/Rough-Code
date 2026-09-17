@@ -1,0 +1,113 @@
+/* [project]/app/components/Footer.module.css [app-client] (css) */
+.Footer-module__nhiC3q__footer {
+  background-color: var(--color-primary-brown, #4e2c1d);
+  color: var(--color-bg-light, #f7f5f0);
+  z-index: 30;
+  width: 100%;
+  position: relative;
+}
+
+.Footer-module__nhiC3q__waveContainer {
+  z-index: 31;
+  width: 100%;
+  height: 90px;
+  margin-top: -75px;
+  position: relative;
+  overflow: visible;
+}
+
+.Footer-module__nhiC3q__waveSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.Footer-module__nhiC3q__socialIcons {
+  z-index: 32;
+  gap: 1.25rem;
+  display: flex;
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.Footer-module__nhiC3q__socialBtn {
+  background-color: var(--color-primary-green, #2f6732);
+  color: #fff;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 42px;
+  height: 42px;
+  text-decoration: none;
+  transition: transform .2s cubic-bezier(.16, 1, .3, 1), background-color .2s;
+  display: flex;
+  box-shadow: 0 4px 12px #00000040;
+}
+
+.Footer-module__nhiC3q__socialBtn:hover {
+  background-color: var(--color-dark-green, #1e4521);
+  transform: translateY(-4px)scale(1.05);
+}
+
+.Footer-module__nhiC3q__footerContent {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: .5rem 1rem 3rem;
+}
+
+.Footer-module__nhiC3q__sectionTitle {
+  letter-spacing: .15em;
+  color: var(--color-accent-gold, #d4a359);
+  margin-bottom: 1.25rem;
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.Footer-module__nhiC3q__footerNav {
+  flex-direction: column;
+  gap: .85rem;
+  margin-bottom: 2rem;
+  display: flex;
+}
+
+.Footer-module__nhiC3q__footerLink {
+  color: var(--color-bg-light, #f7f5f0);
+  opacity: .9;
+  font-size: .95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity .2s, color .2s;
+}
+
+.Footer-module__nhiC3q__footerLink:hover {
+  opacity: 1;
+  color: var(--color-accent-gold, #d4a359);
+}
+
+.Footer-module__nhiC3q__adminContainer {
+  border-top: 1px solid #ffffff1a;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+.Footer-module__nhiC3q__adminLink {
+  color: #fff6;
+  font-size: .78rem;
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.Footer-module__nhiC3q__adminLink:hover {
+  color: #fffc;
+}
+
+.Footer-module__nhiC3q__copyright {
+  color: #ffffff80;
+  margin-top: 1rem;
+  font-size: .75rem;
+}
+
+/*# sourceMappingURL=app_components_Footer_module_css_1igg3k2._.single.css.map*/

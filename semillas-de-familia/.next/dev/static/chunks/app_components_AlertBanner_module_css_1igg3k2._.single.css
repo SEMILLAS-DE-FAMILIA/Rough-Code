@@ -2,28 +2,31 @@
 .AlertBanner-module__0tMRIa__banner {
   z-index: 50;
   text-align: center;
+  letter-spacing: .01em;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  padding: .75rem 2.5rem .75rem 1.5rem;
-  font-size: .85rem;
-  font-weight: 600;
+  padding: .85rem 2.5rem .85rem 1.5rem;
+  font-family: Plus Jakarta Sans, system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
   display: flex;
   position: relative;
 }
 
 .AlertBanner-module__0tMRIa__info {
-  color: #15803d;
-  background-color: #dcfce7;
+  background-color: var(--color-accent-soft, #f0fdf4);
+  color: var(--color-accent-hover, #15803d);
 }
 
 .AlertBanner-module__0tMRIa__alerta {
-  color: #b91c1c;
-  background-color: #fee2e2;
+  background-color: var(--color-danger-soft, #fef2f2);
+  color: var(--color-danger-strong, #b91c1c);
 }
 
 .AlertBanner-module__0tMRIa__message {
   margin: 0;
+  line-height: 1.3;
 }
 
 .AlertBanner-module__0tMRIa__closeBtn {
@@ -32,15 +35,28 @@
   opacity: .7;
   background: none;
   border: none;
-  font-size: .85rem;
+  font-size: 1rem;
+  font-weight: 800;
+  transition: opacity .15s, transform .15s cubic-bezier(.16, 1, .3, 1);
   position: absolute;
   top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
+  right: 1.25rem;
+  transform: translateY(-50%)scale(1);
 }
 
 .AlertBanner-module__0tMRIa__closeBtn:hover {
   opacity: 1;
+}
+
+.AlertBanner-module__0tMRIa__closeBtn:active {
+  transform: translateY(-50%)scale(.88);
+}
+
+@media (max-width: 640px) {
+  .AlertBanner-module__0tMRIa__banner {
+    padding: .75rem 2.25rem .75rem 1rem;
+    font-size: .9rem;
+  }
 }
 
 /*# sourceMappingURL=app_components_AlertBanner_module_css_1igg3k2._.single.css.map*/

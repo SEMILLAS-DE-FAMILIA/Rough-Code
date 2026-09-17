@@ -1,4 +1,82 @@
 /* [project]/app/components/AppLayout.module.css [app-client] (css) */
+.AppLayout-module__RrbURa__topHeaderNav {
+  background-color: var(--color-primary-green);
+  color: var(--color-bg-light);
+  z-index: 100;
+  justify-content: space-between;
+  align-items: center;
+  padding: .75rem 1.5rem;
+  display: flex;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.AppLayout-module__RrbURa__brandSection {
+  align-items: center;
+  gap: .75rem;
+  display: flex;
+}
+
+.AppLayout-module__RrbURa__brandLogo {
+  color: var(--color-bg-light);
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.AppLayout-module__RrbURa__searchContainer {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 1rem;
+}
+
+.AppLayout-module__RrbURa__searchInput {
+  width: 100%;
+  color: var(--color-dark-brown);
+  background-color: #fff;
+  border: 1px solid #fff;
+  border-radius: 9999px;
+  outline: none;
+  padding: .55rem 1.2rem;
+  font-size: .88rem;
+  transition: all .2s;
+  box-shadow: 0 2px 6px #00000014;
+}
+
+.AppLayout-module__RrbURa__searchInput::placeholder {
+  color: #78716c;
+  opacity: 1;
+}
+
+.AppLayout-module__RrbURa__searchInput:focus {
+  border-color: var(--color-warm-cream);
+  box-shadow: 0 0 0 3px #dfb77359;
+}
+
+.AppLayout-module__RrbURa__navActions {
+  align-items: center;
+  display: flex;
+}
+
+.AppLayout-module__RrbURa__distributorBtn {
+  background-color: var(--color-primary-brown);
+  color: var(--color-bg-light);
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  border-radius: 9999px;
+  padding: 7px 16px;
+  font-size: .75rem;
+  font-weight: 700;
+  transition: background-color .2s;
+}
+
+.AppLayout-module__RrbURa__distributorBtn:hover {
+  background-color: var(--color-dark-brown);
+}
+
 .AppLayout-module__RrbURa__menuFloatingBtn, .AppLayout-module__RrbURa__cartFloatingBtn {
   z-index: 80;
   color: #1c1917;
@@ -8,38 +86,41 @@
   border-radius: 9999px;
   justify-content: center;
   align-items: center;
-  width: 48px;
-  height: 48px;
-  padding: .75rem;
   transition: transform .2s, box-shadow .2s;
   display: flex;
   position: fixed;
-  top: 1.5rem;
-  box-shadow: 0 4px 12px #0000000f;
+  bottom: 1.5rem;
+  box-shadow: 0 4px 12px #0000001f;
 }
 
 .AppLayout-module__RrbURa__menuFloatingBtn {
+  width: 64px;
+  height: 64px;
+  padding: 0;
   left: 1.5rem;
 }
 
 .AppLayout-module__RrbURa__cartFloatingBtn {
+  width: 58px;
+  height: 58px;
+  padding: .75rem;
   right: 1.5rem;
 }
 
 .AppLayout-module__RrbURa__menuFloatingBtn:hover, .AppLayout-module__RrbURa__cartFloatingBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px #00000017;
+  box-shadow: 0 6px 16px #00000026;
 }
 
 .AppLayout-module__RrbURa__cartBadge {
-  background: var(--color-primary-green);
+  background: var(--color-primary-green, #2f6732);
   color: #fff;
   border: 2px solid #fff;
   border-radius: 50%;
   justify-content: center;
   align-items: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   font-size: .7rem;
   font-weight: 800;
   animation: .3s cubic-bezier(.34, 1.56, .64, 1) AppLayout-module__RrbURa__badgePop;
@@ -76,44 +157,41 @@
   pointer-events: auto;
 }
 
-.AppLayout-module__RrbURa__sidebar, .AppLayout-module__RrbURa__cartDrawer {
-  background-color: var(--color-bg-light);
+.AppLayout-module__RrbURa__cartDrawer {
+  background-color: var(--color-bg-light, #f7f5f0);
   z-index: 100;
+  -webkit-overflow-scrolling: touch;
+  border-left: 1px solid #0000000f;
   flex-direction: column;
   width: 100%;
-  max-width: 380px;
-  padding: 1.75rem 1.5rem;
+  max-width: 400px;
+  height: 100dvh;
   transition: transform .28s cubic-bezier(.16, 1, .3, 1);
   display: flex;
   position: fixed;
   top: 0;
   bottom: 0;
+  right: 0;
+  overflow-y: auto;
+  transform: translateX(100%);
   box-shadow: -4px 0 25px #00000014;
 }
 
-.AppLayout-module__RrbURa__sidebar {
-  border-right: 1px solid #0000000f;
-  left: 0;
-  transform: translateX(-100%);
-}
-
-.AppLayout-module__RrbURa__cartDrawer {
-  border-left: 1px solid #0000000f;
-  right: 0;
-  transform: translateX(100%);
-}
-
-.AppLayout-module__RrbURa__sidebar.AppLayout-module__RrbURa__isOpen, .AppLayout-module__RrbURa__cartDrawer.AppLayout-module__RrbURa__isOpen {
+.AppLayout-module__RrbURa__cartDrawer.AppLayout-module__RrbURa__isOpen {
   transform: translateX(0);
 }
 
 .AppLayout-module__RrbURa__sidebarHeader {
+  background-color: var(--color-bg-light, #f7f5f0);
+  z-index: 10;
   border-bottom: 1px solid #00000014;
+  flex-shrink: 0;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.25rem;
-  padding-bottom: 1.25rem;
+  padding: 1.5rem 1.5rem 1rem;
   display: flex;
+  position: sticky;
+  top: 0;
 }
 
 .AppLayout-module__RrbURa__sidebarHeader h3 {
@@ -137,50 +215,12 @@
   color: #1c1917;
 }
 
-.AppLayout-module__RrbURa__sidebarNav {
-  flex-direction: column;
-  gap: .5rem;
-  display: flex;
-}
-
-.AppLayout-module__RrbURa__sidebarLink {
-  color: #44403c;
-  cursor: pointer;
-  text-align: left;
-  background: none;
-  border: none;
-  border-radius: .85rem;
-  align-items: center;
-  gap: .85rem;
-  width: 100%;
-  padding: .85rem 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all .2s;
-  display: flex;
-}
-
-.AppLayout-module__RrbURa__sidebarLink:hover, .AppLayout-module__RrbURa__sidebarLink.AppLayout-module__RrbURa__active {
-  color: #1c1917;
-  background: #0000000a;
-}
-
-.AppLayout-module__RrbURa__adminBadge {
-  color: var(--color-primary-green);
-  background: #2f67321a;
-  border-radius: .5rem;
-  margin-left: auto;
-  padding: .2rem .5rem;
-  font-size: .7rem;
-  font-weight: 700;
-}
-
 .AppLayout-module__RrbURa__cartList {
+  -webkit-overflow-scrolling: touch;
   flex-direction: column;
   flex: 1;
   gap: .85rem;
-  margin: .5rem 0;
-  padding-right: .25rem;
+  padding: 1.25rem;
   display: flex;
   overflow-y: auto;
 }
@@ -191,7 +231,8 @@
   flex-direction: column;
   align-items: center;
   gap: .5rem;
-  margin-top: 4rem;
+  margin: auto 0;
+  padding: 3rem 1rem;
   display: flex;
 }
 
@@ -203,13 +244,13 @@
   background: #fff;
   border: 1px solid #0000000d;
   border-radius: 1rem;
+  flex-shrink: 0;
   align-items: center;
   gap: 1rem;
-  max-height: 120px;
+  min-height: 80px;
   padding: .85rem;
   transition: opacity .25s, transform .25s, max-height .25s, margin .25s, padding .25s;
   display: flex;
-  overflow: hidden;
   box-shadow: 0 2px 6px #00000005;
 }
 
@@ -228,8 +269,8 @@
   background: #f1f5f9;
   border-radius: .6rem;
   flex-shrink: 0;
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
 }
 
 .AppLayout-module__RrbURa__cartItemTitle {
@@ -263,7 +304,7 @@
   width: 26px;
   height: 24px;
   font-weight: 700;
-  transition: background .15s, transform .15s cubic-bezier(.16, 1, .3, 1);
+  transition: background-color .15s, transform .15s cubic-bezier(.16, 1, .3, 1);
 }
 
 .AppLayout-module__RrbURa__quantityControls button:hover {
@@ -319,10 +360,11 @@
 }
 
 .AppLayout-module__RrbURa__cartFooter {
-  background: #fdfcf1;
+  background: var(--color-bg-light, #fdfcf1);
   border-top: 1px solid #00000014;
+  flex-shrink: 0;
   margin-top: auto;
-  padding-top: 1.1rem;
+  padding: 1.25rem;
 }
 
 .AppLayout-module__RrbURa__summaryRow {
@@ -381,7 +423,7 @@
 }
 
 .AppLayout-module__RrbURa__cartCheckoutBtn {
-  background: var(--color-primary-brown);
+  background: var(--color-primary-brown, #4e2c1d);
   color: #fff;
   cursor: pointer;
   border: none;
@@ -390,12 +432,12 @@
   padding: .95rem;
   font-size: .95rem;
   font-weight: 700;
-  transition: background .2s, transform .2s cubic-bezier(.16, 1, .3, 1), box-shadow .2s;
+  transition: background-color .2s, transform .2s cubic-bezier(.16, 1, .3, 1), box-shadow .2s;
   box-shadow: 0 8px 18px -4px #1c191759;
 }
 
 .AppLayout-module__RrbURa__cartCheckoutBtn:hover {
-  background: var(--color-dark-brown);
+  background: var(--color-dark-brown, #2a1a17);
   transform: translateY(-2px);
   box-shadow: 0 12px 22px -4px #1c191766;
 }
@@ -417,8 +459,8 @@
   animation: .3s cubic-bezier(.16, 1, .3, 1) AppLayout-module__RrbURa__slideUp;
   display: flex;
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 5.5rem;
+  right: 1.5rem;
   box-shadow: 0 10px 25px -5px #0000001a;
 }
 

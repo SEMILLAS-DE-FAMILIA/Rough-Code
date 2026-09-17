@@ -1,48 +1,79 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { supabase } from '../../../src/lib/supabaseClient';
+import { extractStoragePath } from '../../../src/lib/storageUtils';
 import ImageUploadField from './ImageUploadField';
 import styles from './Admin.module.css';
+
+interface AdminVariant {
+  id?: number;
+  weight: string;
+  price: string;
+  discount_percent: string;
+  distributor_price: string;
+}
+
+interface AdminFlavor {
+  id?: number;
+  flavor_name: string;
+}
 
 interface AdminProduct {
   id: number;
   title: string;
-  category: string;
-  price: number;
-  discount_percent: number;
-  final_price: number;
+  category_id: number | null;
+  category_name?: string;
   description: string | null;
   img_url: string | null;
+  images: string[] | null;
   badge: string | null;
-  stock: number;
   active: boolean;
   is_new: boolean;
+  is_distributor: boolean;
+  variants?: AdminVariant[];
+  flavors?: AdminFlavor[];
+  stockMap?: Record<string, number>;
 }
 
-const emptyForm = {
+interface FormState {
+  title: string;
+  category_id: string;
+  description: string;
+  images: string[];
+  badge: string;
+  active: boolean;
+  is_new: boolean;
+  is_distributor: boolean;
+  variants: AdminVariant[];
+  flavors: AdminFlavor[];
+  stockMatrix: Record<string, string>;
+}
+
+const emptyForm: FormState = {
   title: '',
-  category: '',
-  price: '',
-  discount_percent: '0',
+  category_id: '',
   description: '',
-  img_url: '',
+  images: [],
   badge: '',
-  stock: '0',
   active: true,
   is_new: false,
+  is_distributor: false,
+  variants: [],
+  flavors: [],
+  stockMatrix: {},
 };
-
-const formatCLP = (value: number) =>
-  new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
 
 export default function ProductsManager() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -50,10 +81,55 @@ export default function ProductsManager() {
     setLoading(true);
     const { data, error } = await supabase
       .from('products')
-      .select('*')
+      .select(`
+        *,
+        categories ( name ),
+        product_variants (
+          id,
+          weight,
+          price,
+          discount_percent,
+          variant_flavor_stock ( flavor_id, stock ),
+          variant_distributor_price ( price )
+        ),
+        product_flavors ( id, flavor_name )
+      `)
       .order('created_at', { ascending: false });
 
-    if (!error && data) setProducts(data);
+    if (error) {
+      console.error('Error al cargar productos:', error.message || error);
+      setLoading(false);
+      return;
+    }
+
+    if (data) {
+      const mappedProducts: AdminProduct[] = data.map((p: any) => {
+        const stockMap: Record<string, number> = {};
+        (p.product_variants || []).forEach((v: any) => {
+          (v.variant_flavor_stock || []).forEach((vfs: any) => {
+            stockMap[`${v.id}-${vfs.flavor_id}`] = vfs.stock;
+          });
+        });
+
+        return {
+          ...p,
+          category_name: p.categories?.name || 'Sin categoría',
+          variants: (p.product_variants || []).map((v: any) => ({
+            id: v.id,
+            weight: v.weight,
+            price: String(v.price),
+            discount_percent: String(v.discount_percent ?? 0),
+            distributor_price: v.variant_distributor_price?.price != null ? String(v.variant_distributor_price.price) : '',
+          })),
+          flavors: (p.product_flavors || []).map((f: any) => ({
+            id: f.id,
+            flavor_name: f.flavor_name,
+          })),
+          stockMap,
+        };
+      });
+      setProducts(mappedProducts);
+    }
     setLoading(false);
   };
 
@@ -68,81 +144,218 @@ export default function ProductsManager() {
   }, []);
 
   const openCreateModal = () => {
+    setIsClosing(false);
     setEditingId(null);
-    setForm(emptyForm);
-    setFormError(null);
-    setShowModal(true);
-  };
-
-  const openEditModal = (p: AdminProduct) => {
-    setEditingId(p.id);
     setForm({
-      title: p.title,
-      category: p.category,
-      price: String(p.price),
-      discount_percent: String(p.discount_percent),
-      description: p.description ?? '',
-      img_url: p.img_url ?? '',
-      badge: p.badge ?? '',
-      stock: String(p.stock),
-      active: p.active,
-      is_new: p.is_new,
+      ...emptyForm,
+      variants: [{ weight: '500g', price: '5000', discount_percent: '0', distributor_price: '' }],
+      flavors: [{ flavor_name: 'Natural' }],
+      stockMatrix: { '0-0': '10' },
     });
     setFormError(null);
     setShowModal(true);
   };
 
-  const closeModal = () => setShowModal(false);
+  const openEditModal = (p: AdminProduct) => {
+    setIsClosing(false);
+    setEditingId(p.id);
+
+    const initialImages = p.images && p.images.length > 0 ? p.images : p.img_url ? [p.img_url] : [];
+    const variants =
+      p.variants && p.variants.length > 0
+        ? p.variants
+        : [{ weight: '500g', price: '0', discount_percent: '0', distributor_price: '' }];
+    const flavors = p.flavors && p.flavors.length > 0 ? p.flavors : [{ flavor_name: 'Natural' }];
+
+    const stockMatrix: Record<string, string> = {};
+    variants.forEach((v, vIdx) => {
+      flavors.forEach((f, fIdx) => {
+        const key = v.id != null && f.id != null ? `${v.id}-${f.id}` : undefined;
+        const stock = key ? p.stockMap?.[key] : undefined;
+        stockMatrix[`${vIdx}-${fIdx}`] = stock != null ? String(stock) : '0';
+      });
+    });
+
+    setForm({
+      title: p.title,
+      category_id: p.category_id ? String(p.category_id) : '',
+      description: p.description ?? '',
+      images: initialImages,
+      badge: p.badge ?? '',
+      active: p.active,
+      is_new: p.is_new,
+      is_distributor: p.is_distributor,
+      variants,
+      flavors,
+      stockMatrix,
+    });
+    setFormError(null);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setShowModal(false);
+      setIsClosing(false);
+    }, 200);
+  };
+
+  // ---------- Variantes de Peso ----------
+  const updateVariant = (idx: number, patch: Partial<AdminVariant>) => {
+    const updated = [...form.variants];
+    updated[idx] = { ...updated[idx], ...patch };
+    setForm({ ...form, variants: updated });
+  };
+
+  const addVariant = () => {
+    const newIdx = form.variants.length;
+    const newStockMatrix = { ...form.stockMatrix };
+    form.flavors.forEach((_, fIdx) => {
+      newStockMatrix[`${newIdx}-${fIdx}`] = '0';
+    });
+    setForm({
+      ...form,
+      variants: [...form.variants, { weight: '', price: '', discount_percent: '0', distributor_price: '' }],
+      stockMatrix: newStockMatrix,
+    });
+  };
+
+  const removeVariant = (idx: number) => {
+    const newVariants = form.variants.filter((_, i) => i !== idx);
+    const newStockMatrix: Record<string, string> = {};
+    Object.entries(form.stockMatrix).forEach(([key, val]) => {
+      const [vIdxStr, fIdxStr] = key.split('-');
+      const vIdx = parseInt(vIdxStr, 10);
+      if (vIdx === idx) return;
+      const newVIdx = vIdx > idx ? vIdx - 1 : vIdx;
+      newStockMatrix[`${newVIdx}-${fIdxStr}`] = val ?? '0';
+    });
+    setForm({ ...form, variants: newVariants, stockMatrix: newStockMatrix });
+  };
+
+  const calculateFinalPrice = (priceStr: string, discountStr: string) => {
+    const price = parseFloat(priceStr) || 0;
+    const discount = parseFloat(discountStr) || 0;
+    if (price <= 0) return 0;
+    if (discount <= 0) return price;
+    return Math.round(price - price * (discount / 100));
+  };
+
+  // ---------- Sabores ----------
+  const updateFlavor = (idx: number, patch: Partial<AdminFlavor>) => {
+    const updated = [...form.flavors];
+    updated[idx] = { ...updated[idx], ...patch };
+    setForm({ ...form, flavors: updated });
+  };
+
+  const addFlavor = () => {
+    const newIdx = form.flavors.length;
+    const newStockMatrix = { ...form.stockMatrix };
+    form.variants.forEach((_, vIdx) => {
+      newStockMatrix[`${vIdx}-${newIdx}`] = '0';
+    });
+    setForm({
+      ...form,
+      flavors: [...form.flavors, { flavor_name: '' }],
+      stockMatrix: newStockMatrix,
+    });
+  };
+
+  const removeFlavor = (idx: number) => {
+    const newFlavors = form.flavors.filter((_, i) => i !== idx);
+    const newStockMatrix: Record<string, string> = {};
+    Object.entries(form.stockMatrix).forEach(([key, val]) => {
+      const [vIdxStr, fIdxStr] = key.split('-');
+      const fIdx = parseInt(fIdxStr, 10);
+      if (fIdx === idx) return;
+      const newFIdx = fIdx > idx ? fIdx - 1 : fIdx;
+      newStockMatrix[`${vIdxStr}-${newFIdx}`] = val ?? '0';
+    });
+    setForm({ ...form, flavors: newFlavors, stockMatrix: newStockMatrix });
+  };
+
+  // ---------- Matriz de Stock ----------
+  const updateStock = (vIdx: number, fIdx: number, value: string) => {
+    setForm({ ...form, stockMatrix: { ...form.stockMatrix, [`${vIdx}-${fIdx}`]: value } });
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const priceNum = parseFloat(form.price);
-    const discountNum = parseFloat(form.discount_percent || '0');
-    const stockNum = parseInt(form.stock || '0', 10);
+    const categoryIdNum = form.category_id ? parseInt(form.category_id, 10) : null;
 
-    if (!form.title.trim() || !form.category.trim() || isNaN(priceNum) || priceNum < 0) {
-      setFormError('Completa título, categoría y un precio válido.');
+    if (!form.title.trim() || !categoryIdNum) {
+      setFormError('Completa el título y selecciona una categoría.');
       return;
     }
-    if (discountNum < 0 || discountNum > 100) {
-      setFormError('El descuento debe estar entre 0 y 100.');
+    if (form.variants.length === 0 || form.variants.some((v) => !v.weight.trim() || v.price === '')) {
+      setFormError('Agrega al menos un peso con precio.');
+      return;
+    }
+    if (form.flavors.length === 0 || form.flavors.some((f) => !f.flavor_name.trim())) {
+      setFormError('Agrega al menos un sabor con nombre.');
       return;
     }
 
     setSaving(true);
     setFormError(null);
 
-    const payload = {
+    const mainImageUrl = form.images.length > 0 ? form.images[0] : null;
+
+    const productPayload = {
       title: form.title.trim(),
-      category: form.category.trim(),
-      price: priceNum,
-      discount_percent: discountNum,
+      category_id: categoryIdNum,
       description: form.description.trim() || null,
-      img_url: form.img_url || null,
+      img_url: mainImageUrl,
+      images: form.images,
       badge: form.badge.trim() || null,
-      stock: isNaN(stockNum) ? 0 : stockNum,
       active: form.active,
       is_new: form.is_new,
+      is_distributor: form.is_distributor,
     };
 
-    const { error } = editingId
-      ? await supabase.from('products').update(payload).eq('id', editingId)
-      : await supabase.from('products').insert(payload);
+    // Sanitización estricta: asegurar que ningún stock se envíe como string vacío o nulo
+    const sanitizedStockMatrix: Record<string, string> = {};
+    form.variants.forEach((_, vIdx) => {
+      form.flavors.forEach((_, fIdx) => {
+        const key = `${vIdx}-${fIdx}`;
+        const val = form.stockMatrix[key];
+        sanitizedStockMatrix[key] = (val === undefined || val === null || val === '') ? '0' : String(val);
+      });
+    });
+
+    const { error: rpcError } = await supabase.rpc('save_product_transactional', {
+      p_product_id: editingId,
+      p_product_data: productPayload,
+      p_variants: form.variants,
+      p_flavors: form.flavors,
+      p_stock_matrix: sanitizedStockMatrix,
+    });
 
     setSaving(false);
 
-    if (error) {
-      setFormError('No se pudo guardar el producto. Intenta de nuevo.');
+    if (rpcError) {
+      setFormError(`Error al guardar el producto: ${rpcError.message}`);
       return;
     }
 
-    setShowModal(false);
+    closeModal();
     fetchProducts();
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')) return;
+    if (!confirm('¿Eliminar este producto? Esto también borrará sus imágenes.')) return;
+
+    const product = products.find((p) => p.id === id);
+    const paths = (product?.images || [])
+      .map((url) => extractStoragePath(url, 'product-images'))
+      .filter((p): p is string => Boolean(p));
+
+    if (paths.length > 0) {
+      await supabase.storage.from('product-images').remove(paths);
+    }
+
     await supabase.from('products').delete().eq('id', id);
     fetchProducts();
   };
@@ -152,50 +365,59 @@ export default function ProductsManager() {
     fetchProducts();
   };
 
-  const previewFinalPrice = () => {
-    const priceNum = parseFloat(form.price);
-    const discountNum = parseFloat(form.discount_percent || '0');
-    if (isNaN(priceNum)) return null;
-    const final = Math.round(priceNum * (1 - (isNaN(discountNum) ? 0 : discountNum) / 100));
-    return final;
-  };
+  const totalStockFor = (p: AdminProduct) =>
+    p.stockMap ? Object.values(p.stockMap).reduce((sum, s) => sum + s, 0) : 0;
 
-  const finalPreview = previewFinalPrice();
+  // Filtrado dinámico por título o categoría
+  const filteredProducts = products.filter((p) => {
+    const query = searchTerm.toLowerCase().trim();
+    if (!query) return true;
+    const titleMatch = p.title.toLowerCase().includes(query);
+    const categoryMatch = p.category_name?.toLowerCase().includes(query);
+    return titleMatch || categoryMatch;
+  });
 
   return (
     <div>
       <div className={styles.sectionHeader}>
-        <h2>Productos ({products.length})</h2>
+        <h2>Productos ({filteredProducts.length})</h2>
         <button className={styles.addBtn} onClick={openCreateModal}>
           + Nuevo producto
         </button>
       </div>
 
+      {/* BARRA DE BÚSQUEDA */}
+      <div className={styles.field} style={{ marginBottom: '1.25rem' }}>
+        <input
+          type="text"
+          placeholder="Buscar producto por nombre o categoría..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       {loading ? (
         <p className={styles.emptyState}>Cargando...</p>
-      ) : products.length === 0 ? (
-        <p className={styles.emptyState}>Aún no hay productos. Crea el primero.</p>
+      ) : filteredProducts.length === 0 ? (
+        <p className={styles.emptyState}>
+          {searchTerm ? 'No se encontraron productos que coincidan con la búsqueda.' : 'Aún no hay productos.'}
+        </p>
       ) : (
         <div className={styles.dataTable}>
-          {products.map((p) => (
-            <div
-              key={p.id}
-              className={styles.dataRow}
-              style={{ gridTemplateColumns: '44px 1fr auto auto' }}
-            >
+          {filteredProducts.map((p) => (
+            <div key={p.id} className={styles.dataRow} style={{ gridTemplateColumns: '44px 1fr auto auto' }}>
               {p.img_url ? (
-                <img src={p.img_url} alt={p.title} className={styles.rowThumb} />
+                <div className={styles.rowThumb} style={{ position: 'relative', overflow: 'hidden' }}>
+                  <Image src={p.img_url} alt={p.title} width={44} height={44} style={{ objectFit: 'cover' }} />
+                </div>
               ) : (
                 <div className={styles.rowThumb} />
               )}
               <div>
                 <div className={styles.rowTitle}>{p.title}</div>
                 <div className={styles.rowMeta}>
-                  {p.category} · {formatCLP(p.final_price)}
-                  {p.discount_percent > 0 && ` (−${p.discount_percent}% de ${formatCLP(p.price)})`}
-                  {' · Stock: '}
-                  {p.stock}
-                  {p.is_new && ' · 🌟 Novedad'}
+                  {p.category_name} · {p.variants?.length || 0} pesos · {p.flavors?.length || 0} sabores · Stock total: {totalStockFor(p)}
+                  {p.is_distributor && ' · 🏷️ Distribuidor'}
                 </div>
               </div>
               <button
@@ -206,16 +428,8 @@ export default function ProductsManager() {
                 {p.active ? 'Activo' : 'Inactivo'}
               </button>
               <div className={styles.rowActions}>
-                <button className={styles.iconActionBtn} onClick={() => openEditModal(p)} title="Editar">
-                  ✎
-                </button>
-                <button
-                  className={`${styles.iconActionBtn} ${styles.deleteActionBtn}`}
-                  onClick={() => handleDelete(p.id)}
-                  title="Eliminar"
-                >
-                  ✕
-                </button>
+                <button className={styles.iconActionBtn} onClick={() => openEditModal(p)}>✎</button>
+                <button className={`${styles.iconActionBtn} ${styles.deleteActionBtn}`} onClick={() => handleDelete(p.id)}>✕</button>
               </div>
             </div>
           ))}
@@ -223,146 +437,245 @@ export default function ProductsManager() {
       )}
 
       {showModal && (
-        <div className={styles.modalOverlay} onClick={closeModal}>
-          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={`${styles.modalOverlay} ${isClosing ? styles.modalOverlayExit : ''}`}
+          onClick={closeModal}
+        >
+          <div
+            className={`${styles.modalCardLarge} ${isClosing ? styles.modalCardExit : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3>{editingId ? 'Editar producto' : 'Nuevo producto'}</h3>
 
             <form onSubmit={handleSave}>
               <div className={styles.field}>
                 <label>Nombre del producto</label>
-                <input
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  required
-                />
+                <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
               </div>
 
               <div className={styles.formGrid}>
                 <div className={styles.field}>
                   <label>Categoría</label>
-                  {categories.length === 0 ? (
-                    <p style={{ fontSize: '0.8rem', color: '#a8a29e' }}>
-                      No hay categorías creadas. Ve a la pestaña "Categorías" y crea al menos una.
-                    </p>
-                  ) : (
-                    <select
-                      value={form.category}
-                      onChange={(e) => setForm({ ...form, category: e.target.value })}
-                      required
-                    >
-                      <option value="" disabled>
-                        Selecciona una categoría
-                      </option>
-                      {categories.map((c) => (
-                        <option key={c.id} value={c.name}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
+                  <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
+                    <option value="" disabled>Selecciona una categoría</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className={styles.field}>
-                  <label>Etiqueta (opcional)</label>
-                  <input
-                    value={form.badge}
-                    onChange={(e) => setForm({ ...form, badge: e.target.value })}
-                    placeholder="Orgánico, Top Ventas..."
-                  />
+                  <label>Etiqueta</label>
+                  <input value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} placeholder="Top Ventas..." />
                 </div>
               </div>
-
-              <div className={styles.formGrid}>
-                <div className={styles.field}>
-                  <label>Precio (CLP)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label>Descuento (%)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={form.discount_percent}
-                    onChange={(e) => setForm({ ...form, discount_percent: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              {finalPreview !== null && (
-                <div className={styles.finalPricePreview}>
-                  Precio final al cliente: {formatCLP(finalPreview)}
-                </div>
-              )}
-
-              <div className={styles.field}>
-                <label>Stock disponible</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={form.stock}
-                  onChange={(e) => setForm({ ...form, stock: e.target.value })}
-                />
-              </div>
-
-              <div className={styles.field}>
-                <label>Descripción (se muestra al presionar el "+" en la tienda)</label>
-                <textarea
-                  rows={3}
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                />
-              </div>
-
-              <ImageUploadField
-                bucket="product-images"
-                value={form.img_url || null}
-                onChange={(url) => setForm({ ...form, img_url: url })}
-                label="Imagen del producto"
-              />
-
-              <label className={styles.switchRow} style={{ marginTop: '1.1rem' }}>
-                <input
-                  type="checkbox"
-                  className={styles.switchInput}
-                  checked={form.active}
-                  onChange={(e) => setForm({ ...form, active: e.target.checked })}
-                />
-                <span className={styles.switchTrack}>
-                  <span className={styles.switchThumb} />
-                </span>
-                <span className={styles.switchLabel}>Visible en la tienda</span>
-              </label>
 
               <label className={styles.switchRow}>
                 <input
                   type="checkbox"
                   className={styles.switchInput}
-                  checked={form.is_new}
-                  onChange={(e) => setForm({ ...form, is_new: e.target.checked })}
+                  checked={form.is_distributor}
+                  onChange={(e) => setForm({ ...form, is_distributor: e.target.checked })}
                 />
-                <span className={styles.switchTrack}>
-                  <span className={styles.switchThumb} />
-                </span>
-                <span className={styles.switchLabel}>
-                  Marcar como novedad (aparecerá en la sección Novedades de la tienda)
-                </span>
+                <span className={styles.switchTrack}><span className={styles.switchThumb} /></span>
+                <span className={styles.switchLabel}>Disponible para distribuidores</span>
+              </label>
+
+              {/* SECCIÓN VARIANTES DE PESO Y PRECIOS */}
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
+                <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
+                  Pesos y Precios
+                </label>
+
+                {form.variants.map((v, vIdx) => {
+                  const finalPrice = calculateFinalPrice(v.price, v.discount_percent);
+                  const hasDiscount = parseFloat(v.discount_percent || '0') > 0 && parseFloat(v.price || '0') > 0;
+
+                  return (
+                    <div key={vIdx} className={styles.variantCard}>
+                      <div className={styles.variantGrid}>
+                        <div className={styles.variantCol}>
+                          <label>Peso / Formato</label>
+                          <input
+                            type="text"
+                            value={v.weight}
+                            onChange={(e) => updateVariant(vIdx, { weight: e.target.value })}
+                            placeholder="Ej. 500g"
+                            required
+                          />
+                        </div>
+
+                        <div className={styles.variantCol}>
+                          <label>Precio Lista ($)</label>
+                          <input
+                            type="number"
+                            value={v.price}
+                            onChange={(e) => updateVariant(vIdx, { price: e.target.value })}
+                            placeholder="Ej. 5000"
+                            required
+                          />
+                        </div>
+
+                        <div className={styles.variantCol}>
+                          <label>% Descuento</label>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={v.discount_percent}
+                            onChange={(e) => updateVariant(vIdx, { discount_percent: e.target.value })}
+                            placeholder="0"
+                          />
+                        </div>
+
+                        {form.is_distributor && (
+                          <div className={styles.variantCol}>
+                            <label style={{ color: '#d97706' }}>Precio Distribuidor ($)</label>
+                            <input
+                              type="number"
+                              value={v.distributor_price}
+                              onChange={(e) => updateVariant(vIdx, { distributor_price: e.target.value })}
+                              placeholder={`Opcional (${v.price || 'Normal'})`}
+                              style={{ borderColor: '#f59e0b' }}
+                            />
+                          </div>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => removeVariant(vIdx)}
+                          style={{
+                            background: '#fee2e2',
+                            color: '#dc2626',
+                            border: 'none',
+                            padding: '8px 12px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            height: '38px',
+                          }}
+                          title="Eliminar peso"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      {hasDiscount && (
+                        <div className={styles.finalPriceTag}>
+                          🏷️ Precio final venta: ${finalPrice.toLocaleString('es-CL')} ({v.discount_percent}% dcto.)
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  onClick={addVariant}
+                  style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                >
+                  + Agregar peso
+                </button>
+              </div>
+
+              {/* SECCIÓN SABORES */}
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
+                <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
+                  Sabores
+                </label>
+
+                {form.flavors.map((f, fIdx) => (
+                  <div key={fIdx} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '8px', marginBottom: '8px' }}>
+                    <input
+                      type="text"
+                      value={f.flavor_name}
+                      onChange={(e) => updateFlavor(fIdx, { flavor_name: e.target.value })}
+                      placeholder="Nombre del sabor"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeFlavor(fIdx)}
+                      style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer' }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={addFlavor}
+                  style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                >
+                  + Agregar sabor
+                </button>
+              </div>
+
+              {/* SECCIÓN MATRIZ DE STOCK */}
+              {form.variants.length > 0 && form.flavors.length > 0 && (
+                <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
+                  <label style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'block' }}>
+                    Stock por combinación (peso × sabor)
+                  </label>
+
+                  <div className={styles.tableWrapper}>
+                    <table className={styles.stockTable}>
+                      <thead>
+                        <tr>
+                          <th style={{ textAlign: 'left' }}>Sabor \ Peso</th>
+                          {form.variants.map((v, vIdx) => (
+                            <th key={vIdx} style={{ textAlign: 'center', minWidth: '90px' }}>
+                              {v.weight || `Peso ${vIdx + 1}`}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {form.flavors.map((f, fIdx) => (
+                          <tr key={fIdx}>
+                            <td style={{ fontWeight: 600 }}>{f.flavor_name || `Sabor ${fIdx + 1}`}</td>
+                            {form.variants.map((_, vIdx) => (
+                              <td key={vIdx} style={{ textAlign: 'center' }}>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={form.stockMatrix[`${vIdx}-${fIdx}`] ?? '0'}
+                                  onChange={(e) => updateStock(vIdx, fIdx, e.target.value)}
+                                  style={{ width: '70px', padding: '4px 6px', borderRadius: '6px', border: '1px solid #e2e8f0', textAlign: 'center' }}
+                                />
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              <div className={styles.field} style={{ marginTop: '1rem' }}>
+                <label>Descripción</label>
+                <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+              </div>
+
+              <ImageUploadField bucket="product-images" value={form.images} onChange={(urls) => setForm({ ...form, images: urls })} label="Imágenes" altText={form.title} />
+
+              <label className={styles.switchRow} style={{ marginTop: '1rem' }}>
+                <input type="checkbox" className={styles.switchInput} checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} />
+                <span className={styles.switchTrack}><span className={styles.switchThumb} /></span>
+                <span className={styles.switchLabel}>Visible en la tienda</span>
+              </label>
+
+              <label className={styles.switchRow}>
+                <input type="checkbox" className={styles.switchInput} checked={form.is_new} onChange={(e) => setForm({ ...form, is_new: e.target.checked })} />
+                <span className={styles.switchTrack}><span className={styles.switchThumb} /></span>
+                <span className={styles.switchLabel}>Marcar como novedad</span>
               </label>
 
               {formError && <p className={styles.errorText}>{formError}</p>}
 
               <div className={styles.modalActions}>
-                <button type="button" className={styles.secondaryBtn} onClick={closeModal}>
-                  Cancelar
-                </button>
-                <button type="submit" className={styles.primaryBtn} disabled={saving}>
-                  {saving ? 'Guardando...' : 'Guardar producto'}
-                </button>
+                <button type="button" className={styles.secondaryBtn} onClick={closeModal}>Cancelar</button>
+                <button type="submit" className={styles.primaryBtn} disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>
               </div>
             </form>
           </div>

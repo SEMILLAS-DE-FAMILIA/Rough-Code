@@ -14,6 +14,7 @@ const TABS = [
   { href: '/admin/carrusel', label: 'Carrusel' },
   { href: '/admin/banner', label: 'Banner' },
   { href: '/admin/distribuidores', label: 'Distribuidores' },
+  { href: '/admin/carga-masiva', label: 'Carga Masiva' },
 ];
 
 const INACTIVITY_LIMIT_MS = 15 * 60 * 1000;

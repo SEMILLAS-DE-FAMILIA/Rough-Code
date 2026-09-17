@@ -1,5 +1,38 @@
+// proxy.ts
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+
+const isDev = process.env.NODE_ENV === 'development';
+
+function buildCspHeader() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseHost = new URL(supabaseUrl).hostname;
+
+  const scriptSrc = isDev
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com"
+    : "script-src 'self' https://www.googletagmanager.com";
+
+  return [
+    "default-src 'self'",
+    scriptSrc,
+    "style-src 'self' 'unsafe-inline'",
+    `img-src 'self' data: blob: https://${supabaseHost} https://www.google-analytics.com`,
+    `connect-src 'self' https://${supabaseHost} wss://${supabaseHost} https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com`,
+    "font-src 'self' data:",
+    "frame-ancestors 'none'",
+  ].join('; ');
+}
+
+function applySecurityHeaders(response: NextResponse) {
+  response.headers.set('Content-Security-Policy', buildCspHeader());
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+  response.headers.set('X-DNS-Prefetch-Control', 'on');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  return response;
+}
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request: { headers: request.headers } });
@@ -25,18 +58,18 @@ export async function proxy(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith('/admin')) {
     if (!user) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      return applySecurityHeaders(NextResponse.redirect(new URL('/login', request.url)));
     }
 
     const { data: isAdmin } = await supabase.rpc('is_admin');
     if (!isAdmin) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      return applySecurityHeaders(NextResponse.redirect(new URL('/login', request.url)));
     }
   }
 
-  return response;
+  return applySecurityHeaders(response);
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };

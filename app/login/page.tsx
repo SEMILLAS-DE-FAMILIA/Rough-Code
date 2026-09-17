@@ -1,9 +1,11 @@
+// app/login/page.tsx
 'use client';
 
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AdminLogin from '../components/admin/AdminLogin';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reason = searchParams.get('reason');
@@ -21,4 +23,12 @@ export default function LoginPage() {
       : undefined;
 
   return <AdminLogin onLoggedIn={handleLoggedIn} infoMessage={infoMessage} />;
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginContent />
+    </Suspense>
+  );
 }

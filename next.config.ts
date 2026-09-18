@@ -1,8 +1,13 @@
-// next.config.ts — se queda solo con esto, sin duplicar CSP en ningún lado
 import type { NextConfig } from 'next';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseHost = new URL(supabaseUrl).hostname;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+let supabaseHost = 'placeholder.supabase.co';
+
+try {
+  supabaseHost = new URL(supabaseUrl).hostname;
+} catch {
+  // Manejo por si la URL no es válida durante el build inicial
+}
 
 const nextConfig: NextConfig = {
   images: {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCartStore, CartItem } from '../../src/lib/useCartStore';
 import { useIsHydrated } from '../../src/lib/useIsHydrated';
-import { formatCLP } from '../../src/lib/format'; // ajusta la ruta relativa según el archivo
+import { formatCLP } from '../../src/lib/format';
 import { supabase } from '../../src/lib/supabaseClient';
 import { isValidRut, autoFormatRut } from '../../src/lib/rut';
 import styles from './pedidos.module.css';
@@ -194,15 +194,38 @@ export default function PedidosPage() {
             <h3>Tu pedido</h3>
             {cart.map((item) => (
               <div key={item.id} className={styles.summaryRow}>
-                {item.img_url && <Image src={item.img_url} alt={item.product_title} width={48} height={48} className={styles.summaryThumb} />}
+                {item.img_url && (
+                  <Image 
+                    src={item.img_url} 
+                    alt={item.product_title} 
+                    width={48} 
+                    height={48} 
+                    className={styles.summaryThumb} 
+                  />
+                )}
                 <div style={{ flex: 1 }}>
                   <p className={styles.summaryTitle}>
                     {item.product_title}
-                    {item.is_reservation && <span style={{ fontSize: '0.75rem', marginLeft: '6px', color: '#e65100', background: '#ffe0b2', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Reserva</span>}
+                    {item.is_reservation && (
+                      <span style={{ fontSize: '0.75rem', marginLeft: '6px', color: '#e65100', background: '#ffe0b2', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>
+                        Reserva
+                      </span>
+                    )}
                   </p>
-                  <p className={styles.summaryMeta}>{item.quantity} × {formatCLP(item.unit_price)}</p>
+
+                  {(item.selected_weight || item.selected_flavor) && (
+                    <p className={styles.summaryMeta}>
+                      {[item.selected_weight, item.selected_flavor].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+
+                  <p className={styles.summaryMeta}>
+                    {item.quantity} × {formatCLP(item.unit_price)}
+                  </p>
                 </div>
-                <span className={styles.summaryLineTotal}>{formatCLP(item.unit_price * item.quantity)}</span>
+                <span className={styles.summaryLineTotal}>
+                  {formatCLP(item.unit_price * item.quantity)}
+                </span>
               </div>
             ))}
             <div className={styles.summaryTotalRow}>

@@ -59,10 +59,56 @@ export function useProducts({
     setLoading(true);
     setError(null);
 
-    const from = (currentPage - 1) * itemsPerPage;
+    let matchedIds: number[] = [];
+    const hasSearch = searchQuery.trim().length > 0;
+
+    if (hasSearch) {
+      const { data: matches, error: searchError } = await supabase.rpc('search_products', {
+        p_query: searchQuery.trim(),
+      });
+      if (searchError) {
+        console.error('Error en búsqueda:', searchError.message);
+        setError('No se pudo realizar la búsqueda.');
+        setLoading(false);
+        return;
+      }
+      matchedIds = (matches || []).map((m: any) => m.id);
+      if (matchedIds.length === 0) {
+        setProducts([]);
+        setTotalCount(0);
+        setLoading(false);
+        return;
+      }
+    }
+
+    // Aplica los filtros comunes (categoría/distribuidor/búsqueda/novedad) a cualquier query base
+    function applyFilters<T>(base: T): T {
+      let q = (base as any).eq('active', true);
+      if (isNewOnly) q = q.eq('is_new', true);
+      if (activeCategory === 'Distribuidor') {
+        q = q.eq('is_distributor', true);
+      } else if (activeCategory !== 'Todos' && categories.length > 0) {
+        const selectedCatObj = categories.find((c) => c.name === activeCategory);
+        if (selectedCatObj?.id) {
+          q = q.eq('category_id', selectedCatObj.id);
+        }
+      }
+      if (hasSearch) {
+        q = q.in('id', matchedIds);
+      }
+      return q;
+    }
+
+    // 1. Conteo liviano, solo para calcular la paginación real bajo los filtros actuales
+    const countBase = supabase.from('products').select('id', { count: 'exact', head: true });
+    const { count: filteredCount } = await applyFilters(countBase);
+    const safeTotalPages = Math.max(1, Math.ceil((filteredCount || 0) / itemsPerPage));
+    const safePage = Math.min(currentPage, safeTotalPages);
+    const from = (safePage - 1) * itemsPerPage;
     const to = from + itemsPerPage - 1;
 
-    let query = supabase
+    // 2. Query real, con los joins completos
+    const dataBase = supabase
       .from('products')
       .select(
         `
@@ -86,47 +132,11 @@ export function useProducts({
         product_flavors ( id, flavor_name )
       `,
         { count: 'exact' }
-      )
-      .eq('active', true);
+      );
 
-    if (isNewOnly) {
-      query = query.eq('is_new', true);
-    }
-
-    // Aplicar filtro de categoría o zona distribuidor
-    if (activeCategory === 'Distribuidor') {
-      query = query.eq('is_distributor', true);
-    } else if (activeCategory !== 'Todos' && categories.length > 0) {
-      const selectedCatObj = categories.find((c) => c.name === activeCategory);
-      if (selectedCatObj?.id) {
-        query = query.eq('category_id', selectedCatObj.id);
-      }
-    }
-
-    // Búsqueda tolerante a tildes, mayúsculas y errores de tipeo
-    if (searchQuery.trim()) {
-      const { data: matches, error: searchError } = await supabase.rpc('search_products', {
-        p_query: searchQuery.trim(),
-      });
-      if (searchError) {
-        console.error('Error en búsqueda:', searchError.message);
-        setError('No se pudo realizar la búsqueda.');
-        setLoading(false);
-        return;
-      }
-      const matchedIds = (matches || []).map((m: any) => m.id);
-      if (matchedIds.length === 0) {
-        setProducts([]);
-        setTotalCount(0);
-        setLoading(false);
-        return;
-      }
-      query = query.in('id', matchedIds);
-    }
-
+    let query = applyFilters(dataBase);
     query = query.order('created_at', { ascending: false });
 
-    // Aplicar paginación o límite según isNewOnly
     if (!isNewOnly) {
       query = query.range(from, to);
     } else {

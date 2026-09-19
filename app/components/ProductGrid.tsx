@@ -37,6 +37,14 @@ export default function ProductGrid({
     itemsPerPage: ITEMS_PER_PAGE,
   });
 
+  // Clamp defensivo de la página actual según el totalCount obtenido
+  useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalCount, currentPage]);
+
   // Reinicia la página actual al cambiar la búsqueda o la categoría
   useEffect(() => {
     setCurrentPage(1);
@@ -115,6 +123,7 @@ export default function ProductGrid({
                 setIsModalClosing(false);
                 setSelectedProduct(p);
               }}
+              onAddToCart={onAddToCart}
               viewingDistributorTab={viewingDistributorTab}
               isDistributorLoggedIn={isDistributorLoggedIn}
               distributorPrices={distributorPrices}

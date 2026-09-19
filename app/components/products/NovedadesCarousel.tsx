@@ -55,6 +55,7 @@ export default function NovedadesCarousel({ onAddToCart, onOpenDistributorModal 
               <ProductCard
                 product={p}
                 onOpenModal={setSelectedProduct}
+                onAddToCart={onAddToCart}
                 isDistributorLoggedIn={isDistributorLoggedIn}
                 distributorPrices={distributorPrices}
                 onOpenDistributorModal={onOpenDistributorModal}

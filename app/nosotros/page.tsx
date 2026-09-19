@@ -3,12 +3,24 @@ import Link from 'next/link';
 
 export default function SobreNosotrosPage() {
   return (
-    <main style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px', color: '#2C1810', fontFamily: 'var(--font-sans, sans-serif)' }}>
-      <nav style={{ marginBottom: '20px', fontSize: '0.9rem' }}>
+    <main 
+      lang="es"
+      style={{ 
+        maxWidth: '800px', 
+        margin: '0 auto', 
+        padding: '40px 20px', 
+        color: '#2C1810', 
+        fontFamily: 'var(--font-sans, sans-serif)',
+        textAlign: 'justify',
+        hyphens: 'auto',
+        WebkitHyphens: 'auto'
+      }}
+    >
+      <nav style={{ marginBottom: '20px', fontSize: '0.9rem', textAlign: 'left' }}>
         <Link href="/" style={{ color: '#4E2C1D', textDecoration: 'underline' }}>← Volver al inicio</Link>
       </nav>
 
-      <h1 style={{ fontSize: '2.2rem', marginBottom: '10px', color: '#4E2C1D' }}>Sobre Nosotros</h1>
+      <h1 style={{ fontSize: '2.2rem', marginBottom: '10px', color: '#4E2C1D', textAlign: 'left' }}>Sobre Nosotros</h1>
       <p style={{ fontSize: '1.1rem', color: '#666', marginBottom: '30px', fontWeight: '500' }}>
         Llevando lo mejor de la naturaleza y los frutos secos directamente a tu hogar en Talca y todo Chile.
       </p>

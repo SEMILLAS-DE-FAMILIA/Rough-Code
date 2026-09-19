@@ -2,15 +2,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-const isDev = process.env.NODE_ENV === 'development';
-
 function buildCspHeader() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseHost = new URL(supabaseUrl).hostname;
 
-  const scriptSrc = isDev
-    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com"
-    : "script-src 'self' https://www.googletagmanager.com";
+  // 'unsafe-inline' es necesario en todo entorno (no solo dev) porque
+  // Next.js App Router usa scripts inline para la hidratación de React
+  const scriptSrc = "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com";
 
   return [
     "default-src 'self'",

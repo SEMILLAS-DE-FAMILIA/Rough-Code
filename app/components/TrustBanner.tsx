@@ -14,8 +14,8 @@ export default function TrustBanner() {
             </svg>
           </div>
           <div className={styles.trustText}>
-            <h4>100% Orgánico</h4>
-            <p>Semillas libres de transgénicos</p>
+            <h4>Crujientes y Frescos</h4>
+            <p>Textura perfecta y sabor inigualable en cada puñado que disfrutas.</p>
           </div>
         </div>
 
@@ -26,8 +26,8 @@ export default function TrustBanner() {
             </svg>
           </div>
           <div className={styles.trustText}>
-            <h4>Envíos Seguros</h4>
-            <p>Despacho directo a todo el país</p>
+            <h4>Lleno de Beneficios</h4>
+            <p>Cuida tu corazón, fortalece tu mente y nutre tu cuerpo con cada porción.</p>
           </div>
         </div>
 
@@ -38,8 +38,8 @@ export default function TrustBanner() {
             </svg>
           </div>
           <div className={styles.trustText}>
-            <h4>Calidad Probada</h4>
-            <p>Alta tasa de germinación</p>
+            <h4>Para toda la Familia</h4>
+            <p>Saludables, versátiles y deliciosos: ideales para compartir en cualquier momento.</p>
           </div>
         </div>
       </div>

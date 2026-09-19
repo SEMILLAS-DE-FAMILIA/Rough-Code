@@ -35,7 +35,7 @@ export default function UpdatePasswordPage() {
       setMessage(`Error: ${error.message}`);
     } else {
       setMessage('¡Contraseña actualizada con éxito! Redirigiendo...');
-      setTimeout(() => router.push('/login'), 2000);
+      setTimeout(() => router.push('/'), 2000);
     }
   };
 

@@ -6,6 +6,7 @@ import { extractStoragePath } from '../../../src/lib/storageUtils';
 import ImageUploadField from './ImageUploadField';
 import styles from './Admin.module.css';
 
+
 interface Slide {
   id: number;
   title: string;

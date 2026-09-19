@@ -3,10 +3,12 @@ export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 declare global {
   interface Window {
     dataLayer: any[];
+    gtag: (...args: any[]) => void;
   }
 }
 
-function gtag(...args: any[]) {
+// Aseguramos que la función gtag envíe los eventos a window.dataLayer y esté expuesta en window
+export function gtag(...args: any[]) {
   if (typeof window === 'undefined') return;
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push(args);
@@ -27,16 +29,23 @@ export function storeConsent(value: ConsentValue) {
 }
 
 export function initGtag() {
-  // Si ya había consentimiento guardado de una visita anterior, se aplica
-  // ANTES del 'config' — así el pageview automático ya sale con el estado correcto.
+  if (typeof window === 'undefined') return;
+
+  // Asignamos gtag al objeto window para compatibilidad global
+  window.gtag = window.gtag || gtag;
+
   const stored = getStoredConsent();
+
+  // Consent Mode v2: Configuración predeterminada
   gtag('consent', 'default', {
     ad_storage: 'denied',
     ad_user_data: 'denied',
     ad_personalization: 'denied',
     analytics_storage: stored === 'granted' ? 'granted' : 'denied',
   });
+
   gtag('js', new Date());
+
   if (GA_MEASUREMENT_ID) {
     gtag('config', GA_MEASUREMENT_ID, { anonymize_ip: true });
   }
@@ -46,8 +55,8 @@ export function updateConsent(granted: boolean) {
   gtag('consent', 'update', {
     analytics_storage: granted ? 'granted' : 'denied',
   });
+
   if (granted) {
-    // Sin esto, aceptar el banner no genera ningún hit hasta la próxima navegación
     gtag('event', 'page_view');
   }
 }

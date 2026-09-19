@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tusitio.vercel.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://semillas-de-familia.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Opcional: Puedes hacer un fetch a tu base de datos o API para obtener IDs dinámicos (ej. productos del catálogo)

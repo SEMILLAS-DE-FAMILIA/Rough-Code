@@ -9,6 +9,9 @@ export default function Footer() {
   const instagramUrl = "https://www.instagram.com/semillasdefamilia.talca?igsi=ZWZ2NTV5MWczYjB0";
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const whatsappMessage = encodeURIComponent("¡Hola! Quisiera hacer una consulta sobre los productos de Semillas de Familia.");
+  
+  // Enlace genérico para Google Maps (Cámbialo cuando tengas el link exacto)
+  const mapsUrl = "https://maps.google.com/?q=Talca";
 
   return (
     <footer className={styles.footer}>
@@ -88,7 +91,25 @@ export default function Footer() {
                 <span>Facebook</span>
               </a>
 
+              {/* Google Maps (Verde) */}
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.contactBtn} ${styles.mapsBtn}`}
+              >
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <span>Ubicación</span>
+              </a>
+
             </div>
+
+            {/* Dirección de la tienda */}
+            <p className={styles.addressText}>
+              📍 35 y media oriente 2943, Valles del Country
+            </p>
           </div>
 
         </div>

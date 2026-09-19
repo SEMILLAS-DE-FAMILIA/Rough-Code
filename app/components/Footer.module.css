@@ -114,6 +114,21 @@
   background-color: #1877f2;
 }
 
+/* Botón de Google Maps en verde claro */
+.mapsBtn {
+  background-color: #8BC34A; /* Verde claro agradable */
+}
+
+/* Texto de la dirección alineado con los botones */
+.addressText {
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85); /* Blanco ligeramente translúcido para fondo oscuro */
+  text-align: center;
+  line-height: 1.4;
+  max-width: 180px; /* Mantiene la misma anchura de los botones para alineación */
+}
+
 .adminContainer {
   margin-top: 1.5rem;
   padding-top: 1rem;

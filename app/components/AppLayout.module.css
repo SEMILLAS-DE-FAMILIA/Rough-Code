@@ -463,6 +463,12 @@
   line-height: 1.2;
 }
 
+.cartItemMeta {
+  font-size: 0.75rem;
+  color: #78716c;
+  margin: 0 0 0.3rem 0;
+}
+
 .cartItemPrice {
   color: #15803d;
   font-size: 0.88rem;

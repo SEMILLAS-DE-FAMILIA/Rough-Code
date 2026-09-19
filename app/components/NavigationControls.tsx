@@ -142,6 +142,14 @@ export default function NavigationControls({ lastAddedProduct }: NavigationContr
                 )}
                 <div style={{ flex: 1 }}>
                   <h4 className={styles.cartItemTitle}>{item.product_title}</h4>
+                  
+                  {/* METADATA AGREGADA AQUÍ */}
+                  {(item.selected_weight || item.selected_flavor) && (
+                    <p className={styles.cartItemMeta}>
+                      {[item.selected_weight, item.selected_flavor].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+                  
                   <p className={styles.cartItemPrice}>{formatCLP(item.unit_price)}</p>
 
                   <div className={styles.quantityControls}>

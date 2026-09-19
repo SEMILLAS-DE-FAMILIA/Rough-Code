@@ -2,13 +2,15 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 function buildCspHeader() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseHost = new URL(supabaseUrl).hostname;
 
-  // 'unsafe-inline' es necesario en todo entorno (no solo dev) porque
-  // Next.js App Router usa scripts inline para la hidratación de React
-  const scriptSrc = "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com";
+  const scriptSrc = isDev
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com"
+    : "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com";
 
   return [
     "default-src 'self'",
@@ -35,26 +37,28 @@ function applySecurityHeaders(response: NextResponse) {
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request: { headers: request.headers } });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          response = NextResponse.next({ request: { headers: request.headers } });
-          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
-        },
-      },
-    }
-  );
-
-  const { data: { user } } = await supabase.auth.getUser();
-
+  // Solo se paga el costo de la llamada a Supabase Auth en rutas de /admin.
+  // El resto del sitio (home, catálogo, etc.) nunca necesita saber quién está logueado.
   if (request.nextUrl.pathname.startsWith('/admin')) {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+            response = NextResponse.next({ request: { headers: request.headers } });
+            cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+          },
+        },
+      }
+    );
+
+    const { data: { user } } = await supabase.auth.getUser();
+
     if (!user) {
       return applySecurityHeaders(NextResponse.redirect(new URL('/login', request.url)));
     }

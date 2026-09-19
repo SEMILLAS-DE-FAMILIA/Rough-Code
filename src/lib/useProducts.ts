@@ -103,10 +103,25 @@ export function useProducts({
       }
     }
 
-    // Aplicar filtro de búsqueda de texto en servidor
+    // Búsqueda tolerante a tildes, mayúsculas y errores de tipeo
     if (searchQuery.trim()) {
-      const term = searchQuery.trim();
-      query = query.or(`title.ilike.%${term}%,description.ilike.%${term}%`);
+      const { data: matches, error: searchError } = await supabase.rpc('search_products', {
+        p_query: searchQuery.trim(),
+      });
+      if (searchError) {
+        console.error('Error en búsqueda:', searchError.message);
+        setError('No se pudo realizar la búsqueda.');
+        setLoading(false);
+        return;
+      }
+      const matchedIds = (matches || []).map((m: any) => m.id);
+      if (matchedIds.length === 0) {
+        setProducts([]);
+        setTotalCount(0);
+        setLoading(false);
+        return;
+      }
+      query = query.in('id', matchedIds);
     }
 
     query = query.order('created_at', { ascending: false });

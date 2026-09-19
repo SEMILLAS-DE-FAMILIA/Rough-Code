@@ -18,7 +18,7 @@ function stockFor(variant: ProductVariant | undefined, flavorId: number | undefi
 interface ProductModalDetailsProps {
   product: Product;
   onClose: () => void;
-  onAddToCart: (item: NewCartItem) => void; // antes: any
+  onAddToCart: (item: NewCartItem) => void;
   distributorPrices?: Record<number, number>;
 }
 
@@ -32,7 +32,7 @@ export default function ProductModalDetails({
   const [isClosing, setIsClosing] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedVariantId, setSelectedVariantId] = useState<number>(product.variants[0]?.id || 0);
-  const [flavorQuantities, setFlavorQuantities] = useState<Record<number, number>>({});
+  const [quantities, setQuantities] = useState<Record<string, number>>({}); // key: `${variantId}-${flavorId}`
 
   const cart = useCartStore((s) => s.cart);
 
@@ -73,22 +73,24 @@ export default function ProductModalDetails({
   const currentVariant = product.variants.find((v) => v.id === selectedVariantId) || product.variants[0];
 
   const handleQuantityChange = (flavorId: number, qty: number, maxStock: number) => {
+    if (!currentVariant) return;
+    const key = `${currentVariant.id}-${flavorId}`;
     const validQty = Math.max(0, Math.min(qty, maxStock));
-    setFlavorQuantities((prev) => ({ ...prev, [flavorId]: validQty }));
+    setQuantities((prev) => ({ ...prev, [key]: validQty }));
   };
 
   const currentDistributorPrice = currentVariant && distributorPrices ? distributorPrices[currentVariant.id] : undefined;
 
-  const unitPrice = () => {
-    if (!currentVariant) return 0;
-    if (currentDistributorPrice != null) return currentDistributorPrice;
-    const disc = currentVariant.discount_percent || 0;
-    return disc > 0 ? currentVariant.price * (1 - disc / 100) : currentVariant.price;
+  const priceForVariant = (variant: ProductVariant) => {
+    const distPrice = distributorPrices ? distributorPrices[variant.id] : undefined;
+    if (distPrice != null) return distPrice;
+    const disc = variant.discount_percent || 0;
+    return disc > 0 ? variant.price * (1 - disc / 100) : variant.price;
   };
 
   const handleReserveFlavor = (flavorObj: ProductFlavor) => {
     if (!currentVariant) return;
-    const finalPrice = unitPrice();
+    const finalPrice = priceForVariant(currentVariant);
 
     onAddToCart({
       product_id: product.id,
@@ -108,35 +110,31 @@ export default function ProductModalDetails({
   };
 
   const handleAddAll = () => {
-    if (!currentVariant) return;
-    const finalPrice = unitPrice();
-
-    Object.entries(flavorQuantities).forEach(([flavorIdStr, qty]) => {
-      if (qty > 0) {
-        const flavorId = parseInt(flavorIdStr, 10);
-        const flavorObj = product.flavors.find((f) => f.id === flavorId);
-        if (flavorObj) {
-          const maxStock = stockFor(currentVariant, flavorObj.id);
-          onAddToCart({
-            product_id: product.id,
-            product_title: product.title,
-            variant_id: currentVariant.id,
-            flavor_id: flavorObj.id,
-            selected_weight: currentVariant.weight,
-            selected_flavor: flavorObj.flavor_name,
-            unit_price: finalPrice,
-            quantity: qty,
-            img_url: product.img_url,
-            max_stock: maxStock,
-          });
-        }
-      }
+    Object.entries(quantities).forEach(([key, qty]) => {
+      if (qty <= 0) return;
+      const [variantIdStr, flavorIdStr] = key.split('-');
+      const variant = product.variants.find((v) => v.id === parseInt(variantIdStr, 10));
+      const flavorObj = product.flavors.find((f) => f.id === parseInt(flavorIdStr, 10));
+      if (!variant || !flavorObj) return;
+      
+      onAddToCart({
+        product_id: product.id,
+        product_title: product.title,
+        variant_id: variant.id,
+        flavor_id: flavorObj.id,
+        selected_weight: variant.weight,
+        selected_flavor: flavorObj.flavor_name,
+        unit_price: priceForVariant(variant),
+        quantity: qty,
+        img_url: product.img_url,
+        max_stock: stockFor(variant, flavorObj.id),
+      });
     });
-
+    setQuantities({});
     handleClose();
   };
 
-  const totalSelectedCount = Object.values(flavorQuantities).reduce((sum, q) => sum + q, 0);
+  const totalSelectedCount = Object.values(quantities).reduce((sum, q) => sum + q, 0);
 
   if (!mounted) return null;
 
@@ -184,7 +182,6 @@ export default function ProductModalDetails({
                     type="button"
                     onClick={() => {
                       setSelectedVariantId(v.id);
-                      setFlavorQuantities({});
                     }}
                     style={{
                       padding: '8px 14px',
@@ -217,7 +214,7 @@ export default function ProductModalDetails({
                 const maxStock = stockFor(currentVariant, f.id);
                 const inCart = currentVariant ? alreadyInCart(currentVariant.id, f.id) : 0;
                 const remainingRoom = Math.max(0, maxStock - inCart);
-                const currentQty = flavorQuantities[f.id] || 0;
+                const currentQty = currentVariant ? quantities[`${currentVariant.id}-${f.id}`] || 0 : 0;
                 const isFlavorOutOfStock = remainingRoom <= 0;
 
                 return (
@@ -299,7 +296,7 @@ export default function ProductModalDetails({
                 <span className={styles.originalPrice}>{formatCLP(currentVariant.price)}</span>
               )}
               <span className={styles.price} style={currentDistributorPrice != null ? { color: '#2563eb' } : undefined}>
-                {formatCLP(unitPrice())} c/u
+                {formatCLP(currentVariant ? priceForVariant(currentVariant) : 0)} c/u
               </span>
             </div>
             <button

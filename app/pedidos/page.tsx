@@ -11,6 +11,7 @@ import { isValidRut, autoFormatRut } from '../../src/lib/rut';
 import styles from './pedidos.module.css';
 
 function buildWhatsAppMessage(
+  orderId: number,
   items: CartItem[],
   total: number,
   name: string,
@@ -23,6 +24,7 @@ function buildWhatsAppMessage(
   const lines: string[] = [];
 
   lines.push('*¡Hola! Gracias por tu compra en Semillas de Familia.*');
+  lines.push(`*ID de Compra: #${orderId}*`);
   lines.push('Hemos registrado tu pedido con el siguiente detalle:');
   lines.push('──────────────────────────────');
   lines.push('');
@@ -139,7 +141,7 @@ export default function PedidosPage() {
       return;
     }
 
-    const message = buildWhatsAppMessage(cart, total, name.trim(), rut, deliveryType, paymentMethod, address, notes);
+    const message = buildWhatsAppMessage(newOrderId, cart, total, name.trim(), rut, deliveryType, paymentMethod, address, notes);
     const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
 

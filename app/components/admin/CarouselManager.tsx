@@ -5,7 +5,6 @@ import { supabase } from '../../../src/lib/supabaseClient';
 import { extractStoragePath } from '../../../src/lib/storageUtils';
 import ImageUploadField from './ImageUploadField';
 import styles from './Admin.module.css';
-import { revalidatePath } from 'next/cache';
 
 interface Slide {
   id: number;

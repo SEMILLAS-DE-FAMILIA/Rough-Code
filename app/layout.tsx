@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Plus_Jakarta_Sans, Pacifico } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import "./styles/tokens.css";
 
 // Importación de componentes globales
 import TrustBanner from "./components/TrustBanner";
 import Footer from "./components/Footer";
-import AnalyticsProvider from "./components/AnalyticsProvider";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 
 const geistSans = Geist({
@@ -31,7 +31,8 @@ const pacifico = Pacifico({
   variable: "--font-pacifico",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tusitio.vercel.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.semillasdefamilia.cl';
+const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export const metadata: Metadata = {
   title: {
@@ -74,11 +75,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} ${displayFont.variable}`}
     >
-      <body className={displayFont.variable}>
-        <AnalyticsProvider />
-
+      <body>
         <div className="root-content-wrapper">
           {children}
         </div>
@@ -86,6 +85,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <TrustBanner />
         <Footer />
         <CookieConsentBanner />
+
+        {/* Carga optimizada de Google Analytics */}
+        {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );

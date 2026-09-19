@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getStoredConsent, storeConsent, updateConsent } from '../../src/lib/analytics';
+import { getStoredConsent, storeConsent } from '../../src/lib/analytics';
 import styles from './CookieConsentBanner.module.css';
 
 export default function CookieConsentBanner() {
@@ -12,8 +12,21 @@ export default function CookieConsentBanner() {
   }, []);
 
   const handleChoice = (granted: boolean) => {
-    storeConsent(granted ? 'granted' : 'denied');
-    updateConsent(granted);
+    const status = granted ? 'granted' : 'denied';
+    
+    // 1. Guardar estado en localStorage
+    storeConsent(status);
+
+    // 2. Actualizar Consent Mode v2 en Google Analytics
+    if (typeof window !== 'undefined' && 'gtag' in window) {
+      (window as any).gtag('consent', 'update', {
+        analytics_storage: status,
+        ad_storage: status,
+        ad_user_data: status,
+        ad_personalization: status,
+      });
+    }
+
     setVisible(false);
   };
 

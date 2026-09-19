@@ -11,7 +11,7 @@ export default function Footer() {
   const whatsappMessage = encodeURIComponent("¡Hola! Quisiera hacer una consulta sobre los productos de Semillas de Familia.");
   
   // Enlace genérico para Google Maps (Cámbialo cuando tengas el link exacto)
-  const mapsUrl = "https://maps.google.com/?q=Talca";
+  const mapsUrl = "https://www.google.com/maps/place/Semillas+de+Familia/@-35.4203902,-71.6115209,19z/data=!4m6!3m5!1s0x9665c71099d697e5:0x6ef00412e2caa32d!8m2!3d-35.4204875!4d-71.6116698!16s%2Fg%2F11zyvf1km0?hl=es-419&entry=ttu&g_ep=EgoyMDI2MDkxNi4wIKXMDSoASAFQAw%3D%3D";
 
   return (
     <footer className={styles.footer}>

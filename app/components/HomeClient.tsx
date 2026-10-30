@@ -32,36 +32,39 @@ function DistributorToast({ onOpenModal }: { onOpenModal: () => void }) {
     <div
       style={{
         position: 'fixed',
-        bottom: '95px',
-        right: '24px',
+        bottom: '85px',
+        left: '16px',
+        right: '16px',
+        margin: '0 auto',
         zIndex: 99,
         background: '#ffffff',
         border: '1px solid rgba(15, 23, 42, 0.1)',
-        borderRadius: '1rem',
-        padding: '1rem 1.25rem',
-        boxShadow: '0 12px 28px -4px rgba(0, 0, 0, 0.15)',
+        borderRadius: '0.75rem',
+        padding: '0.75rem 0.8rem',
+        boxShadow: '0 8px 24px -4px rgba(0, 0, 0, 0.12)',
         display: 'flex',
         alignItems: 'center',
-        gap: '1rem',
-        maxWidth: '400px',
-        width: 'calc(100% - 48px)',
+        gap: '0.5rem',
+        maxWidth: '380px',
+        width: 'auto',
       }}
     >
-      <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>🏷️</div>
+      <div style={{ fontSize: '1.25rem', flexShrink: 0 }}>🏷️</div>
       <div style={{ flex: 1 }}>
-        <p style={{ margin: 0, fontWeight: 700, fontSize: '0.875rem', color: '#0f172a' }}>
+        <p style={{ margin: 0, fontWeight: 700, fontSize: '0.8rem', color: '#0f172a' }}>
           ¿Quieres ser distribuidor?
         </p>
-        <p style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-          Accede a precios mayoristas y compras por volumen.
+        <p style={{ margin: '2px 0 0 0', fontSize: '0.7rem', color: '#64748b', lineHeight: 1.2 }}>
+          Accede a precios por volumen.
         </p>
       </div>
       <button
         onClick={() => { handleDismiss(); onOpenModal(); }}
         style={{
-          background: '#0f172a', color: '#ffffff', border: 'none', padding: '8px 14px',
-          borderRadius: '0.5rem', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
-          whiteSpace: 'nowrap', flexShrink: 0,
+          background: '#0f172a', color: '#ffffff', border: 'none', 
+          padding: '6px 10px',
+          borderRadius: '0.4rem', fontSize: '0.75rem', fontWeight: 600, 
+          cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
         }}
       >
         Registrarme
@@ -70,7 +73,7 @@ function DistributorToast({ onOpenModal }: { onOpenModal: () => void }) {
         onClick={handleDismiss}
         style={{
           background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer',
-          fontSize: '1rem', padding: '2px 4px', lineHeight: 1,
+          fontSize: '1.1rem', padding: '0 4px', lineHeight: 1,
         }}
         title="Cerrar notificación"
       >
